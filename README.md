@@ -18,5 +18,5 @@ Clearingway requires the following environment variables to start:
 * **FFLOGS_CLIENT_ID**: The client ID from [fflogs](https://www.fflogs.com/api/clients/).
 * **FFLOGS_CLIENT_SECRET**: The client secret from [fflogs](https://www.fflogs.com/api/clients/).
 * **ENCOUNTERS**: A string of `<name>=<encounter_id>`, separated by commas. For example, `P1S=78,P2S=79,P3S=80,P4SP1=81,P4SP2=82`. These are the only encounters the bot will consider relevant.
-For each named encounter, the bot will expect a role "<name>-Cleared" to exist.
+For each named encounter, the bot will create a `<name>-Cleared` role.
 

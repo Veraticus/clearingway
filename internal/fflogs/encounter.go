@@ -13,6 +13,10 @@ type Rank struct {
 	RankPercent float64 `json:"rankPercent"`
 }
 
+func (er *EncounterRankings) Cleared() bool {
+	return er.TotalKills > 0
+}
+
 func (er *EncounterRankings) BestRank() *Rank {
 	ranks := make([]*Rank, len(er.Ranks))
 	copy(ranks, er.Ranks)

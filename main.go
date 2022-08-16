@@ -35,10 +35,15 @@ func main() {
 	err := discord.Start()
 	defer discord.Session.Close()
 	if err != nil {
-		panic(fmt.Errorf("Could not instantiate Discord: %f", err))
+		panic(fmt.Errorf("Could not instantiate Discord: %w", err))
 	}
 
 	fflogs := fflogs.Init(fflogsClientId, fflogsClientSecret)
-	fmt.Printf("Fflogs is %+v", fflogs)
+	encounterRankings, err := fflogs.GetEncounterRankings(78, "Atmus Coldheart", "Gilgamesh")
+	if err != nil {
+		panic(fmt.Errorf("Could not query graphql: %w", err))
+	}
 	fmt.Printf("Encounters is %+v", encounters)
+	fmt.Printf("Cleared is: %v", encounterRankings.Cleared())
+	fmt.Printf("Best rank is: %v", encounterRankings.BestRank().RankPercent)
 }

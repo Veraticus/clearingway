@@ -100,7 +100,7 @@ func (d *Discord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate
 		}
 
 		if char.UpdatedRecently() {
-			_, err = s.ChannelMessageEdit(d.ChannelId, message.ID, "Please only use `cleared!` once every 5 minutes.")
+			_, err = s.ChannelMessageEdit(d.ChannelId, message.ID, "Please only use `clears!` once every 5 minutes.")
 			if err != nil {
 				fmt.Printf("Error sending Discord message: %v", err)
 			}

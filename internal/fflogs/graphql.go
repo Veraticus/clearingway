@@ -12,6 +12,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Veraticus/clearingway/internal/ffxiv"
+
 	"github.com/hasura/go-graphql-client"
 )
 
@@ -29,9 +31,9 @@ type fflogsAccessToken struct {
 	AccessToken      string `json:"access_token"`
 }
 
-func (f *Fflogs) GetEncounterRankings(encounterIds []int, characterName, characterServer string) (*EncounterRankings, error) {
+func (f *Fflogs) GetEncounterRankings(encounterIds []int, char *ffxiv.Character) (*EncounterRankings, error) {
 	query := strings.Builder{}
-	query.WriteString(fmt.Sprintf("query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"NA\"){", characterName, characterServer))
+	query.WriteString(fmt.Sprintf("query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"NA\"){", char.Name, char.Server))
 	for _, encounterId := range encounterIds {
 		query.WriteString(fmt.Sprintf("e%d: encounterRankings(encounterID: %d)", encounterId, encounterId))
 	}

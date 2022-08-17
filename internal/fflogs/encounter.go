@@ -15,6 +15,10 @@ type EncounterRanking struct {
 	Ranks      []*Rank `json:"ranks"`
 }
 
+type Rank struct {
+	Percent float64 `json:"rankPercent"`
+}
+
 // An encounter could have multiple IDs, since fflogs considers ultimates in
 // different expansion to be different encounters.
 type Encounters struct {
@@ -26,11 +30,13 @@ type Encounter struct {
 	IDs  []int
 }
 
-var UltimateEncounters = []*Encounter{
-	{Name: "DSR", IDs: []int{1065}},
-	{Name: "UCOB", IDs: []int{1060, 1047, 1039}},
-	{Name: "UWU", IDs: []int{1061, 1048, 1042}},
-	{Name: "TEA", IDs: []int{1062, 1050}},
+var UltimateEncounters = &Encounters{
+	Encounters: []*Encounter{
+		{Name: "DSR", IDs: []int{1065}},
+		{Name: "UCOB", IDs: []int{1060, 1047, 1039}},
+		{Name: "UWU", IDs: []int{1061, 1048, 1042}},
+		{Name: "TEA", IDs: []int{1062, 1050}},
+	},
 }
 
 func (e *Encounters) IDs() []int {
@@ -39,6 +45,52 @@ func (e *Encounters) IDs() []int {
 		ids = append(ids, encounter.IDs...)
 	}
 	return ids
+}
+
+func (e *Encounters) BestRankForEncounterRankings(ers *EncounterRankings) *Rank {
+	var bestRank *Rank
+	for _, encounter := range e.Encounters {
+		for _, encounterId := range encounter.IDs {
+			encounterRanking, ok := ers.Encounters[encounterId]
+			if !ok {
+				continue
+			}
+			if !encounterRanking.Cleared() {
+				continue
+			}
+			rank := encounterRanking.BestRank()
+			if bestRank == nil || (rank.Percent > bestRank.Percent) {
+				bestRank = rank
+			}
+		}
+	}
+
+	return bestRank
+}
+
+func (e *Encounters) TotalClearsFromEncounterRankings(ers *EncounterRankings) int {
+	clears := map[string]bool{}
+	for _, encounter := range e.Encounters {
+		for _, encounterId := range encounter.IDs {
+			encounterRanking, ok := ers.Encounters[encounterId]
+			if !ok {
+				continue
+			}
+			if encounterRanking.Cleared() {
+				clears[encounter.Name] = true
+				continue
+			}
+		}
+	}
+
+	totalClears := 0
+	for _, clear := range clears {
+		if clear == true {
+			totalClears = totalClears + 1
+		}
+	}
+
+	return totalClears
 }
 
 func (er *EncounterRanking) Cleared() bool {
@@ -51,5 +103,3 @@ func (er *EncounterRanking) BestRank() *Rank {
 	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].Percent > ranks[j].Percent })
 	return ranks[0]
 }
-
-func (r *Rank) Color()

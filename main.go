@@ -10,6 +10,7 @@ import (
 
 	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/Veraticus/clearingway/internal/fflogs"
+	"github.com/Veraticus/clearingway/internal/ffxiv"
 )
 
 func main() {
@@ -33,6 +34,8 @@ func main() {
 		panic("You must supply a FFLOGS_CLIENT_SECRET to start!")
 	}
 
+	fflogsInstance := fflogs.Init(fflogsClientId, fflogsClientSecret)
+
 	// Encounters should be in `<name>=<encounterId>` format separated by commas.
 	encounters, ok := os.LookupEnv("ENCOUNTERS")
 	if !ok {
@@ -52,21 +55,21 @@ func main() {
 		fmt.Printf("Relevant encounter: %+v\n", relevantEncounter)
 	}
 
-	fflogs := fflogs.Init(fflogsClientId, fflogsClientSecret)
-	encounterRankings, err := fflogs.GetEncounterRankings(relevantEncounters.IDs(), "Atmus Coldheart", "Gilgamesh")
-	if err != nil {
-		panic(fmt.Errorf("EncounterRankings error: %w", err))
-	}
-	fmt.Printf("Encounter rankings: %+v\n", encounterRankings)
-	os.Exit(0)
+	roles := &discord.Roles{Roles: []*discord.Role{}}
+	roles.Roles = append(roles.Roles, discord.AllParsingRoles()...)
+	roles.Roles = append(roles.Roles, discord.AllUltimateRoles()...)
+	roles.Roles = append(roles.Roles, discord.RolesForEncounters(relevantEncounters)...)
+	roles.Roles = append(roles.Roles, discord.AllServerRoles()...)
 
 	discord := &discord.Discord{
 		Token:              discordToken,
 		ChannelId:          discordChannelId,
 		RelevantEncounters: relevantEncounters,
-		Fflogs:             fflogs,
+		Fflogs:             fflogsInstance,
+		Roles:              roles,
+		Characters:         &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}},
 	}
-	err = discord.Start()
+	err := discord.Start()
 	defer discord.Session.Close()
 	if err != nil {
 		panic(fmt.Errorf("Could not instantiate Discord: %w", err))

@@ -2,11 +2,17 @@ package ffxiv
 
 import (
 	"fmt"
+	"time"
 )
 
+type Characters struct {
+	Characters map[string]*Character
+}
+
 type Character struct {
-	Name   string
-	Server string
+	Name           string
+	Server         string
+	LastUpdateTime time.Time
 }
 
 var AetherServers = []string{
@@ -44,7 +50,7 @@ var PrimalServers = []string{
 
 var NAServers = append(append(append([]string{}, AetherServers...), CrystalServers...), PrimalServers...)
 
-func InitCharacter(name string, roles []string) (*Character, error) {
+func (cs *Characters) Init(name string, roles []string) (*Character, error) {
 	server := ""
 	for _, role := range roles {
 		for _, naServer := range NAServers {
@@ -58,10 +64,19 @@ func InitCharacter(name string, roles []string) (*Character, error) {
 		return nil, fmt.Errorf("No NA server role found! Did you run `!iam verify`?")
 	}
 
-	character := &Character{
-		Name:   name,
-		Server: server,
+	char, ok := cs.Characters[name+"-"+server]
+	if !ok {
+		char = &Character{
+			Name:   name,
+			Server: server,
+		}
+		cs.Characters[name+"-"+server] = char
 	}
 
-	return character, nil
+	return char, nil
+}
+
+func (c *Character) UpdatedRecently() bool {
+	duration := time.Now().Sub(c.LastUpdateTime)
+	return duration.Minutes() <= 5.0
 }

@@ -15,8 +15,9 @@ Clearingway sends a few graphql requests to fflogs to determine what fights that
 Clearingway requires the following environment variables to start:
 
 * **DISCORD_TOKEN**: You have to create a [Discord bot for Clearingway](https://discord.com/developers/applications). Once you've done so, you can add the bot token here.
+* **DISCORD_CHANNEL_ID**: The channel ID on which to listen for the `!clears` message.
 * **FFLOGS_CLIENT_ID**: The client ID from [fflogs](https://www.fflogs.com/api/clients/).
 * **FFLOGS_CLIENT_SECRET**: The client secret from [fflogs](https://www.fflogs.com/api/clients/).
 * **ENCOUNTERS**: A string of `<name>=<encounter_id>`, separated by commas. For example, `P1S=78,P2S=79,P3S=80,P4SP1=81,P4SP2=82`. These are the only encounters the bot will consider relevant.
-For each named encounter, the bot will create a `<name>-Cleared` role.
+For each named encounter, the bot will create a `<name>-PF` and `<name>-Cleared` role.
 

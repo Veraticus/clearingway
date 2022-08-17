@@ -3,6 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
+	"strconv"
+	"strings"
+	"syscall"
 
 	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/Veraticus/clearingway/internal/fflogs"
@@ -12,6 +16,11 @@ func main() {
 	discordToken, ok := os.LookupEnv("DISCORD_TOKEN")
 	if !ok {
 		panic("You must supply a DISCORD_TOKEN to start!")
+	}
+
+	discordChannelId, ok := os.LookupEnv("DISCORD_CHANNEL_ID")
+	if !ok {
+		panic("You must supply a DISCORD_CHANNEL_ID to start!")
 	}
 
 	fflogsClientId, ok := os.LookupEnv("FFLOGS_CLIENT_ID")
@@ -24,26 +33,46 @@ func main() {
 		panic("You must supply a FFLOGS_CLIENT_SECRET to start!")
 	}
 
+	// Encounters should be in `<name>=<encounterId>` format separated by commas.
 	encounters, ok := os.LookupEnv("ENCOUNTERS")
 	if !ok {
 		panic("You must supply ENCOUNTERS to start!")
 	}
+	relevantEncounters := &fflogs.Encounters{Encounters: []*fflogs.Encounter{}}
+	for _, encounter := range strings.Split(encounters, ",") {
+		e := strings.Split(encounter, "=")
+		name := e[0]
+		id, err := strconv.Atoi(e[1])
+		if err != nil {
+			panic(fmt.Errorf("Could not convert encounter to integer for %v: %w", name, err))
+		}
+		relevantEncounters.Encounters = append(relevantEncounters.Encounters, &fflogs.Encounter{Name: name, IDs: []int{id}})
+	}
+	for _, relevantEncounter := range relevantEncounters.Encounters {
+		fmt.Printf("Relevant encounter: %+v\n", relevantEncounter)
+	}
+
+	fflogs := fflogs.Init(fflogsClientId, fflogsClientSecret)
+	encounterRankings, err := fflogs.GetEncounterRankings(relevantEncounters.IDs(), "Atmus Coldheart", "Gilgamesh")
+	if err != nil {
+		panic(fmt.Errorf("EncounterRankings error: %w", err))
+	}
+	fmt.Printf("Encounter rankings: %+v\n", encounterRankings)
+	os.Exit(0)
 
 	discord := &discord.Discord{
-		Token: discordToken,
+		Token:              discordToken,
+		ChannelId:          discordChannelId,
+		RelevantEncounters: relevantEncounters,
+		Fflogs:             fflogs,
 	}
-	err := discord.Start()
+	err = discord.Start()
 	defer discord.Session.Close()
 	if err != nil {
 		panic(fmt.Errorf("Could not instantiate Discord: %w", err))
 	}
 
-	fflogs := fflogs.Init(fflogsClientId, fflogsClientSecret)
-	encounterRankings, err := fflogs.GetEncounterRankings(78, "Atmus Coldheart", "Gilgamesh")
-	if err != nil {
-		panic(fmt.Errorf("Could not query graphql: %w", err))
-	}
-	fmt.Printf("Encounters is %+v", encounters)
-	fmt.Printf("Cleared is: %v", encounterRankings.Cleared())
-	fmt.Printf("Best rank is: %v", encounterRankings.BestRank().RankPercent)
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	<-sc
 }

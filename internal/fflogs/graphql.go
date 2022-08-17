@@ -9,6 +9,7 @@ import (
 	"golang.org/x/oauth2"
 	"mime/multipart"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/hasura/go-graphql-client"
@@ -28,33 +29,53 @@ type fflogsAccessToken struct {
 	AccessToken      string `json:"access_token"`
 }
 
-var encounterRankingsQuery struct {
-	CharacterData struct {
-		Character struct {
-			EncounterRankings json.RawMessage `graphql:"encounterRankings(encounterID: $encounterId)"`
-		} `graphql:"character(name: $characterName, serverSlug: $characterServer, serverRegion: \"NA\")"`
-	} `graphql:"characterData"`
-}
-
-func (f *Fflogs) GetEncounterRankings(encounterId int, characterName, characterServer string) (*EncounterRankings, error) {
-	variables := map[string]interface{}{
-		"encounterId":     graphql.Int(encounterId),
-		"characterName":   graphql.String(characterName),
-		"characterServer": graphql.String(characterServer),
+func (f *Fflogs) GetEncounterRankings(encounterIds []int, characterName, characterServer string) (*EncounterRankings, error) {
+	query := strings.Builder{}
+	query.WriteString(fmt.Sprintf("query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"NA\"){", characterName, characterServer))
+	for _, encounterId := range encounterIds {
+		query.WriteString(fmt.Sprintf("e%d: encounterRankings(encounterID: %d)", encounterId, encounterId))
 	}
+	query.WriteString("}}}")
 
-	err := f.graphqlClient.Query(context.Background(), &encounterRankingsQuery, variables)
+	raw, err := f.graphqlClient.ExecRaw(context.Background(), query.String(), nil)
 	if err != nil {
-		return nil, fmt.Errorf("Could not execute graphql query: %w", err)
+		return nil, fmt.Errorf("Error executing query: %w", err)
 	}
 
-	encounterRankings := &EncounterRankings{}
-	err = json.Unmarshal(encounterRankingsQuery.CharacterData.Character.EncounterRankings, encounterRankings)
+	var characterData map[string]*json.RawMessage
+	err = json.Unmarshal(raw, &characterData)
 	if err != nil {
 		return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)
 	}
 
-	fmt.Printf("Results are: %+v\n", encounterRankings)
+	var character map[string]*json.RawMessage
+	err = json.Unmarshal(*characterData["characterData"], &character)
+	if err != nil {
+		return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)
+	}
+
+	var rawEncounters map[string]*json.RawMessage
+	err = json.Unmarshal(*character["character"], &rawEncounters)
+	if err != nil {
+		return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)
+	}
+
+	encounterRankings := &EncounterRankings{Encounters: map[int]*EncounterRanking{}}
+	for rawId, rawEncounter := range rawEncounters {
+		var id int
+		_, err = fmt.Sscanf(rawId, "e%d", &id)
+		if err != nil {
+			return nil, fmt.Errorf("Could not get encounter ID back from response: %w", err)
+		}
+
+		encounterRanking := &EncounterRanking{}
+		err = json.Unmarshal(*rawEncounter, encounterRanking)
+		if err != nil {
+			return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)
+		}
+
+		encounterRankings.Encounters[id] = encounterRanking
+	}
 
 	return encounterRankings, nil
 }

@@ -56,9 +56,9 @@ func main() {
 	}
 
 	roles := &discord.Roles{Roles: []*discord.Role{}}
+	roles.Roles = append(roles.Roles, discord.RolesForEncounters(relevantEncounters)...)
 	roles.Roles = append(roles.Roles, discord.AllParsingRoles()...)
 	roles.Roles = append(roles.Roles, discord.AllUltimateRoles()...)
-	roles.Roles = append(roles.Roles, discord.RolesForEncounters(relevantEncounters)...)
 	roles.Roles = append(roles.Roles, discord.AllServerRoles()...)
 
 	discord := &discord.Discord{

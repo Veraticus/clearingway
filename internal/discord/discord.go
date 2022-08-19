@@ -86,7 +86,7 @@ func (d *Discord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate
 		roleNames := d.Roles.RoleNames(m.Member.Roles)
 		char, err := d.Characters.Init(m.Member.Nick, roleNames)
 		if err != nil {
-			_, err = s.ChannelMessageSendReply(d.ChannelId, fmt.Sprintf("Could not find character %s: %s", m.Member.Nick, err), (*m).Reference())
+			_, err = s.ChannelMessageSendReply(d.ChannelId, fmt.Sprintf("Could not find character: %s", err), (*m).Reference())
 			if err != nil {
 				fmt.Printf("Error sending Discord message: %v", err)
 			}
@@ -107,50 +107,65 @@ func (d *Discord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate
 			return
 		}
 
-		encounterIds := []int{}
-		encounterIds = append(encounterIds, d.RelevantEncounters.IDs()...)
-		encounterIds = append(encounterIds, fflogs.UltimateEncounters.IDs()...)
-		encounterRankings, err := d.Fflogs.GetEncounterRankings(encounterIds, char)
+		charText, err := d.UpdateCharacter(char, m.Author.ID, m.GuildID)
 		if err != nil {
-			_, err = s.ChannelMessageEdit(d.ChannelId, message.ID, fmt.Sprintf("Error retrieving encounter rankings: %s", err))
+			_, err = s.ChannelMessageEdit(d.ChannelId, message.ID, fmt.Sprintf("Could not analyze clears for %s (%s): %s", char.Name, char.Server, err))
 			if err != nil {
 				fmt.Printf("Error sending Discord message: %v", err)
 			}
 			return
 		}
 
-		text := strings.Builder{}
-		text.WriteString("")
-		for _, role := range d.Roles.Roles {
-			if role.ShouldApply == nil {
-				continue
-			}
-
-			shouldApply := role.ShouldApply(d.RelevantEncounters, encounterRankings)
-			if shouldApply {
-				if !role.PresentInRoles(m.Member.Roles) {
-					err := role.AddToCharacter(m.GuildID, m.Author.ID, s, char)
-					if err != nil {
-						fmt.Printf("Error adding Discord role: %v", err)
-					}
-					text.WriteString(fmt.Sprintf("Adding role: `%s`\n", role.Name))
-				}
-			} else {
-				if role.PresentInRoles(m.Member.Roles) {
-					role.RemoveFromCharacter(m.GuildID, m.Author.ID, s, char)
-					if err != nil {
-						fmt.Printf("Error removing Discord role: %v", err)
-					}
-					text.WriteString(fmt.Sprintf("Removing role: `%s`\n", role.Name))
-				}
-			}
-		}
-
-		char.LastUpdateTime = time.Now()
-		_, err = s.ChannelMessageEdit(d.ChannelId, message.ID, fmt.Sprintf("Finished clear analysis.\n%s", text.String()))
+		_, err = s.ChannelMessageEdit(d.ChannelId, message.ID, fmt.Sprintf("Finished clear analysis.\n%s", charText))
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v", err)
 		}
 		return
 	}
+}
+
+func (d *Discord) UpdateCharacter(char *ffxiv.Character, discordUserId, guildId string) (string, error) {
+	encounterIds := []int{}
+	encounterIds = append(encounterIds, d.RelevantEncounters.IDs()...)
+	encounterIds = append(encounterIds, fflogs.UltimateEncounters.IDs()...)
+	encounterRankings, err := d.Fflogs.GetEncounterRankings(encounterIds, char)
+	if err != nil {
+		return "", fmt.Errorf("Error retrieving encounter rankings: %w", err)
+	}
+
+	member, err := d.Session.GuildMember(guildId, discordUserId)
+	if err != nil {
+		return "", fmt.Errorf("Could not retrieve roles for user: %w", err)
+	}
+
+	text := strings.Builder{}
+	text.WriteString("")
+	for _, role := range d.Roles.Roles {
+		if role.ShouldApply == nil {
+			continue
+		}
+
+		shouldApply := role.ShouldApply(d.RelevantEncounters, encounterRankings)
+		if shouldApply {
+			if !role.PresentInRoles(member.Roles) {
+				err := role.AddToCharacter(guildId, discordUserId, d.Session, char)
+				if err != nil {
+					return "", fmt.Errorf("Error adding Discord role: %v", err)
+				}
+				text.WriteString(fmt.Sprintf("Adding role: `%s`\n", role.Name))
+			}
+		} else {
+			if role.PresentInRoles(member.Roles) {
+				role.RemoveFromCharacter(guildId, discordUserId, d.Session, char)
+				if err != nil {
+					return "", fmt.Errorf("Error removing Discord role: %v", err)
+				}
+				text.WriteString(fmt.Sprintf("Removing role: `%s`\n", role.Name))
+			}
+		}
+	}
+
+	char.LastUpdateTime = time.Now()
+
+	return text.String(), nil
 }

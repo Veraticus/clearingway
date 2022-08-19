@@ -55,6 +55,9 @@ func (f *Fflogs) GetEncounterRankings(encounterIds []int, char *ffxiv.Character)
 	if err != nil {
 		return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)
 	}
+	if character["character"] == nil {
+		return nil, fmt.Errorf("Character %s (%s) not found in fflogs!", char.Name, char.Server)
+	}
 
 	var rawEncounters map[string]*json.RawMessage
 	err = json.Unmarshal(*character["character"], &rawEncounters)

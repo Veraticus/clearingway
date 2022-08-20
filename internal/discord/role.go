@@ -27,7 +27,7 @@ var encounterRoleColors = []int{
 	0x9644e5,
 	0xef8633,
 	0xd06fa4,
-	0xe1cc8a,
+	// 0xe1cc8a,
 }
 
 func AllParsingRoles() []*Role {
@@ -153,13 +153,15 @@ func RolesForEncounters(es *fflogs.Encounters) []*Role {
 	roleColors := encounterRoleColors[len(encounterRoleColors)-len(es.Encounters):]
 
 	for i, encounter := range es.Encounters {
+		encounterId := encounter.IDs[0]
+
 		roles = append(roles, &Role{Name: encounter.Name + "-PF", Color: 0x11806a})
 		roles = append(roles, &Role{Name: encounter.Name + "-Reclear", Color: 0x11806a})
 		roles = append(roles, &Role{Name: encounter.Name + "-Parse", Color: 0x11806a})
 		roles = append(roles, &Role{
 			Name: encounter.Name + "-Cleared", Color: roleColors[i],
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				encounterRanking := ers.Encounters[encounter.IDs[0]]
+				encounterRanking := ers.Encounters[encounterId]
 				return encounterRanking.Cleared()
 			},
 		})

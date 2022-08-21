@@ -84,7 +84,12 @@ func (d *Discord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate
 	// Check if the message is "!clears"
 	if m.Content == "!clears" {
 		roleNames := d.Roles.RoleNames(m.Member.Roles)
-		char, err := d.Characters.Init(m.Member.Nick, roleNames)
+		nick := m.Member.Nick
+		if nick == "" {
+			nick = m.Member.User.Username
+		}
+
+		char, err := d.Characters.Init(nick, roleNames)
 		if err != nil {
 			_, err = s.ChannelMessageSendReply(d.ChannelId, fmt.Sprintf("Could not find character: %s", err), (*m).Reference())
 			if err != nil {

@@ -86,7 +86,7 @@ func (d *Discord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate
 		roleNames := d.Roles.RoleNames(m.Member.Roles)
 		nick := m.Member.Nick
 		if nick == "" {
-			nick = m.Member.User.Username
+			nick = m.Author.Username
 		}
 
 		char, err := d.Characters.Init(nick, roleNames)

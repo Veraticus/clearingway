@@ -68,12 +68,6 @@ func main() {
 		panic(fmt.Errorf("Could not instantiate Discord: %w", err))
 	}
 
-	char := &ffxiv.Character{Name: "Harthorn Lux", Server: "Midgardsormr"}
-	msg, err := d.UpdateCharacter(char, "230811846859423744", "1008845758805594173")
-	fmt.Printf("Msg is: %+v", msg)
-	fmt.Printf("Err is: %+v", err)
-	os.Exit(0)
-
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc

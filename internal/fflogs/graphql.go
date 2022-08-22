@@ -31,11 +31,13 @@ type fflogsAccessToken struct {
 	AccessToken      string `json:"access_token"`
 }
 
-func (f *Fflogs) GetEncounterRankings(encounterIds []int, char *ffxiv.Character) (*EncounterRankings, error) {
+func (f *Fflogs) GetEncounterRankings(encounters *Encounters, char *ffxiv.Character) (*EncounterRankings, error) {
 	query := strings.Builder{}
 	query.WriteString(fmt.Sprintf("query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"NA\"){", char.Name, char.Server))
-	for _, encounterId := range encounterIds {
-		query.WriteString(fmt.Sprintf("e%d: encounterRankings(encounterID: %d)", encounterId, encounterId))
+	for _, encounter := range encounters.Encounters {
+		for _, encounterId := range encounter.IDs {
+			query.WriteString(fmt.Sprintf("e%d: encounterRankings(encounterID: %d, difficulty: %d)", encounterId, encounterId, encounter.DifficultyInt()))
+		}
 	}
 	query.WriteString("}}}")
 

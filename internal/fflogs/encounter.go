@@ -22,29 +22,24 @@ type Rank struct {
 // An encounter could have multiple IDs, since fflogs considers ultimates in
 // different expansion to be different encounters.
 type Encounters struct {
-	Encounters []*Encounter
+	Encounters []*Encounter `yaml:"encounters"`
 }
 
 type Encounter struct {
-	Name string
-	IDs  []int
+	Name         string `yaml:"name"`
+	Difficulty   string `yaml:"difficulty"`
+	IDs          []int  `yaml:"ids"`
+	CreateRoles  bool   `yaml:"createRoles"`
+	ClearedColor int    `yaml:"clearedColor"`
 }
 
 var UltimateEncounters = &Encounters{
 	Encounters: []*Encounter{
-		{Name: "DSR", IDs: []int{1065}},
-		{Name: "UCOB", IDs: []int{1060, 1047, 1039}},
-		{Name: "UWU", IDs: []int{1061, 1048, 1042}},
-		{Name: "TEA", IDs: []int{1062, 1050}},
+		{Name: "DSR", IDs: []int{1065}, Difficulty: "Ultimate", CreateRoles: false},
+		{Name: "UCOB", IDs: []int{1060, 1047, 1039}, Difficulty: "Ultimate", CreateRoles: false},
+		{Name: "UWU", IDs: []int{1061, 1048, 1042}, Difficulty: "Ultimate", CreateRoles: false},
+		{Name: "TEA", IDs: []int{1062, 1050}, Difficulty: "Ultimate", CreateRoles: false},
 	},
-}
-
-func (e *Encounters) IDs() []int {
-	ids := []int{}
-	for _, encounter := range e.Encounters {
-		ids = append(ids, encounter.IDs...)
-	}
-	return ids
 }
 
 func (e *Encounters) BestRankForEncounterRankings(ers *EncounterRankings) *Rank {
@@ -102,4 +97,12 @@ func (er *EncounterRanking) BestRank() *Rank {
 	copy(ranks, er.Ranks)
 	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].Percent > ranks[j].Percent })
 	return ranks[0]
+}
+
+func (e *Encounter) DifficultyInt() int {
+	if e.Difficulty == "Savage" {
+		return 101
+	}
+
+	return 100
 }

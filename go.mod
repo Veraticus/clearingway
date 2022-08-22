@@ -7,6 +7,7 @@ require (
 	github.com/hasura/go-graphql-client v0.8.0
 	github.com/stretchr/testify v1.7.1
 	golang.org/x/oauth2 v0.0.0-20220808172628-8227340efae7
+	gopkg.in/yaml.v2 v2.2.8
 )
 
 require (

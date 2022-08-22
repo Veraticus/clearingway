@@ -20,16 +20,6 @@ type Role struct {
 	ShouldApply func(*fflogs.Encounters, *fflogs.EncounterRankings) bool
 }
 
-var encounterRoleColors = []int{
-	0x636363,
-	0x78fa4c,
-	0x2a72f6,
-	0x9644e5,
-	0xef8633,
-	0xd06fa4,
-	// 0xe1cc8a,
-}
-
 func AllParsingRoles() []*Role {
 	return []*Role{
 		{
@@ -150,16 +140,18 @@ func ServerRoles(servers []string, color int) []*Role {
 
 func RolesForEncounters(es *fflogs.Encounters) []*Role {
 	roles := []*Role{}
-	roleColors := encounterRoleColors[len(encounterRoleColors)-len(es.Encounters):]
 
-	for i, encounter := range es.Encounters {
+	for _, encounter := range es.Encounters {
+		if encounter.CreateRoles != true {
+			continue
+		}
+
 		encounterId := encounter.IDs[0]
-
 		roles = append(roles, &Role{Name: encounter.Name + "-PF", Color: 0x11806a})
 		roles = append(roles, &Role{Name: encounter.Name + "-Reclear", Color: 0x11806a})
 		roles = append(roles, &Role{Name: encounter.Name + "-Parse", Color: 0x11806a})
 		roles = append(roles, &Role{
-			Name: encounter.Name + "-Cleared", Color: roleColors[i],
+			Name: encounter.Name + "-Cleared", Color: encounter.ClearedColor,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				encounterRanking := ers.Encounters[encounterId]
 				return encounterRanking.Cleared()

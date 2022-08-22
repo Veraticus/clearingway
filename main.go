@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/signal"
-	"strconv"
-	"strings"
 	"syscall"
 
 	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/Veraticus/clearingway/internal/fflogs"
 	"github.com/Veraticus/clearingway/internal/ffxiv"
+
+	"gopkg.in/yaml.v2"
 )
 
 func main() {
@@ -36,44 +37,42 @@ func main() {
 
 	fflogsInstance := fflogs.Init(fflogsClientId, fflogsClientSecret)
 
-	// Encounters should be in `<name>=<encounterId>` format separated by commas.
-	encounters, ok := os.LookupEnv("ENCOUNTERS")
-	if !ok {
-		panic("You must supply ENCOUNTERS to start!")
+	encounters := &fflogs.Encounters{Encounters: []*fflogs.Encounter{}}
+	config, err := ioutil.ReadFile("./config.yaml")
+	if err != nil {
+		panic(fmt.Errorf("Could not read config.yaml: %w", err))
 	}
-	relevantEncounters := &fflogs.Encounters{Encounters: []*fflogs.Encounter{}}
-	for _, encounter := range strings.Split(encounters, ",") {
-		e := strings.Split(encounter, "=")
-		name := e[0]
-		id, err := strconv.Atoi(e[1])
-		if err != nil {
-			panic(fmt.Errorf("Could not convert encounter to integer for %v: %w", name, err))
-		}
-		relevantEncounters.Encounters = append(relevantEncounters.Encounters, &fflogs.Encounter{Name: name, IDs: []int{id}})
-	}
-	for _, relevantEncounter := range relevantEncounters.Encounters {
-		fmt.Printf("Relevant encounter: %+v\n", relevantEncounter)
+	yaml.Unmarshal(config, &encounters)
+	encounters.Encounters = append(encounters.Encounters, fflogs.UltimateEncounters.Encounters...)
+	for _, encounter := range encounters.Encounters {
+		fmt.Printf("Encounter: %+v\n", encounter)
 	}
 
 	roles := &discord.Roles{Roles: []*discord.Role{}}
-	roles.Roles = append(roles.Roles, discord.RolesForEncounters(relevantEncounters)...)
+	roles.Roles = append(roles.Roles, discord.RolesForEncounters(encounters)...)
 	roles.Roles = append(roles.Roles, discord.AllParsingRoles()...)
 	roles.Roles = append(roles.Roles, discord.AllUltimateRoles()...)
 	roles.Roles = append(roles.Roles, discord.AllServerRoles()...)
 
-	discord := &discord.Discord{
-		Token:              discordToken,
-		ChannelId:          discordChannelId,
-		RelevantEncounters: relevantEncounters,
-		Fflogs:             fflogsInstance,
-		Roles:              roles,
-		Characters:         &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}},
+	d := &discord.Discord{
+		Token:      discordToken,
+		ChannelId:  discordChannelId,
+		Fflogs:     fflogsInstance,
+		Roles:      roles,
+		Encounters: encounters,
+		Characters: &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}},
 	}
-	err := discord.Start()
-	defer discord.Session.Close()
+	err = d.Start()
+	defer d.Session.Close()
 	if err != nil {
 		panic(fmt.Errorf("Could not instantiate Discord: %w", err))
 	}
+
+	char := &ffxiv.Character{Name: "Harthorn Lux", Server: "Midgardsormr"}
+	msg, err := d.UpdateCharacter(char, "230811846859423744", "1008845758805594173")
+	fmt.Printf("Msg is: %+v", msg)
+	fmt.Printf("Err is: %+v", err)
+	os.Exit(0)
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)

@@ -12,12 +12,12 @@ import (
 )
 
 type Discord struct {
-	Token              string
-	ChannelId          string
-	Fflogs             *fflogs.Fflogs
-	RelevantEncounters *fflogs.Encounters
+	Token     string
+	ChannelId string
+	Fflogs    *fflogs.Fflogs
 
-	Roles *Roles
+	Encounters *fflogs.Encounters
+	Roles      *Roles
 
 	Characters *ffxiv.Characters
 
@@ -130,10 +130,7 @@ func (d *Discord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate
 }
 
 func (d *Discord) UpdateCharacter(char *ffxiv.Character, discordUserId, guildId string) (string, error) {
-	encounterIds := []int{}
-	encounterIds = append(encounterIds, d.RelevantEncounters.IDs()...)
-	encounterIds = append(encounterIds, fflogs.UltimateEncounters.IDs()...)
-	encounterRankings, err := d.Fflogs.GetEncounterRankings(encounterIds, char)
+	encounterRankings, err := d.Fflogs.GetEncounterRankings(d.Encounters, char)
 	if err != nil {
 		return "", fmt.Errorf("Error retrieving encounter rankings: %w", err)
 	}
@@ -150,7 +147,7 @@ func (d *Discord) UpdateCharacter(char *ffxiv.Character, discordUserId, guildId 
 			continue
 		}
 
-		shouldApply := role.ShouldApply(d.RelevantEncounters, encounterRankings)
+		shouldApply := role.ShouldApply(d.Encounters, encounterRankings)
 		if shouldApply {
 			if !role.PresentInRoles(member.Roles) {
 				err := role.AddToCharacter(guildId, discordUserId, d.Session, char)

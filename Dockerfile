@@ -1,4 +1,4 @@
-FROM golang:1.18.1 AS builder
+FROM golang:1.19.0 AS builder
 WORKDIR /src
 COPY . /src
 RUN make build

@@ -153,7 +153,11 @@ func RolesForEncounters(es *fflogs.Encounters) []*Role {
 		roles = append(roles, &Role{
 			Name: encounter.Name + "-Cleared", Color: encounter.ClearedColor,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				encounterRanking := ers.Encounters[encounterId]
+				encounterRanking, ok := ers.Encounters[encounterId]
+				if !ok {
+					return false
+				}
+
 				return encounterRanking.Cleared()
 			},
 		})

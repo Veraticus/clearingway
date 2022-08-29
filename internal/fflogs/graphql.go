@@ -83,13 +83,12 @@ func (f *Fflogs) GetEncounterRankings(encounters *Encounters, char *ffxiv.Charac
 		if encounterRanking.Error != "" {
 			if encounterRanking.Error == "Invalid encounter id specified." {
 				fmt.Printf("Could not find encounters for id %d, continuing...\n", id)
-				continue
 			} else {
 				return nil, fmt.Errorf("Received error from fflogs for encounter %d: %v", id, encounterRanking.Error)
 			}
+		} else {
+			encounterRankings.Encounters[id] = encounterRanking
 		}
-
-		encounterRankings.Encounters[id] = encounterRanking
 	}
 
 	return encounterRankings, nil

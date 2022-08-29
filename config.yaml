@@ -1,26 +1,26 @@
 encounters:
-- ids: [82]
-  name: "P4SP2"
+- ids: [87]
+  name: "P8SP2"
   difficulty: "Savage"
   createRoles: true
   clearedColor: 0xd06fa4
-- ids: [81]
-  name: "P4SP1"
+- ids: [86]
+  name: "P8SP1"
   difficulty: "Savage"
   createRoles: true
   clearedColor: 0xef8633
-- ids: [80]
-  name: "P3S"
+- ids: [85]
+  name: "P7S"
   difficulty: "Savage"
   createRoles: true
   clearedColor: 0x9644e5
-- ids: [79]
-  name: "P2S"
+- ids: [84]
+  name: "P6S"
   difficulty: "Savage"
   createRoles: true
   clearedColor: 0x2a72f6
-- ids: [78]
-  name: "P1S"
+- ids: [83]
+  name: "P5S"
   difficulty: "Savage"
   createRoles: true
   clearedColor: 0x78fa4c

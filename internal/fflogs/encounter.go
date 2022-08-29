@@ -11,6 +11,7 @@ type EncounterRankings struct {
 }
 
 type EncounterRanking struct {
+	Error      string  `json:"error"`
 	TotalKills int     `json:"totalKills"`
 	Ranks      []*Rank `json:"ranks"`
 }

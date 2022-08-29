@@ -46,6 +46,10 @@ var UltimateEncounters = &Encounters{
 func (e *Encounters) BestRankForEncounterRankings(ers *EncounterRankings) *Rank {
 	var bestRank *Rank
 	for _, encounter := range e.Encounters {
+		if encounter.Difficulty == "Ultimate" {
+			continue
+		}
+
 		for _, encounterId := range encounter.IDs {
 			encounterRanking, ok := ers.Encounters[encounterId]
 			if !ok {
@@ -54,6 +58,7 @@ func (e *Encounters) BestRankForEncounterRankings(ers *EncounterRankings) *Rank 
 			if !encounterRanking.Cleared() {
 				continue
 			}
+
 			rank := encounterRanking.BestRank()
 			if bestRank == nil || (rank.Percent > bestRank.Percent) {
 				bestRank = rank

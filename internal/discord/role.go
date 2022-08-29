@@ -25,57 +25,96 @@ func AllParsingRoles() []*Role {
 		{
 			Name: "Gold", Color: 0xe1cc8a,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				rank := es.BestRankForEncounterRankings(ers).Percent
-				return rank == 100.0
+				rank := es.BestRankForEncounterRankings(ers)
+				if rank == nil {
+					return false
+				}
+				percent := rank.Percent
+				return percent == 100.0
 			},
 		},
 		{
 			Name: "Pink", Color: 0xd06fa4,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				rank := es.BestRankForEncounterRankings(ers).Percent
-				return (rank >= 99.0 && rank < 100.0)
+				rank := es.BestRankForEncounterRankings(ers)
+				if rank == nil {
+					return false
+				}
+				percent := rank.Percent
+
+				return (percent >= 99.0 && percent < 100.0)
 			},
 		},
 		{
 			Name: "Orange", Color: 0xef8633,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				rank := es.BestRankForEncounterRankings(ers).Percent
-				return (rank >= 95.0 && rank < 99.0)
+				rank := es.BestRankForEncounterRankings(ers)
+				if rank == nil {
+					return false
+				}
+				percent := rank.Percent
+
+				return (percent >= 95.0 && percent < 99.0)
 			},
 		},
 		{
 			Name: "Purple", Color: 0x9644e5,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				rank := es.BestRankForEncounterRankings(ers).Percent
-				return (rank >= 75.0 && rank < 95.0)
+				rank := es.BestRankForEncounterRankings(ers)
+				if rank == nil {
+					return false
+				}
+				percent := rank.Percent
+
+				return (percent >= 75.0 && percent < 95.0)
 			},
 		},
 		{
 			Name: "Blue", Color: 0x2a72f6,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				rank := es.BestRankForEncounterRankings(ers).Percent
-				return (rank >= 50.0 && rank < 75.0)
+				rank := es.BestRankForEncounterRankings(ers)
+				if rank == nil {
+					return false
+				}
+				percent := rank.Percent
+
+				return (percent >= 50.0 && percent < 75.0)
 			},
 		},
 		{
 			Name: "Green", Color: 0x78fa4c,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				rank := es.BestRankForEncounterRankings(ers).Percent
-				return (rank >= 25.0 && rank < 50.0)
+				rank := es.BestRankForEncounterRankings(ers)
+				if rank == nil {
+					return false
+				}
+				percent := rank.Percent
+
+				return (percent >= 25.0 && percent < 50.0)
 			},
 		},
 		{
 			Name: "Gray", Color: 0x636363,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				rank := es.BestRankForEncounterRankings(ers).Percent
-				return (rank > 0 && rank < 25.0)
+				rank := es.BestRankForEncounterRankings(ers)
+				if rank == nil {
+					return false
+				}
+				percent := rank.Percent
+
+				return (percent > 0 && percent < 25.0)
 			},
 		},
 		{
 			Name: "NA's Comfiest", Color: 0x636363,
 			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
-				rank := es.BestRankForEncounterRankings(ers).Percent
-				return rank == 0.0
+				rank := es.BestRankForEncounterRankings(ers)
+				if rank == nil {
+					return false
+				}
+				percent := rank.Percent
+
+				return percent == 0.0
 			},
 		},
 	}

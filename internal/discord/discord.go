@@ -24,6 +24,13 @@ type Discord struct {
 	Session *discordgo.Session
 }
 
+var (
+	clearCommand = &discordgo.ApplicationCommand{
+		Name:        "clears",
+		Description: "Analyze fflogs and assign yourself cleared roles.",
+	}
+)
+
 func (d *Discord) Start() error {
 	s, err := discordgo.New("Bot " + d.Token)
 	if err != nil {
@@ -31,7 +38,8 @@ func (d *Discord) Start() error {
 	}
 
 	s.AddHandler(d.ready)
-	s.AddHandler(d.messageCreate)
+	s.AddHandler(d.interactionCreate)
+
 	s.Identify.Intents = discordgo.IntentsGuilds | discordgo.IntentsGuildMessages
 
 	err = s.Open()
@@ -66,67 +74,79 @@ func (d *Discord) ready(s *discordgo.Session, event *discordgo.Ready) {
 			fmt.Printf("Error ensuring roles: %v", err)
 			return
 		}
+
+		fmt.Printf("Adding commands...\n")
+		s.ApplicationCommandCreate(event.User.ID, guild.ID, clearCommand)
 	}
 	fmt.Printf("Discord ready!\n")
 }
 
-func (d *Discord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
-	// Ignore messages from the bot
-	if m.Author.ID == s.State.User.ID {
-		return
-	}
-
+func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	// Ignore messages not on the correct channel
-	if m.ChannelID != d.ChannelId {
+	if i.ChannelID != d.ChannelId {
 		return
 	}
 
 	// Check if the message is "!clears"
-	if m.Content == "!clears" {
-		roleNames := d.Roles.RoleNames(m.Member.Roles)
-		nick := m.Member.Nick
-		if nick == "" {
-			nick = m.Author.Username
-		}
+	roleNames := d.Roles.RoleNames(i.Member.Roles)
+	nick := i.Member.Nick
+	if nick == "" {
+		nick = i.Member.User.Username
+	}
+	char, err := d.Characters.Init(nick, roleNames)
 
-		char, err := d.Characters.Init(nick, roleNames)
-		if err != nil {
-			_, err = s.ChannelMessageSendReply(d.ChannelId, fmt.Sprintf("Could not find character: %s", err), (*m).Reference())
-			if err != nil {
-				fmt.Printf("Error sending Discord message: %v", err)
-			}
-			return
-		}
-
-		message, err := s.ChannelMessageSendReply(d.ChannelId, fmt.Sprintf("Analyzing logs for %s (%s), please wait...", char.Name, char.Server), (*m).Reference())
-		if err != nil {
-			fmt.Printf("Error sending Discord message: %v", err)
-			return
-		}
-
-		if char.UpdatedRecently() {
-			_, err = s.ChannelMessageEdit(d.ChannelId, message.ID, "Please only use `clears!` once every 5 minutes.")
-			if err != nil {
-				fmt.Printf("Error sending Discord message: %v", err)
-			}
-			return
-		}
-
-		charText, err := d.UpdateCharacter(char, m.Author.ID, m.GuildID)
-		if err != nil {
-			_, err = s.ChannelMessageEdit(d.ChannelId, message.ID, fmt.Sprintf("Could not analyze clears for %s (%s): %s", char.Name, char.Server, err))
-			if err != nil {
-				fmt.Printf("Error sending Discord message: %v", err)
-			}
-			return
-		}
-
-		_, err = s.ChannelMessageEdit(d.ChannelId, message.ID, fmt.Sprintf("Finished clear analysis.\n%s", charText))
+	if err != nil {
+		err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: fmt.Sprintf("Could not find character: %s", err),
+			},
+		})
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v", err)
 		}
 		return
 	}
+
+	err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: fmt.Sprintf("Analyzing logs for %s (%s)...", char.Name, char.Server),
+		},
+	})
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v", err)
+		return
+	}
+
+	if char.UpdatedRecently() {
+		s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+			Content: "Please only use `/clears` once every 5 minutes.",
+		})
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v", err)
+		}
+		return
+	}
+
+	charText, err := d.UpdateCharacter(char, i.Member.User.ID, i.GuildID)
+	if err != nil {
+		s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+			Content: fmt.Sprintf("Could not analyze clears for %s (%s): %s", char.Name, char.Server, err),
+		})
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v", err)
+		}
+		return
+	}
+
+	_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+		Content: fmt.Sprintf("Finished clear analysis.\n%s", charText),
+	})
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v", err)
+	}
+	return
 }
 
 func (d *Discord) UpdateCharacter(char *ffxiv.Character, discordUserId, guildId string) (string, error) {

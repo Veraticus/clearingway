@@ -151,7 +151,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Content: "/verify command failed! Make sure you input your world, first name, and last name.",
+				Content: "`/verify` command failed! Make sure you input your world, first name, and last name.",
 			},
 		})
 		if err != nil {
@@ -163,7 +163,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Content: fmt.Sprintf("Finding %s %s (%s) in the Lodestone...", firstName, lastName, world),
+			Content: fmt.Sprintf("Finding `%s %s (%s)` in the Lodestone...", firstName, lastName, world),
 		},
 	})
 	if err != nil {
@@ -183,7 +183,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 	}
 
 	_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-		Content: fmt.Sprintf("Verifying ownership of %s (%s)...", char.Name(), char.World),
+		Content: fmt.Sprintf("Verifying ownership of `%s (%s)`...", char.Name(), char.World),
 	})
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v", err)
@@ -203,7 +203,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 	if !isOwner {
 		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 			Content: fmt.Sprintf(
-				"You are not the owner of %s (%s)!\nIf this is your character, add the following code to your Lodestone profile:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
+				"You are not the owner of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
 				char.Name(),
 				char.World,
 				char.LodestoneSlug(discordId),
@@ -216,7 +216,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 	}
 
 	_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-		Content: fmt.Sprintf("Analyzing logs for %s (%s)...", char.Name(), char.World),
+		Content: fmt.Sprintf("Analyzing logs for `%s (%s)`...", char.Name(), char.World),
 	})
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v", err)
@@ -224,7 +224,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 
 	if char.UpdatedRecently() {
 		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-			Content: "Finished clear analysis.",
+			Content: fmt.Sprintf("Finished clear analysis for `%s (%s)`.", char.Name(), char.World),
 		})
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v", err)
@@ -235,13 +235,13 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 	charText, err := d.UpdateCharacter(char, i.Member.User.ID, i.GuildID)
 	if err != nil {
 		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-			Content: fmt.Sprintf("Could not analyze clears for %s (%s): %s", char.Name(), char.World, err),
+			Content: fmt.Sprintf("Could not analyze clears for `%s (%s)`: %s", char.Name(), char.World, err),
 		})
 		return
 	}
 
 	_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-		Content: fmt.Sprintf("Finished clear analysis.\n%s", charText),
+		Content: fmt.Sprintf("Finished clear analysis for `%s (%s)`.\n%s", char.Name(), char.World, charText),
 	})
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v", err)

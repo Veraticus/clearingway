@@ -84,7 +84,16 @@ func (d *Discord) ready(s *discordgo.Session, event *discordgo.Ready) {
 func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	// Ignore messages not on the correct channel
 	if i.ChannelID != d.ChannelId {
-		return
+		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "Only issue this command in #botspam!",
+			},
+		})
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v", err)
+			return
+		}
 	}
 
 	// Check if the message is "!clears"

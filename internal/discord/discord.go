@@ -27,9 +27,9 @@ type Discord struct {
 	Session *discordgo.Session
 }
 
-var verifyCommand = &discordgo.ApplicationCommand{
-	Name:        "verify",
-	Description: "Verify you own your character and assign them roles.",
+var clearCommand = &discordgo.ApplicationCommand{
+	Name:        "clears",
+	Description: "Verify you own your character and assign them cleared roles.",
 	Options: []*discordgo.ApplicationCommandOption{
 		{
 			Type:        discordgo.ApplicationCommandOptionString,
@@ -97,10 +97,20 @@ func (d *Discord) ready(s *discordgo.Session, event *discordgo.Ready) {
 		}
 
 		fmt.Printf("Adding commands...\n")
-		_, err = s.ApplicationCommandCreate(event.User.ID, guild.ID, verifyCommand)
+		_, err = s.ApplicationCommandCreate(event.User.ID, guild.ID, clearCommand)
 		if err != nil {
 			fmt.Printf("Could not add command: %v\n", err)
 		}
+
+		// fmt.Printf("Removing commands...\n")
+		// cmd, err := s.ApplicationCommandCreate(event.User.ID, guild.ID, verifyCommand)
+		// if err != nil {
+		// 	fmt.Printf("Could not find command: %v\n", err)
+		// }
+		// err = s.ApplicationCommandDelete(event.User.ID, guild.ID, cmd.ID)
+		// if err != nil {
+		// 	fmt.Printf("Could not delete command: %v\n", err)
+		// }
 	}
 	fmt.Printf("Discord ready!\n")
 }
@@ -151,7 +161,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Content: "`/verify` command failed! Make sure you input your world, first name, and last name.",
+				Content: "`/clears` command failed! Make sure you input your world, first name, and last name.",
 			},
 		})
 		if err != nil {
@@ -203,7 +213,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 	if !isOwner {
 		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 			Content: fmt.Sprintf(
-				"I could not verify your ownership of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile and then run `/verify` again:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
+				"I could not verify your ownership of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile and then run `/clears` again:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
 				char.Name(),
 				char.World,
 				char.LodestoneSlug(discordId),

@@ -113,7 +113,6 @@ func (c *Character) IsOwner(discordId string) (bool, error) {
 		return false, nil
 	}
 
-	// "Your Lodestone profile can be edited from: https://na.finalfantasyxiv.com/lodestone/my/setting/profile/"
 	return true, nil
 }
 

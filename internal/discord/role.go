@@ -9,6 +9,39 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+var AetherServers = map[string]interface{}{
+	"Adamantoise":  nil,
+	"Cactuar":      nil,
+	"Faerie":       nil,
+	"Gilgamesh":    nil,
+	"Jenova":       nil,
+	"Midgardsormr": nil,
+	"Sargatanas":   nil,
+	"Siren":        nil,
+}
+
+var CrystalServers = map[string]interface{}{
+	"Balmung":   nil,
+	"Brynhildr": nil,
+	"Coeurl":    nil,
+	"Diabolos":  nil,
+	"Goblin":    nil,
+	"Malboro":   nil,
+	"Mateus":    nil,
+	"Zalera":    nil,
+}
+
+var PrimalServers = map[string]interface{}{
+	"Behemoth":  nil,
+	"Excalibur": nil,
+	"Exodus":    nil,
+	"Famfrit":   nil,
+	"Hyperion":  nil,
+	"Lamia":     nil,
+	"Leviathan": nil,
+	"Ultros":    nil,
+}
+
 type Roles struct {
 	Roles []*Role
 }
@@ -17,14 +50,14 @@ type Role struct {
 	DiscordRole *discordgo.Role
 	Name        string
 	Color       int
-	ShouldApply func(*fflogs.Encounters, *fflogs.EncounterRankings) bool
+	ShouldApply func(*ffxiv.Character, *fflogs.Encounters, *fflogs.EncounterRankings) bool
 }
 
 func AllParsingRoles() []*Role {
 	return []*Role{
 		{
 			Name: "Gold", Color: 0xe1cc8a,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				rank := es.BestRankForEncounterRankings(ers)
 				if rank == nil {
 					return false
@@ -35,7 +68,7 @@ func AllParsingRoles() []*Role {
 		},
 		{
 			Name: "Pink", Color: 0xd06fa4,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				rank := es.BestRankForEncounterRankings(ers)
 				if rank == nil {
 					return false
@@ -47,7 +80,7 @@ func AllParsingRoles() []*Role {
 		},
 		{
 			Name: "Orange", Color: 0xef8633,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				rank := es.BestRankForEncounterRankings(ers)
 				if rank == nil {
 					return false
@@ -59,7 +92,7 @@ func AllParsingRoles() []*Role {
 		},
 		{
 			Name: "Purple", Color: 0x9644e5,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				rank := es.BestRankForEncounterRankings(ers)
 				if rank == nil {
 					return false
@@ -71,7 +104,7 @@ func AllParsingRoles() []*Role {
 		},
 		{
 			Name: "Blue", Color: 0x2a72f6,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				rank := es.BestRankForEncounterRankings(ers)
 				if rank == nil {
 					return false
@@ -83,7 +116,7 @@ func AllParsingRoles() []*Role {
 		},
 		{
 			Name: "Green", Color: 0x78fa4c,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				rank := es.BestRankForEncounterRankings(ers)
 				if rank == nil {
 					return false
@@ -95,7 +128,7 @@ func AllParsingRoles() []*Role {
 		},
 		{
 			Name: "Gray", Color: 0x636363,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				rank := es.BestRankForEncounterRankings(ers)
 				if rank == nil {
 					return false
@@ -107,7 +140,7 @@ func AllParsingRoles() []*Role {
 		},
 		{
 			Name: "NA's Comfiest", Color: 0x636363,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				rank := es.BestRankForEncounterRankings(ers)
 				if rank == nil {
 					return false
@@ -124,28 +157,28 @@ func AllUltimateRoles() []*Role {
 	return []*Role{
 		{
 			Name: "The Legend", Color: 0x3498db,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				totalClears := fflogs.UltimateEncounters.TotalClearsFromEncounterRankings(ers)
 				return totalClears == 1
 			},
 		},
 		{
 			Name: "The Double Legend", Color: 0x3498db,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				totalClears := fflogs.UltimateEncounters.TotalClearsFromEncounterRankings(ers)
 				return totalClears == 2
 			},
 		},
 		{
 			Name: "The Triple Legend", Color: 0x3498db,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				totalClears := fflogs.UltimateEncounters.TotalClearsFromEncounterRankings(ers)
 				return totalClears == 3
 			},
 		},
 		{
-			Name: "The Tetra Legend", Color: 0x3498db,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			Name: "The Quad Legend", Color: 0x3498db,
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				totalClears := fflogs.UltimateEncounters.TotalClearsFromEncounterRankings(ers)
 				return totalClears == 4
 			},
@@ -155,9 +188,27 @@ func AllUltimateRoles() []*Role {
 
 func AllServerRoles() []*Role {
 	roles := []*Role{
-		{Name: "Aether", Color: 0x71368a},
-		{Name: "Crystal", Color: 0x206694},
-		{Name: "Primal", Color: 0x992d22},
+		{
+			Name: "Aether", Color: 0x71368a,
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+				_, ok := AetherServers[c.World]
+				return ok
+			},
+		},
+		{
+			Name: "Crystal", Color: 0x206694,
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+				_, ok := CrystalServers[c.World]
+				return ok
+			},
+		},
+		{
+			Name: "Primal", Color: 0x992d22,
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+				_, ok := PrimalServers[c.World]
+				return ok
+			},
+		},
 	}
 
 	return roles
@@ -177,7 +228,7 @@ func RolesForEncounters(es *fflogs.Encounters) []*Role {
 		roles = append(roles, &Role{Name: encounter.Name + "-Parse", Color: 0x11806a})
 		roles = append(roles, &Role{
 			Name: encounter.Name + "-Cleared", Color: encounter.ClearedColor,
-			ShouldApply: func(es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
+			ShouldApply: func(c *ffxiv.Character, es *fflogs.Encounters, ers *fflogs.EncounterRankings) bool {
 				encounterRanking, ok := ers.Encounters[encounterId]
 				if !ok {
 					return false

@@ -203,7 +203,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 	if !isOwner {
 		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 			Content: fmt.Sprintf(
-				"You are not the owner of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
+				"I could not verify your ownership of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile and then run `/verify` again:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
 				char.Name(),
 				char.World,
 				char.LodestoneSlug(discordId),
@@ -224,7 +224,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 
 	if char.UpdatedRecently() {
 		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-			Content: fmt.Sprintf("Finished clear analysis for `%s (%s)`.", char.Name(), char.World),
+			Content: fmt.Sprintf("Finished analysis for `%s (%s)`.", char.Name(), char.World),
 		})
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v", err)
@@ -241,7 +241,7 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 	}
 
 	_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-		Content: fmt.Sprintf("Finished clear analysis for `%s (%s)`.\n%s", char.Name(), char.World, charText),
+		Content: fmt.Sprintf("Finished analysis for `%s (%s)`.\n%s", char.Name(), char.World, charText),
 	})
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v", err)
@@ -267,7 +267,7 @@ func (d *Discord) UpdateCharacter(char *ffxiv.Character, discordUserId, guildId 
 			continue
 		}
 
-		shouldApply := role.ShouldApply(d.Encounters, encounterRankings)
+		shouldApply := role.ShouldApply(char, d.Encounters, encounterRankings)
 		if shouldApply {
 			if !role.PresentInRoles(member.Roles) {
 				err := role.AddToCharacter(guildId, discordUserId, d.Session, char)

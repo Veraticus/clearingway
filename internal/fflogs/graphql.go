@@ -6,11 +6,12 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"golang.org/x/oauth2"
 	"mime/multipart"
 	"net/http"
 	"strings"
 	"time"
+
+	"golang.org/x/oauth2"
 
 	"github.com/Veraticus/clearingway/internal/ffxiv"
 
@@ -33,10 +34,23 @@ type fflogsAccessToken struct {
 
 func (f *Fflogs) GetEncounterRankings(encounters *Encounters, char *ffxiv.Character) (*EncounterRankings, error) {
 	query := strings.Builder{}
-	query.WriteString(fmt.Sprintf("query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"NA\"){", char.Name, char.Server))
+	query.WriteString(
+		fmt.Sprintf(
+			"query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"NA\"){",
+			char.Name(),
+			char.World,
+		),
+	)
 	for _, encounter := range encounters.Encounters {
 		for _, encounterId := range encounter.IDs {
-			query.WriteString(fmt.Sprintf("e%d: encounterRankings(encounterID: %d, difficulty: %d)", encounterId, encounterId, encounter.DifficultyInt()))
+			query.WriteString(
+				fmt.Sprintf(
+					"e%d: encounterRankings(encounterID: %d, difficulty: %d)",
+					encounterId,
+					encounterId,
+					encounter.DifficultyInt(),
+				),
+			)
 		}
 	}
 	query.WriteString("}}}")
@@ -58,7 +72,7 @@ func (f *Fflogs) GetEncounterRankings(encounters *Encounters, char *ffxiv.Charac
 		return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)
 	}
 	if character["character"] == nil {
-		return nil, fmt.Errorf("Character %s (%s) not found in fflogs!", char.Name, char.Server)
+		return nil, fmt.Errorf("Character %s (%s) not found in fflogs!", char.Name(), char.World)
 	}
 
 	var rawEncounters map[string]*json.RawMessage

@@ -5,6 +5,9 @@ import (
 	"strings"
 	"time"
 
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+
 	"github.com/Veraticus/clearingway/internal/fflogs"
 	"github.com/Veraticus/clearingway/internal/ffxiv"
 
@@ -24,12 +27,30 @@ type Discord struct {
 	Session *discordgo.Session
 }
 
-var (
-	clearCommand = &discordgo.ApplicationCommand{
-		Name:        "clears",
-		Description: "Analyze fflogs and assign yourself cleared roles.",
-	}
-)
+var verifyCommand = &discordgo.ApplicationCommand{
+	Name:        "verify",
+	Description: "Verify you own your character and assign them roles.",
+	Options: []*discordgo.ApplicationCommandOption{
+		{
+			Type:        discordgo.ApplicationCommandOptionString,
+			Name:        "world",
+			Description: "Your character's world",
+			Required:    true,
+		},
+		{
+			Type:        discordgo.ApplicationCommandOptionString,
+			Name:        "first-name",
+			Description: "Your character's first name",
+			Required:    true,
+		},
+		{
+			Type:        discordgo.ApplicationCommandOptionString,
+			Name:        "last-name",
+			Description: "Your character's last name",
+			Required:    true,
+		},
+	},
+}
 
 func (d *Discord) Start() error {
 	s, err := discordgo.New("Bot " + d.Token)
@@ -57,26 +78,29 @@ func (d *Discord) ready(s *discordgo.Session, event *discordgo.Ready) {
 	for _, guild := range event.Guilds {
 		existingRoles, err := s.GuildRoles(guild.ID)
 		if err != nil {
-			fmt.Printf("Error getting existing roles: %v", err)
+			fmt.Printf("Error getting existing roles: %v\n", err)
 			return
 		}
 
 		fmt.Printf("Ensuring roles...\n")
 		err = d.Roles.Ensure(guild.ID, s, existingRoles)
 		if err != nil {
-			fmt.Printf("Error ensuring roles: %v", err)
+			fmt.Printf("Error ensuring roles: %v\n", err)
 			return
 		}
 
 		fmt.Printf("Reorder roles...\n")
 		err = d.Roles.Reorder(guild.ID, s)
 		if err != nil {
-			fmt.Printf("Error ensuring roles: %v", err)
+			fmt.Printf("Error reordering roles: %v\n", err)
 			return
 		}
 
 		fmt.Printf("Adding commands...\n")
-		s.ApplicationCommandCreate(event.User.ID, guild.ID, clearCommand)
+		_, err = s.ApplicationCommandCreate(event.User.ID, guild.ID, verifyCommand)
+		if err != nil {
+			fmt.Printf("Could not add command: %v\n", err)
+		}
 	}
 	fmt.Printf("Discord ready!\n")
 }
@@ -96,19 +120,38 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 		}
 	}
 
-	// Check if the message is "!clears"
-	roleNames := d.Roles.RoleNames(i.Member.Roles)
-	nick := i.Member.Nick
-	if nick == "" {
-		nick = i.Member.User.Username
-	}
-	char, err := d.Characters.Init(nick, roleNames)
+	options := i.ApplicationCommandData().Options
 
-	if err != nil {
-		err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+	// Or convert the slice into a map
+	optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
+	for _, opt := range options {
+		optionMap[opt.Name] = opt
+	}
+
+	var world string
+	var firstName string
+	var lastName string
+
+	if option, ok := optionMap["world"]; ok {
+		world = option.StringValue()
+	}
+	if option, ok := optionMap["first-name"]; ok {
+		firstName = option.StringValue()
+	}
+	if option, ok := optionMap["last-name"]; ok {
+		lastName = option.StringValue()
+	}
+
+	title := cases.Title(language.AmericanEnglish)
+	world = title.String(world)
+	firstName = title.String(firstName)
+	lastName = title.String(lastName)
+
+	if len(world) == 0 || len(firstName) == 0 || len(lastName) == 0 {
+		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Content: fmt.Sprintf("Could not find character: %s", err),
+				Content: "/verify command failed! Make sure you input your world, first name, and last name.",
 			},
 		})
 		if err != nil {
@@ -117,10 +160,10 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 		return
 	}
 
-	err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Content: fmt.Sprintf("Analyzing logs for %s (%s)...", char.Name, char.Server),
+			Content: fmt.Sprintf("Finding %s %s (%s) in the Lodestone...", firstName, lastName, world),
 		},
 	})
 	if err != nil {
@@ -128,9 +171,60 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 		return
 	}
 
+	char, err := d.Characters.Init(world, firstName, lastName)
+	if err != nil {
+		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+			Content: err.Error(),
+		})
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v", err)
+		}
+		return
+	}
+
+	_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+		Content: fmt.Sprintf("Verifying ownership of %s (%s)...", char.Name(), char.World),
+	})
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v", err)
+	}
+
+	discordId := i.Member.User.ID
+	isOwner, err := char.IsOwner(discordId)
+	if err != nil {
+		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+			Content: err.Error(),
+		})
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v", err)
+		}
+		return
+	}
+	if !isOwner {
+		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+			Content: fmt.Sprintf(
+				"You are not the owner of %s (%s)!\nIf this is your character, add the following code to your Lodestone profile:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
+				char.Name(),
+				char.World,
+				char.LodestoneSlug(discordId),
+			),
+		})
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v", err)
+		}
+		return
+	}
+
+	_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+		Content: fmt.Sprintf("Analyzing logs for %s (%s)...", char.Name(), char.World),
+	})
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v", err)
+	}
+
 	if char.UpdatedRecently() {
-		s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-			Content: "Please only use `/clears` once every 5 minutes.",
+		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+			Content: "Finished clear analysis.",
 		})
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v", err)
@@ -140,12 +234,9 @@ func (d *Discord) interactionCreate(s *discordgo.Session, i *discordgo.Interacti
 
 	charText, err := d.UpdateCharacter(char, i.Member.User.ID, i.GuildID)
 	if err != nil {
-		s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-			Content: fmt.Sprintf("Could not analyze clears for %s (%s): %s", char.Name, char.Server, err),
+		_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+			Content: fmt.Sprintf("Could not analyze clears for %s (%s): %s", char.Name(), char.World, err),
 		})
-		if err != nil {
-			fmt.Printf("Error sending Discord message: %v", err)
-		}
 		return
 	}
 

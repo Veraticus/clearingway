@@ -159,21 +159,7 @@ func AllServerRoles() []*Role {
 		{Name: "Crystal", Color: 0x206694},
 		{Name: "Primal", Color: 0x992d22},
 	}
-	roles = append(roles, ServerRoles(ffxiv.AetherServers, 0x71368a)...)
-	roles = append(roles, ServerRoles(ffxiv.CrystalServers, 0x206694)...)
-	roles = append(roles, ServerRoles(ffxiv.PrimalServers, 0x992d22)...)
 
-	return roles
-}
-
-func ServerRoles(servers []string, color int) []*Role {
-	roles := []*Role{}
-	for _, server := range servers {
-		roles = append(roles, &Role{
-			Name:  server,
-			Color: color,
-		})
-	}
 	return roles
 }
 

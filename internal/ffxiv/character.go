@@ -2,7 +2,11 @@ package ffxiv
 
 import (
 	"fmt"
+	"hash/adler32"
 	"time"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type Characters struct {
@@ -10,67 +14,35 @@ type Characters struct {
 }
 
 type Character struct {
-	Name           string
-	Server         string
+	World          string
+	FirstName      string
+	LastName       string
+	LodestoneID    int
 	LastUpdateTime time.Time
 }
 
-var AetherServers = []string{
-	"Adamantoise",
-	"Cactuar",
-	"Faerie",
-	"Gilgamesh",
-	"Jenova",
-	"Midgardsormr",
-	"Sargatanas",
-	"Siren",
-}
-
-var CrystalServers = []string{
-	"Balmung",
-	"Brynhildr",
-	"Coeurl",
-	"Diabolos",
-	"Goblin",
-	"Malboro",
-	"Mateus",
-	"Zalera",
-}
-
-var PrimalServers = []string{
-	"Behemoth",
-	"Excalibur",
-	"Exodus",
-	"Famfrit",
-	"Hyperion",
-	"Lamia",
-	"Leviathan",
-	"Ultros",
-}
-
-var NAServers = append(append(append([]string{}, AetherServers...), CrystalServers...), PrimalServers...)
-
-func (cs *Characters) Init(name string, roles []string) (*Character, error) {
-	server := ""
-	for _, role := range roles {
-		for _, naServer := range NAServers {
-			if role == naServer {
-				server = role
-				break
-			}
-		}
+func (cs *Characters) Init(world, firstName, lastName string) (*Character, error) {
+	if len(firstName) < 2 {
+		return nil, fmt.Errorf("First name must be at least two characters.")
 	}
-	if server == "" {
-		return nil, fmt.Errorf("No NA server role found! Did you run `!iam verify`?")
+	if len(lastName) < 2 {
+		return nil, fmt.Errorf("Last name must be at least two characters.")
 	}
+	name := firstName + " " + lastName
 
-	char, ok := cs.Characters[name+"-"+server]
+	title := cases.Title(language.AmericanEnglish)
+	char, ok := cs.Characters[name+"-"+world]
 	if !ok {
 		char = &Character{
-			Name:   name,
-			Server: server,
+			FirstName: firstName,
+			LastName:  lastName,
+			World:     title.String(world),
 		}
-		cs.Characters[name+"-"+server] = char
+		err := char.SetLodestoneID()
+		if err != nil {
+			return nil, err
+		}
+		cs.Characters[name+"-"+world] = char
 	}
 
 	return char, nil
@@ -79,4 +51,13 @@ func (cs *Characters) Init(name string, roles []string) (*Character, error) {
 func (c *Character) UpdatedRecently() bool {
 	duration := time.Now().Sub(c.LastUpdateTime)
 	return duration.Minutes() <= 5.0
+}
+
+func (c *Character) Name() string {
+	title := cases.Title(language.AmericanEnglish)
+	return title.String(c.FirstName) + " " + title.String(c.LastName)
+}
+
+func (c *Character) LodestoneSlug(discordId string) string {
+	return fmt.Sprintf("clearingway-%d", adler32.Checksum([]byte(discordId)))
 }

@@ -32,7 +32,12 @@ type fflogsAccessToken struct {
 	AccessToken      string `json:"access_token"`
 }
 
-func (f *Fflogs) GetEncounterRankings(encounters *Encounters, char *ffxiv.Character) (*EncounterRankings, error) {
+type RankingToGet struct {
+	IDs        []int
+	Difficulty int
+}
+
+func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ffxiv.Character) (*Rankings, error) {
 	query := strings.Builder{}
 	query.WriteString(
 		fmt.Sprintf(
@@ -41,14 +46,14 @@ func (f *Fflogs) GetEncounterRankings(encounters *Encounters, char *ffxiv.Charac
 			char.World,
 		),
 	)
-	for _, encounter := range encounters.Encounters {
-		for _, encounterId := range encounter.IDs {
+	for _, rankingToGet := range rankingsToGet {
+		for _, id := range rankingToGet.IDs {
 			query.WriteString(
 				fmt.Sprintf(
 					"e%d: encounterRankings(encounterID: %d, difficulty: %d)",
-					encounterId,
-					encounterId,
-					encounter.DifficultyInt(),
+					id,
+					id,
+					rankingToGet.Difficulty,
 				),
 			)
 		}
@@ -75,38 +80,38 @@ func (f *Fflogs) GetEncounterRankings(encounters *Encounters, char *ffxiv.Charac
 		return nil, fmt.Errorf("Character %s (%s) not found in fflogs!", char.Name(), char.World)
 	}
 
-	var rawEncounters map[string]*json.RawMessage
-	err = json.Unmarshal(*character["character"], &rawEncounters)
+	var rawRankings map[string]*json.RawMessage
+	err = json.Unmarshal(*character["character"], &rawRankings)
 	if err != nil {
 		return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)
 	}
 
-	encounterRankings := &EncounterRankings{Encounters: map[int]*EncounterRanking{}}
-	for rawId, rawEncounter := range rawEncounters {
+	rankings := &Rankings{Rankings: map[int]*Ranking{}}
+	for rawId, rawRanking := range rawRankings {
 		var id int
 		_, err = fmt.Sscanf(rawId, "e%d", &id)
 		if err != nil {
 			return nil, fmt.Errorf("Could not get encounter ID back from response: %w", err)
 		}
 
-		encounterRanking := &EncounterRanking{}
-		err = json.Unmarshal(*rawEncounter, encounterRanking)
+		ranking := &Ranking{}
+		err = json.Unmarshal(*rawRanking, ranking)
 		if err != nil {
 			return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)
 		}
-		if encounterRanking.Error != "" {
-			if encounterRanking.Error == "Invalid encounter id specified." {
+		if ranking.Error != "" {
+			if ranking.Error == "Invalid encounter id specified." {
 				fmt.Printf("Could not find encounters for id %d, continuing...\n", id)
 				continue
 			} else {
-				return nil, fmt.Errorf("Received error from fflogs for encounter %d: %v", id, encounterRanking.Error)
+				return nil, fmt.Errorf("Received error from fflogs for encounter %d: %v", id, ranking.Error)
 			}
 		}
 
-		encounterRankings.Encounters[id] = encounterRanking
+		rankings.Rankings[id] = ranking
 	}
 
-	return encounterRankings, nil
+	return rankings, nil
 }
 
 func (f *Fflogs) SetGraphqlClient() {

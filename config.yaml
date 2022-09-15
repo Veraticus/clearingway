@@ -1,27 +1,58 @@
-encounters:
-- ids: [87]
-  name: "P8SP2"
-  difficulty: "Savage"
-  createRoles: true
-  clearedColor: 0xd06fa4
-- ids: [86]
-  name: "P8SP1"
-  difficulty: "Savage"
-  createRoles: true
-  clearedColor: 0xef8633
-- ids: [85]
-  name: "P7S"
-  difficulty: "Savage"
-  createRoles: true
-  clearedColor: 0x9644e5
-- ids: [84]
-  name: "P6S"
-  difficulty: "Savage"
-  createRoles: true
-  clearedColor: 0x2a72f6
-- ids: [83]
-  name: "P5S"
-  difficulty: "Savage"
-  createRoles: true
-  clearedColor: 0x78fa4c
+guilds:
+- name: NAPS 
+  guildId: 1008845758805594173
+  channelId: 1008850017185955850
+  encounters:
+  - ids: [87]
+    name: "P8SP2"
+    difficulty: "Savage"
+    defaultRoles: true
+    roles:
+      - name: "P8SP2-Cleared"
+        type: "Cleared"
+        color: 0xd06fa4
+  - ids: [86]
+    name: "P8SP1"
+    difficulty: "Savage"
+    defaultRoles: true
+    roles:
+      - name: "P8SP1-Cleared"
+        type: "Cleared"
+        color: 0xef8633
+  - ids: [85]
+    name: "P7S"
+    difficulty: "Savage"
+    defaultRoles: true
+    roles:
+      - name: "P7S-Cleared"
+        type: "Cleared"
+        color: 0x9644e5
+  - ids: [84]
+    name: "P6S"
+    difficulty: "Savage"
+    defaultRoles: true
+    roles:
+      - name: "P6S-Cleared"
+        type: "Cleared"
+        color: 0x2a72f6
+  - ids: [83]
+    name: "P5S"
+    difficulty: "Savage"
+    defaultRoles: true
+    roles:
+      - name: "P5S-Cleared"
+        type: "Cleared"
+        color: 0x78fa4c
+    clearedColor: 0x78fa4c
+- name: APD 
+  guildId: 968960259081252884
+  channelId: 972868045552877589
+  encounters:
+  - ids: [1065]
+    name: "DSR"
+    defaultRoles: false
+    roles:
+      - name: "Cleared"
+        type: "Cleared"
+        color: 0xf58cba
 

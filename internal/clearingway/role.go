@@ -250,6 +250,7 @@ func (r *Role) PresentInRoles(existingRoleIds []string) bool {
 func (rs *Roles) Ensure(guildId string, s *discordgo.Session, existingRoles []*discordgo.Role) error {
 	for _, r := range rs.Roles {
 		err := r.Ensure(guildId, s, existingRoles)
+		fmt.Printf("Ensuring role: %+v\n", r)
 		if err != nil {
 			return fmt.Errorf("Could not ensure role %v: %w", r, err)
 		}

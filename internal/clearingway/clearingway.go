@@ -3,16 +3,25 @@ package clearingway
 import (
 	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/Veraticus/clearingway/internal/fflogs"
+	"github.com/Veraticus/clearingway/internal/ffxiv"
+
+	trie "github.com/Vivino/go-autocomplete-trie"
 )
 
 type Clearingway struct {
-	Config  *Config
-	Discord *discord.Discord
-	Guilds  *Guilds
-	Fflogs  *fflogs.Fflogs
+	Config           *Config
+	Discord          *discord.Discord
+	Guilds           *Guilds
+	Fflogs           *fflogs.Fflogs
+	AutoCompleteTrie *trie.Trie
 }
 
 func (c *Clearingway) Init() {
+	c.AutoCompleteTrie = trie.New()
+	for _, world := range ffxiv.AllWorlds() {
+		c.AutoCompleteTrie.Insert(world)
+	}
+
 	c.Guilds = &Guilds{Guilds: map[string]*Guild{}}
 
 	for _, configGuild := range c.Config.ConfigGuilds {

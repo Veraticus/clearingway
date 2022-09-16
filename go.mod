@@ -3,6 +3,7 @@ module github.com/Veraticus/clearingway
 go 1.18
 
 require (
+	github.com/Vivino/go-autocomplete-trie v0.0.0-20201027090951-d3f8d75784ef
 	github.com/bwmarrin/discordgo v0.25.0
 	github.com/gocolly/colly v1.2.0
 	github.com/hasura/go-graphql-client v0.8.0

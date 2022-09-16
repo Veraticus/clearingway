@@ -32,3 +32,17 @@ var PrimalWorlds = map[string]interface{}{
 	"Leviathan": nil,
 	"Ultros":    nil,
 }
+
+func AllWorlds() []string {
+	worlds := []string{}
+	for world := range AetherWorlds {
+		worlds = append(worlds, world)
+	}
+	for world := range CrystalWorlds {
+		worlds = append(worlds, world)
+	}
+	for world := range PrimalWorlds {
+		worlds = append(worlds, world)
+	}
+	return worlds
+}

@@ -78,10 +78,11 @@ var ClearCommand = &discordgo.ApplicationCommand{
 	Description: "Verify you own your character and assign them cleared roles.",
 	Options: []*discordgo.ApplicationCommandOption{
 		{
-			Type:        discordgo.ApplicationCommandOptionString,
-			Name:        "world",
-			Description: "Your character's world",
-			Required:    true,
+			Type:         discordgo.ApplicationCommandOptionString,
+			Name:         "world",
+			Description:  "Your character's world",
+			Required:     true,
+			Autocomplete: true,
 		},
 		{
 			Type:        discordgo.ApplicationCommandOptionString,
@@ -99,6 +100,15 @@ var ClearCommand = &discordgo.ApplicationCommand{
 }
 
 func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	switch i.Type {
+	case discordgo.InteractionApplicationCommand:
+		c.Clears(s, i)
+	case discordgo.InteractionApplicationCommandAutocomplete:
+		c.Autocomplete(s, i)
+	}
+}
+
+func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	g, ok := c.Guilds.Guilds[i.GuildID]
 	if !ok {
 		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
@@ -130,11 +140,6 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		lastName = option.StringValue()
 	}
 
-	title := cases.Title(language.AmericanEnglish)
-	world = title.String(world)
-	firstName = title.String(firstName)
-	lastName = title.String(lastName)
-
 	if len(world) == 0 || len(firstName) == 0 || len(lastName) == 0 {
 		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -147,6 +152,11 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		}
 		return
 	}
+
+	title := cases.Title(language.AmericanEnglish)
+	world = title.String(world)
+	firstName = title.String(firstName)
+	lastName = title.String(lastName)
 
 	err := discord.StartInteraction(s, i.Interaction,
 		fmt.Sprintf("Finding `%s %s (%s)` in the Lodestone...", firstName, lastName, world),
@@ -230,6 +240,51 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 	return
 }
 
+func (c *Clearingway) Autocomplete(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	options := i.ApplicationCommandData().Options
+	optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
+	for _, opt := range options {
+		optionMap[opt.Name] = opt
+	}
+
+	var world string
+	if option, ok := optionMap["world"]; ok {
+		world = option.StringValue()
+	}
+
+	choices := []*discordgo.ApplicationCommandOptionChoice{}
+	title := cases.Title(language.AmericanEnglish)
+
+	if len(world) == 0 {
+		for _, world := range ffxiv.AllWorlds() {
+			worldTitle := title.String(world)
+			choices = append(choices, &discordgo.ApplicationCommandOptionChoice{
+				Name:  worldTitle,
+				Value: world,
+			})
+		}
+		return
+	} else {
+		for _, worldCompletion := range c.AutoCompleteTrie.SearchAll(world) {
+			worldCompletionTitle := title.String(worldCompletion)
+			choices = append(choices, &discordgo.ApplicationCommandOptionChoice{
+				Name:  worldCompletionTitle,
+				Value: worldCompletion,
+			})
+		}
+	}
+
+	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionApplicationCommandAutocompleteResult,
+		Data: &discordgo.InteractionResponseData{
+			Choices: choices,
+		},
+	})
+	if err != nil {
+		fmt.Printf("Could not send Discord autocompletions: %+v\n", err)
+	}
+}
+
 func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserId string, guild *Guild) (string, error) {
 	rankingsToGet := []*fflogs.RankingToGet{}
 	for _, encounter := range guild.AllEncounters() {
@@ -244,8 +299,6 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 	if err != nil {
 		return "", fmt.Errorf("Could not retrieve roles for user: %w", err)
 	}
-	fmt.Printf("Got member: %+v\n", member)
-	fmt.Printf("Roles are: %+v\n", member.Roles)
 
 	text := strings.Builder{}
 	text.WriteString("")

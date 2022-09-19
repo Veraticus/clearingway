@@ -37,6 +37,55 @@ type RankingToGet struct {
 	Difficulty int
 }
 
+func (f *Fflogs) SetCharacterLodestoneID(char *ffxiv.Character) error {
+	query := fmt.Sprintf(
+		"query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"NA\"){lodestoneID}}}",
+		char.Name(),
+		char.World,
+	)
+
+	raw, err := f.graphqlClient.ExecRaw(context.Background(), query, nil)
+	if err != nil {
+		return fmt.Errorf("Error executing query: %w", err)
+	}
+
+	var characterData map[string]*json.RawMessage
+	err = json.Unmarshal(raw, &characterData)
+	if err != nil {
+		return fmt.Errorf("Could not unmarshal JSON: %w", err)
+	}
+
+	var character map[string]*json.RawMessage
+	err = json.Unmarshal(*characterData["characterData"], &character)
+	if err != nil {
+		return fmt.Errorf("Could not unmarshal JSON: %w", err)
+	}
+	if character["character"] == nil {
+		return fmt.Errorf("Character %s (%s) not found in fflogs!", char.Name(), char.World)
+	}
+
+	var rawCharacterResponse map[string]*json.RawMessage
+	err = json.Unmarshal(*character["character"], &rawCharacterResponse)
+	if err != nil {
+		return fmt.Errorf("Could not unmarshal JSON: %w", err)
+	}
+
+	for rawKey, rawValue := range rawCharacterResponse {
+		if rawKey == "lodestoneID" {
+			var id int
+			err = json.Unmarshal(*rawValue, &id)
+			if err != nil {
+				return fmt.Errorf("Could not unmarshal lodestone ID: %w", err)
+			}
+
+			char.LodestoneID = id
+			return nil
+		}
+	}
+
+	return fmt.Errorf("Lodestone ID not found on fflogs!")
+}
+
 func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ffxiv.Character) (*Rankings, error) {
 	query := strings.Builder{}
 	query.WriteString(
@@ -50,7 +99,7 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 		for _, id := range rankingToGet.IDs {
 			query.WriteString(
 				fmt.Sprintf(
-					"e%d: encounterRankings(encounterID: %d, difficulty: %d)",
+					"e%d:encounterRankings(encounterID: %d, difficulty: %d) ",
 					id,
 					id,
 					rankingToGet.Difficulty,
@@ -117,7 +166,11 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 func (f *Fflogs) SetGraphqlClient() {
 	src := oauth2.ReuseTokenSource(nil, f)
 	httpClient := oauth2.NewClient(context.Background(), src)
-	f.graphqlClient = graphql.NewClient("https://www.fflogs.com/api/v2/client", httpClient)
+	newClient := graphql.NewClient("https://www.fflogs.com/api/v2/client", httpClient)
+	newClient = newClient.WithRequestModifier(func(req *http.Request) {
+		req.Header.Add("User-Agent", "clearingway")
+	})
+	f.graphqlClient = newClient
 }
 
 func (f *Fflogs) Token() (*oauth2.Token, error) {

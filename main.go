@@ -10,6 +10,7 @@ import (
 	"github.com/Veraticus/clearingway/internal/clearingway"
 	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/Veraticus/clearingway/internal/fflogs"
+	"github.com/Veraticus/clearingway/internal/lodestone"
 
 	"gopkg.in/yaml.v3"
 )
@@ -115,7 +116,16 @@ func run(c *clearingway.Clearingway) {
 		panic(err)
 	}
 
-	isOwner, err := char.IsOwner(discordId)
+	err = c.Fflogs.SetCharacterLodestoneID(char)
+	if err != nil {
+		fmt.Printf("Could not find character in FF Logs: %+v\n", err)
+		err = lodestone.SetCharacterLodestoneID(char)
+		if err != nil {
+			panic(fmt.Errorf("Could not find character in the Lodestone: %+v", err))
+		}
+	}
+
+	isOwner, err := lodestone.CharacterIsOwnedByDiscordUser(char, discordId)
 	if err != nil {
 		panic(err)
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/Veraticus/clearingway/internal/fflogs"
 	"github.com/Veraticus/clearingway/internal/ffxiv"
+	"github.com/Veraticus/clearingway/internal/lodestone"
 
 	"github.com/bwmarrin/discordgo"
 	"golang.org/x/text/cases"
@@ -175,6 +176,31 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		return
 	}
 
+	err = c.Fflogs.SetCharacterLodestoneID(char)
+	if err != nil {
+		err = discord.ContinueInteraction(s, i.Interaction,
+			fmt.Sprintf(
+				"Error finding this character's Lodestone ID from FF Logs: %v\nTo make lookups faster in the future, please link your character in FF Logs to the Lodestone here: https://www.fflogs.com/lodestone/import",
+				err,
+			))
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v", err)
+			return
+		}
+		err = lodestone.SetCharacterLodestoneID(char)
+		if err != nil {
+			err = discord.ContinueInteraction(s, i.Interaction,
+				fmt.Sprintf(
+					"Error finding this character's Lodestone ID in the Lodestone: %v\nIf your character name is short or very common this can frequently fail. Please link your character in FF Logs to the Lodestone here: https://www.fflogs.com/lodestone/import",
+					err,
+				))
+			if err != nil {
+				fmt.Printf("Error sending Discord message: %v", err)
+				return
+			}
+		}
+	}
+
 	err = discord.ContinueInteraction(s, i.Interaction,
 		fmt.Sprintf("Verifying ownership of `%s (%s)`...", char.Name(), char.World),
 	)
@@ -183,7 +209,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	}
 
 	discordId := i.Member.User.ID
-	isOwner, err := char.IsOwner(discordId)
+	isOwner, err := lodestone.CharacterIsOwnedByDiscordUser(char, discordId)
 	if err != nil {
 		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
 		if err != nil {

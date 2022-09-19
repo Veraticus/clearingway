@@ -1,4 +1,4 @@
-package ffxiv
+package lodestone
 
 import (
 	"fmt"
@@ -6,12 +6,19 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Veraticus/clearingway/internal/ffxiv"
+
 	"github.com/gocolly/colly"
 )
 
 var lodestoneUrl = "https://na.finalfantasyxiv.com/lodestone"
 
-func (c *Character) SetLodestoneID() error {
+func SetCharacterLodestoneID(c *ffxiv.Character) error {
+	if c.LodestoneID != 0 {
+		return nil
+	}
+	fmt.Printf("Lodestone ID not set for %s (%s), checking the Lodestone...\n", c.Name(), c.World)
+
 	collector := colly.NewCollector(colly.Async(true))
 	collector.SetRequestTimeout(30 * time.Second)
 	charIDs := []int{}
@@ -71,15 +78,16 @@ func (c *Character) SetLodestoneID() error {
 
 	if len(charIDs) == 0 {
 		return fmt.Errorf(
-			"No character found on the Lodestone for %v (%v)! If you recently renamed yourself or server transferred it can take up to a day for this to be reflected on the Lodestone; please try again later.",
+			"No character found on the Lodestone for `%v (%v)`! If you recently renamed yourself or server transferred it can take up to a day for this to be reflected on the Lodestone; please try again later.",
 			c.Name(),
 			c.World,
 		)
 	}
 	if len(charIDs) > 1 {
 		return fmt.Errorf(
-			"Too many characters found for name %v! Ensure it is exactly your character name.",
+			"Too many characters found for name %s (%s)! Ensure it is exactly your character name.\nAlternatively, import your character to FFlogs at https://www.fflogs.com/lodestone/import to circumvent a Lodestone search.",
 			c.Name(),
+			c.World,
 		)
 	}
 
@@ -88,7 +96,7 @@ func (c *Character) SetLodestoneID() error {
 	return nil
 }
 
-func (c *Character) IsOwner(discordId string) (bool, error) {
+func CharacterIsOwnedByDiscordUser(c *ffxiv.Character, discordId string) (bool, error) {
 	collector := colly.NewCollector(colly.Async(true))
 	collector.SetRequestTimeout(30 * time.Second)
 	errors := []error{}

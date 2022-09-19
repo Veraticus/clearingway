@@ -38,10 +38,7 @@ func (cs *Characters) Init(world, firstName, lastName string) (*Character, error
 			LastName:  lastName,
 			World:     title.String(world),
 		}
-		err := char.SetLodestoneID()
-		if err != nil {
-			return nil, err
-		}
+
 		cs.Characters[name+"-"+world] = char
 	}
 

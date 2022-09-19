@@ -213,6 +213,18 @@ func UltimateRoles() *Roles {
 				return false
 			},
 		},
+		{
+			Name: "The Comfy Legend", Color: 0x636363,
+			ShouldApply: func(opts *ShouldApplyOpts) bool {
+				rank := opts.Encounters.WorstRank(opts.Rankings)
+				if rank == nil {
+					return false
+				}
+				percent := rank.Percent
+
+				return percent <= 0.9
+			},
+		},
 	}}
 }
 

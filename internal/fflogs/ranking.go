@@ -24,9 +24,18 @@ func (r *Ranking) Cleared() bool {
 	return r.TotalKills > 0
 }
 
-func (r *Ranking) BestRank() *Rank {
+func (r *Ranking) SortedRanks() []*Rank {
 	ranks := make([]*Rank, len(r.Ranks))
 	copy(ranks, r.Ranks)
 	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].Percent > ranks[j].Percent })
-	return ranks[0]
+	return ranks
+}
+
+func (r *Ranking) BestRank() *Rank {
+	return r.SortedRanks()[0]
+}
+
+func (r *Ranking) WorstRank() *Rank {
+	sortedRanks := r.SortedRanks()
+	return sortedRanks[len(sortedRanks)-1]
 }

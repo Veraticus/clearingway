@@ -6,8 +6,11 @@ When it hears this message, it tries to find the relevant character in the Lodes
 fflogs and tries to assign them a few roles:
 
 1. A role for the highest current parse they have in any relevant encounter (Gold, Orange, Purple, Blue, Green, Grey),
-2. A role for every relevant encounter they've cleared ("P1S-Cleared," "P2S-Cleared," "P3S-Cleared," etc.)
-3. A combo legend role purely for flexing purposes for every ultimate they've cleared (The Legend, The Double Legend, The Triple Legend, The Tetra Legend)
+2. A role for every relevant encounter they've cleared ("P1S-Cleared," "P2S-Cleared," "P3S-Cleared," etc.),
+3. A combo legend role purely for flexing purposes for every ultimate they've cleared (The Legend, The Double Legend, The Triple Legend, The Tetra Legend),
+4. The role "NA's Comfiest" if they have any relevant encounter clears with a parse between 0 and 0.9,
+5. The role "Nice Legend" if they have any ultimate clears with a parse between 69.0 and 69.9,
+6. The role "Nice" if they have any relevant clears with a parse between 69.0 and 69.9.
 
 It can be configured with the `config.yaml` file found in this repository.
 

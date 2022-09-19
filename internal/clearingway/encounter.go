@@ -112,6 +112,28 @@ func (es *Encounters) BestRank(rankings *fflogs.Rankings) *fflogs.Rank {
 	return bestRank
 }
 
+func (es *Encounters) WorstRank(rankings *fflogs.Rankings) *fflogs.Rank {
+	var worstRank *fflogs.Rank
+	for _, encounter := range es.Encounters {
+		for _, encounterId := range encounter.Ids {
+			encounterRanking, ok := rankings.Rankings[encounterId]
+			if !ok {
+				continue
+			}
+			if !encounterRanking.Cleared() {
+				continue
+			}
+
+			rank := encounterRanking.BestRank()
+			if worstRank == nil || (rank.Percent < worstRank.Percent) {
+				worstRank = rank
+			}
+		}
+	}
+
+	return worstRank
+}
+
 func (es *Encounters) TotalClears(rankings *fflogs.Rankings) int {
 	clears := map[string]bool{}
 	for _, encounter := range es.Encounters {

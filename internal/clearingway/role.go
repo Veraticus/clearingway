@@ -123,13 +123,37 @@ func ParsingRoles() *Roles {
 		{
 			Name: "NA's Comfiest", Color: 0x636363,
 			ShouldApply: func(opts *ShouldApplyOpts) bool {
-				rank := opts.Encounters.BestRank(opts.Rankings)
+				rank := opts.Encounters.WorstRank(opts.Rankings)
 				if rank == nil {
 					return false
 				}
 				percent := rank.Percent
 
-				return percent == 0.0
+				return percent <= 0.9
+			},
+		},
+		{
+			Name: "Nice", Color: 0xE48CA3,
+			ShouldApply: func(opts *ShouldApplyOpts) bool {
+				for _, encounter := range opts.Encounters.Encounters {
+					for _, encounterId := range encounter.Ids {
+						encounterRanking, ok := opts.Rankings.Rankings[encounterId]
+						if !ok {
+							continue
+						}
+						if !encounterRanking.Cleared() {
+							continue
+						}
+
+						for _, rank := range encounterRanking.Ranks {
+							if rank.Percent >= 69.0 && rank.Percent <= 69.9 {
+								return true
+							}
+						}
+					}
+				}
+
+				return false
 			},
 		},
 	}}
@@ -140,29 +164,53 @@ func UltimateRoles() *Roles {
 		{
 			Name: "The Legend", Color: 0x3498db,
 			ShouldApply: func(opts *ShouldApplyOpts) bool {
-				totalClears := UltimateEncounters.TotalClears(opts.Rankings)
+				totalClears := opts.Encounters.TotalClears(opts.Rankings)
 				return totalClears == 1
 			},
 		},
 		{
 			Name: "The Double Legend", Color: 0x3498db,
 			ShouldApply: func(opts *ShouldApplyOpts) bool {
-				totalClears := UltimateEncounters.TotalClears(opts.Rankings)
+				totalClears := opts.Encounters.TotalClears(opts.Rankings)
 				return totalClears == 2
 			},
 		},
 		{
 			Name: "The Triple Legend", Color: 0x3498db,
 			ShouldApply: func(opts *ShouldApplyOpts) bool {
-				totalClears := UltimateEncounters.TotalClears(opts.Rankings)
+				totalClears := opts.Encounters.TotalClears(opts.Rankings)
 				return totalClears == 3
 			},
 		},
 		{
 			Name: "The Quad Legend", Color: 0x3498db,
 			ShouldApply: func(opts *ShouldApplyOpts) bool {
-				totalClears := UltimateEncounters.TotalClears(opts.Rankings)
+				totalClears := opts.Encounters.TotalClears(opts.Rankings)
 				return totalClears == 4
+			},
+		},
+		{
+			Name: "The Nice Legend", Color: 0xE48CA3,
+			ShouldApply: func(opts *ShouldApplyOpts) bool {
+				for _, encounter := range opts.Encounters.Encounters {
+					for _, encounterId := range encounter.Ids {
+						encounterRanking, ok := opts.Rankings.Rankings[encounterId]
+						if !ok {
+							continue
+						}
+						if !encounterRanking.Cleared() {
+							continue
+						}
+
+						for _, rank := range encounterRanking.Ranks {
+							if rank.Percent >= 69.0 && rank.Percent <= 69.9 {
+								return true
+							}
+						}
+					}
+				}
+
+				return false
 			},
 		},
 	}}

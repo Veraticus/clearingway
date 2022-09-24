@@ -124,12 +124,13 @@ func ParsingRoles() *Roles {
 			Name: "NA's Comfiest", Color: 0x636363,
 			ShouldApply: func(opts *ShouldApplyOpts) bool {
 				rank := opts.Encounters.WorstRank(opts.Rankings)
+				fmt.Printf("Worst rank is: %+v\n", rank)
 				if rank == nil {
 					return false
 				}
 				percent := rank.Percent
 
-				return percent <= 0.9
+				return percent < 1
 			},
 		},
 		{

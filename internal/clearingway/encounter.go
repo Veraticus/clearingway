@@ -124,7 +124,7 @@ func (es *Encounters) WorstRank(rankings *fflogs.Rankings) *fflogs.Rank {
 				continue
 			}
 
-			rank := encounterRanking.BestRank()
+			rank := encounterRanking.WorstRank()
 			if worstRank == nil || (rank.Percent < worstRank.Percent) {
 				worstRank = rank
 			}

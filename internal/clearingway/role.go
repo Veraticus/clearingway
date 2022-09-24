@@ -222,7 +222,7 @@ func UltimateRoles() *Roles {
 				}
 				percent := rank.Percent
 
-				return percent <= 0.9
+				return percent < 1
 			},
 		},
 	}}

@@ -10,7 +10,7 @@ var UltimateEncounters = &Encounters{
 	Encounters: []*Encounter{
 		{Name: "Dragonsong's Reprise (Ultimate)", Ids: []int{1065}, Difficulty: "Ultimate", DefaultRoles: false},
 		{
-			Name:         "Unending Coil of Bahamut (Ultimate)",
+			Name:         "The Unending Coil of Bahamut (Ultimate)",
 			Ids:          []int{1060, 1047, 1039},
 			Difficulty:   "Ultimate",
 			DefaultRoles: false,

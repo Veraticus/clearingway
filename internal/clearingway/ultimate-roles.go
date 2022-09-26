@@ -33,7 +33,7 @@ func ultimateRoleString(clearedEncounters *Encounters, rankings *fflogs.Rankings
 				"  `%v` with `%v` on <t:%v:F> (%v).\n",
 				name,
 				rank.Job.Abbreviation,
-				rank.StartTime,
+				rank.UnixTime(),
 				rank.Report.Url(),
 			),
 		)
@@ -113,7 +113,7 @@ func UltimateRoles() *Roles {
 										rank.DPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
-										rank.StartTime,
+										rank.UnixTime(),
 									)
 							}
 						}
@@ -138,7 +138,7 @@ func UltimateRoles() *Roles {
 						rank.DPSPercent,
 						rank.Job.Abbreviation,
 						encounter.Name,
-						rank.StartTime,
+						rank.UnixTime(),
 					)
 				}
 				return false, "No ultimate encounter had a parse at 0."
@@ -165,7 +165,7 @@ func UltimateRoles() *Roles {
 										rank.HPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
-										rank.StartTime,
+										rank.UnixTime(),
 									)
 							}
 						}
@@ -196,7 +196,7 @@ func UltimateRoles() *Roles {
 										rank.HPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
-										rank.StartTime,
+										rank.UnixTime(),
 									)
 							}
 						}

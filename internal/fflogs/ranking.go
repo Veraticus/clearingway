@@ -120,22 +120,26 @@ func (r *Ranking) WorstHPSRank() *Rank {
 	return sortedRanks[len(sortedRanks)-1]
 }
 
+func (r *Ranking) RanksByTime() []*Rank {
+	ranks := make([]*Rank, len(r.Ranks))
+	copy(ranks, r.Ranks)
+	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].StartTime < ranks[j].StartTime })
+	return ranks
+}
+
 func (r *Rank) BestDPSParseString(encounterName string) string {
 	return fmt.Sprintf(
 		"Best parse was *%v* with `%v` in `%v` on <t:%v:F> (%v).",
 		r.DPSPercent,
 		r.Job.Abbreviation,
 		encounterName,
-		r.StartTime,
+		r.UnixTime(),
 		r.Report.Url(),
 	)
 }
 
-func (r *Ranking) RanksByTime() []*Rank {
-	ranks := make([]*Rank, len(r.Ranks))
-	copy(ranks, r.Ranks)
-	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].StartTime < ranks[j].StartTime })
-	return ranks
+func (r *Rank) UnixTime() int {
+	return r.StartTime / 1000
 }
 
 func (r *Report) Url() string {

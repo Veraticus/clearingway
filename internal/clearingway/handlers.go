@@ -384,7 +384,7 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 				return "", fmt.Errorf("Error adding Discord role: %v", err)
 			}
 			text.WriteString(fmt.Sprintf("Adding role: `%s`\n", role.Name))
-			text.WriteString(fmt.Sprintf("=> %s\n", pendingRole.message))
+			text.WriteString(fmt.Sprintf("⮕ %s\n", pendingRole.message))
 		}
 	}
 
@@ -396,7 +396,7 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 				return "", fmt.Errorf("Error removing Discord role: %v", err)
 			}
 			text.WriteString(fmt.Sprintf("Removing role: `%s`\n", role.Name))
-			text.WriteString(fmt.Sprintf("=> %s\n\n", pendingRole.message))
+			text.WriteString(fmt.Sprintf("⮕ %s\n\n", pendingRole.message))
 		}
 	}
 

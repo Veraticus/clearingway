@@ -126,7 +126,7 @@ func ParsingRoles() *Roles {
 						rank.DPSPercent,
 						rank.Job.Abbreviation,
 						encounter.Name,
-						rank.StartTime,
+						rank.UnixTime(),
 					)
 				}
 				return false, "Worst parse was not 0."
@@ -153,7 +153,7 @@ func ParsingRoles() *Roles {
 										rank.DPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
-										rank.StartTime,
+										rank.UnixTime(),
 									)
 							}
 						}
@@ -184,7 +184,7 @@ func ParsingRoles() *Roles {
 										rank.HPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
-										rank.StartTime,
+										rank.UnixTime(),
 									)
 							}
 						}
@@ -215,7 +215,7 @@ func ParsingRoles() *Roles {
 										rank.HPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
-										rank.StartTime,
+										rank.UnixTime(),
 									)
 							}
 						}

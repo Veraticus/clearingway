@@ -44,26 +44,20 @@ func (r *Ranking) Cleared() bool {
 	return r.TotalKills > 0
 }
 
-func (r *Ranking) DPSRanksByPercent() []*Rank {
+func (r *Ranking) DPSRanks() []*Rank {
 	ranks := []*Rank{}
 	for _, r := range r.Ranks {
 		if r.Metric == Dps {
 			ranks = append(ranks, r)
 		}
 	}
-	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].Percent > ranks[j].Percent })
 	return ranks
 }
 
-func (r *Rank) BestParseString(encounterName string) string {
-	return fmt.Sprintf(
-		"Best parse was *%v* with `%v` in `%v` on <t:%v:F> (%v).",
-		r.Percent,
-		r.Job.Abbreviation,
-		encounterName,
-		r.StartTime,
-		r.Report.Url(),
-	)
+func (r *Ranking) DPSRanksByPercent() []*Rank {
+	ranks := r.DPSRanks()
+	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].Percent > ranks[j].Percent })
+	return ranks
 }
 
 func (r *Ranking) BestDPSRank() *Rank {
@@ -75,13 +69,18 @@ func (r *Ranking) WorstDPSRank() *Rank {
 	return sortedRanks[len(sortedRanks)-1]
 }
 
-func (r *Ranking) HPSRanksByPercent() []*Rank {
+func (r *Ranking) HPSRanks() []*Rank {
 	ranks := []*Rank{}
 	for _, r := range r.Ranks {
 		if r.Metric == Hps {
 			ranks = append(ranks, r)
 		}
 	}
+	return ranks
+}
+
+func (r *Ranking) HPSRanksByPercent() []*Rank {
+	ranks := r.HPSRanks()
 	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].Percent > ranks[j].Percent })
 	return ranks
 }
@@ -93,6 +92,17 @@ func (r *Ranking) BestHPSRank() *Rank {
 func (r *Ranking) WorstHPSRank() *Rank {
 	sortedRanks := r.HPSRanksByPercent()
 	return sortedRanks[len(sortedRanks)-1]
+}
+
+func (r *Rank) BestParseString(encounterName string) string {
+	return fmt.Sprintf(
+		"Best parse was *%v* with `%v` in `%v` on <t:%v:F> (%v).",
+		r.Percent,
+		r.Job.Abbreviation,
+		encounterName,
+		r.StartTime,
+		r.Report.Url(),
+	)
 }
 
 func (r *Ranking) RanksByTime() []*Rank {

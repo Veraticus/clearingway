@@ -389,7 +389,7 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 			if err != nil {
 				return nil, fmt.Errorf("Error adding Discord role: %v", err)
 			}
-			text = append(text, fmt.Sprintf("Adding role: **%s**\n⮕ %s\n", role.Name, pendingRole.message))
+			text = append(text, fmt.Sprintf("_Adding role: **%s**_\n⮕ %s\n", role.Name, pendingRole.message))
 		}
 	}
 

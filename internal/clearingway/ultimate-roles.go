@@ -175,5 +175,36 @@ func UltimateRoles() *Roles {
 				return false, "No ultimate encounter had a HPS parse at 0."
 			},
 		},
+		{
+			Name: "The Bloodbathing Legend", Color: 0x8a0303,
+			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
+				for _, encounter := range opts.Encounters.Encounters {
+					for _, encounterId := range encounter.Ids {
+						ranking, ok := opts.Rankings.Rankings[encounterId]
+						if !ok {
+							continue
+						}
+						if !ranking.Cleared() {
+							continue
+						}
+
+						for _, rank := range ranking.HPSRanks() {
+							if rank.Percent == 100 && !rank.Job.IsHealer() {
+								return true,
+									fmt.Sprintf(
+										"HPS parsed was *100* (`%v`) as a non-healer (`%v`) in `%v` on <t:%v:F>",
+										rank.Percent,
+										rank.Job.Abbreviation,
+										encounter.Name,
+										rank.StartTime,
+									)
+							}
+						}
+					}
+				}
+
+				return false, "No encounter had a non-healer HPS parse at 100."
+			},
+		},
 	}}
 }

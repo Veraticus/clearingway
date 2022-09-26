@@ -133,10 +133,14 @@ func run(c *clearingway.Clearingway) {
 		panic("That character is not owned by that Discord ID!")
 	}
 
-	charText, err := c.UpdateCharacterInGuild(char, discordId, guild)
+	roleTexts, err := c.UpdateCharacterInGuild(char, discordId, guild)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Character %s (%s) updated in guild %s:\n%s", char.Name(), char.World, guild.Name, charText)
+	fmt.Printf("Character %s (%s) updated in guild %s.\n", char.Name(), char.World, guild.Name)
+
+	for _, roleText := range roleTexts {
+		fmt.Printf(roleText + "\n")
+	}
 }

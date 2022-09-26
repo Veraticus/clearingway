@@ -2,7 +2,6 @@ package clearingway
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/Veraticus/clearingway/internal/discord"
@@ -249,7 +248,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		return
 	}
 
-	charText, err := c.UpdateCharacterInGuild(char, i.Member.User.ID, g)
+	roleTexts, err := c.UpdateCharacterInGuild(char, i.Member.User.ID, g)
 	if err != nil {
 		err = discord.ContinueInteraction(s, i.Interaction,
 			fmt.Sprintf("Could not analyze clears for `%s (%s)`: %s", char.Name(), char.World, err),
@@ -258,11 +257,19 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	}
 
 	err = discord.ContinueInteraction(s, i.Interaction,
-		fmt.Sprintf("Finished analysis for `%s (%s)`.\n%s", char.Name(), char.World, charText),
+		fmt.Sprintf("Finished analysis for `%s (%s)`.", char.Name(), char.World),
 	)
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v", err)
 	}
+
+	for _, roleText := range roleTexts {
+		err = discord.ContinueInteraction(s, i.Interaction, roleText)
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v", err)
+		}
+	}
+
 	return
 }
 
@@ -316,23 +323,22 @@ type pendingRole struct {
 	message string
 }
 
-func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserId string, guild *Guild) (string, error) {
+func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserId string, guild *Guild) ([]string, error) {
 	rankingsToGet := []*fflogs.RankingToGet{}
 	for _, encounter := range guild.AllEncounters() {
 		rankingsToGet = append(rankingsToGet, &fflogs.RankingToGet{IDs: encounter.Ids, Difficulty: encounter.DifficultyInt()})
 	}
 	rankings, err := c.Fflogs.GetRankingsForCharacter(rankingsToGet, char)
 	if err != nil {
-		return "", fmt.Errorf("Error retrieving encounter rankings: %w", err)
+		return nil, fmt.Errorf("Error retrieving encounter rankings: %w", err)
 	}
 
 	member, err := c.Discord.Session.GuildMember(guild.Id, discordUserId)
 	if err != nil {
-		return "", fmt.Errorf("Could not retrieve roles for user: %w", err)
+		return nil, fmt.Errorf("Could not retrieve roles for user: %w", err)
 	}
 
-	text := strings.Builder{}
-	text.WriteString("")
+	text := []string{}
 
 	shouldApplyOpts := &ShouldApplyOpts{
 		Character: char,
@@ -381,10 +387,9 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 		if !role.PresentInRoles(member.Roles) {
 			err := role.AddToCharacter(guild.Id, discordUserId, c.Discord.Session, char)
 			if err != nil {
-				return "", fmt.Errorf("Error adding Discord role: %v", err)
+				return nil, fmt.Errorf("Error adding Discord role: %v", err)
 			}
-			text.WriteString(fmt.Sprintf("Adding role: **%s**\n", role.Name))
-			text.WriteString(fmt.Sprintf("⮕ %s\n", pendingRole.message))
+			text = append(text, fmt.Sprintf("Adding role: **%s**\n⮕ %s\n", role.Name, pendingRole.message))
 		}
 	}
 
@@ -393,14 +398,13 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 		if role.PresentInRoles(member.Roles) {
 			err := role.RemoveFromCharacter(guild.Id, discordUserId, c.Discord.Session, char)
 			if err != nil {
-				return "", fmt.Errorf("Error removing Discord role: %v", err)
+				return nil, fmt.Errorf("Error removing Discord role: %v", err)
 			}
-			text.WriteString(fmt.Sprintf("Removing role: **%s**\n", role.Name))
-			text.WriteString(fmt.Sprintf("⮕ %s\n\n", pendingRole.message))
+			text = append(text, fmt.Sprintf("Removing role: **%s**\n⮕ %s\n", role.Name, pendingRole.message))
 		}
 	}
 
 	char.LastUpdateTime = time.Now()
 
-	return text.String(), nil
+	return text, nil
 }

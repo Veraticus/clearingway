@@ -73,7 +73,7 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 				return true, fmt.Sprintf("Cleared `%v` with `%v` on <t:%v:F> (%v).",
 					e.Name,
 					rank.Job.Abbreviation,
-					rank.StartTime,
+					rank.UnixTime(),
 					rank.Report.Url(),
 				)
 			}

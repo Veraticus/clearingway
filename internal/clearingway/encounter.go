@@ -8,7 +8,6 @@ import (
 
 var UltimateEncounters = &Encounters{
 	Encounters: []*Encounter{
-		{Name: "Dragonsong's Reprise (Ultimate)", Ids: []int{1065}, Difficulty: "Ultimate", DefaultRoles: false},
 		{
 			Name:         "The Unending Coil of Bahamut (Ultimate)",
 			Ids:          []int{1060, 1047, 1039},
@@ -17,6 +16,7 @@ var UltimateEncounters = &Encounters{
 		},
 		{Name: "The Weapon's Refrain (Ultimate)", Ids: []int{1061, 1048, 1042}, Difficulty: "Ultimate", DefaultRoles: false},
 		{Name: "The Epic of Alexander (Ultimate)", Ids: []int{1062, 1050}, Difficulty: "Ultimate", DefaultRoles: false},
+		{Name: "Dragonsong's Reprise (Ultimate)", Ids: []int{1065}, Difficulty: "Ultimate", DefaultRoles: false},
 	},
 }
 

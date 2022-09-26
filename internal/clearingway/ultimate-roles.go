@@ -110,7 +110,7 @@ func UltimateRoles() *Roles {
 								return true,
 									fmt.Sprintf(
 										"Parsed **69** (`%v`) with `%v` in `%v` on <t:%v:F> (%v).",
-										rank.DPSPercent,
+										rank.DPSPercentString(),
 										rank.Job.Abbreviation,
 										encounter.Name,
 										rank.UnixTime(),
@@ -136,7 +136,7 @@ func UltimateRoles() *Roles {
 				if percent < 1 {
 					return true, fmt.Sprintf(
 						"Parsed **0** (`%v`) with `%v` in `%v` on <t:%v:F> (%v).",
-						rank.DPSPercent,
+						rank.DPSPercentString(),
 						rank.Job.Abbreviation,
 						encounter.Name,
 						rank.UnixTime(),
@@ -164,7 +164,7 @@ func UltimateRoles() *Roles {
 								return true,
 									fmt.Sprintf(
 										"HPS parsed was **0** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v).",
-										rank.HPSPercent,
+										rank.HPSPercentString(),
 										rank.Job.Abbreviation,
 										encounter.Name,
 										rank.UnixTime(),
@@ -196,7 +196,7 @@ func UltimateRoles() *Roles {
 								return true,
 									fmt.Sprintf(
 										"HPS parsed was **100** (`%v`) as a non-healer (`%v`) in `%v` on <t:%v:F> (%v).",
-										rank.HPSPercent,
+										rank.HPSPercentString(),
 										rank.Job.Abbreviation,
 										encounter.Name,
 										rank.UnixTime(),

@@ -130,7 +130,7 @@ func (r *Ranking) RanksByTime() []*Rank {
 func (r *Rank) BestDPSParseString(encounterName string) string {
 	return fmt.Sprintf(
 		"Best parse was **%v** with `%v` in `%v` on <t:%v:F> (%v).",
-		r.DPSPercent,
+		r.DPSPercentString(),
 		r.Job.Abbreviation,
 		encounterName,
 		r.UnixTime(),
@@ -140,6 +140,14 @@ func (r *Rank) BestDPSParseString(encounterName string) string {
 
 func (r *Rank) UnixTime() int {
 	return r.StartTime / 1000
+}
+
+func (r *Rank) DPSPercentString() string {
+	return fmt.Sprintf("%.2f", r.DPSPercent)
+}
+
+func (r *Rank) HPSPercentString() string {
+	return fmt.Sprintf("%.2f", r.HPSPercent)
 }
 
 func (r *Report) Url() string {

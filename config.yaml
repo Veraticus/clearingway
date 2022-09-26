@@ -49,7 +49,7 @@ guilds:
   channelId: 972868045552877589
   encounters:
   - ids: [1065]
-    name: "DSR"
+    name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
     roles:
       - name: "Cleared"

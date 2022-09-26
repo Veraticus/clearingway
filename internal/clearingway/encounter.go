@@ -70,7 +70,7 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 			cleared := ranking.Cleared()
 			if cleared {
 				rank := ranking.RanksByTime()[0]
-				return true, fmt.Sprintf("Cleared %v with %v on <t:%v:F> (%v)",
+				return true, fmt.Sprintf("Cleared `%v` with `%v` on <t:%v:F> (%v).",
 					e.Name,
 					rank.Job.Abbreviation,
 					rank.StartTime,

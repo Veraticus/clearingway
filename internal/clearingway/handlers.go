@@ -311,6 +311,11 @@ func (c *Clearingway) Autocomplete(s *discordgo.Session, i *discordgo.Interactio
 	}
 }
 
+type pendingRole struct {
+	role    *Role
+	message string
+}
+
 func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserId string, guild *Guild) (string, error) {
 	rankingsToGet := []*fflogs.RankingToGet{}
 	for _, encounter := range guild.AllEncounters() {
@@ -334,8 +339,8 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 		Rankings:  rankings,
 	}
 
-	rolesToApply := []*Role{}
-	rolesToRemove := []*Role{}
+	rolesToApply := []*pendingRole{}
+	rolesToRemove := []*pendingRole{}
 
 	// Do not include ultimate encounters for encounter, parsing,
 	// and world roles, since we don't want clears for those fight
@@ -347,11 +352,11 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 
 		shouldApplyOpts.Encounters = guild.Encounters
 
-		shouldApply := role.ShouldApply(shouldApplyOpts)
+		shouldApply, message := role.ShouldApply(shouldApplyOpts)
 		if shouldApply {
-			rolesToApply = append(rolesToApply, role)
+			rolesToApply = append(rolesToApply, &pendingRole{role: role, message: message})
 		} else {
-			rolesToRemove = append(rolesToRemove, role)
+			rolesToRemove = append(rolesToRemove, &pendingRole{role: role, message: message})
 		}
 	}
 
@@ -363,31 +368,35 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 
 		shouldApplyOpts.Encounters = UltimateEncounters
 
-		shouldApply := role.ShouldApply(shouldApplyOpts)
+		shouldApply, message := role.ShouldApply(shouldApplyOpts)
 		if shouldApply {
-			rolesToApply = append(rolesToApply, role)
+			rolesToApply = append(rolesToApply, &pendingRole{role: role, message: message})
 		} else {
-			rolesToRemove = append(rolesToRemove, role)
+			rolesToRemove = append(rolesToRemove, &pendingRole{role: role, message: message})
 		}
 	}
 
-	for _, role := range rolesToApply {
+	for _, pendingRole := range rolesToApply {
+		role := pendingRole.role
 		if !role.PresentInRoles(member.Roles) {
 			err := role.AddToCharacter(guild.Id, discordUserId, c.Discord.Session, char)
 			if err != nil {
 				return "", fmt.Errorf("Error adding Discord role: %v", err)
 			}
 			text.WriteString(fmt.Sprintf("Adding role: `%s`\n", role.Name))
+			text.WriteString(fmt.Sprintf("=> %s\n", pendingRole.message))
 		}
 	}
 
-	for _, role := range rolesToRemove {
+	for _, pendingRole := range rolesToRemove {
+		role := pendingRole.role
 		if role.PresentInRoles(member.Roles) {
 			err := role.RemoveFromCharacter(guild.Id, discordUserId, c.Discord.Session, char)
 			if err != nil {
 				return "", fmt.Errorf("Error removing Discord role: %v", err)
 			}
 			text.WriteString(fmt.Sprintf("Removing role: `%s`\n", role.Name))
+			text.WriteString(fmt.Sprintf("=> %s\n\n", pendingRole.message))
 		}
 	}
 

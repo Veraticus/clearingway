@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"mime/multipart"
 	"net/http"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -86,6 +88,8 @@ func (f *Fflogs) SetCharacterLodestoneID(char *ffxiv.Character) error {
 	return fmt.Errorf("Lodestone ID not found on fflogs!")
 }
 
+var returnedRankingsRegexp = regexp.MustCompile(`(\D+)Z(\d+)`)
+
 func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ffxiv.Character) (*Rankings, error) {
 	query := strings.Builder{}
 	query.WriteString(
@@ -99,7 +103,15 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 		for _, id := range rankingToGet.IDs {
 			query.WriteString(
 				fmt.Sprintf(
-					"e%d:encounterRankings(encounterID: %d, difficulty: %d) ",
+					"dpsZ%d:encounterRankings(encounterID: %d, difficulty: %d, metric: dps) ",
+					id,
+					id,
+					rankingToGet.Difficulty,
+				),
+			)
+			query.WriteString(
+				fmt.Sprintf(
+					"hpsZ%d:encounterRankings(encounterID: %d, difficulty: %d, metric: hps) ",
 					id,
 					id,
 					rankingToGet.Difficulty,
@@ -137,10 +149,16 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 
 	rankings := &Rankings{Rankings: map[int]*Ranking{}}
 	for rawId, rawRanking := range rawRankings {
-		var id int
-		_, err = fmt.Sscanf(rawId, "e%d", &id)
+		match := returnedRankingsRegexp.FindStringSubmatch(rawId)
+		if match == nil {
+			return nil, fmt.Errorf("Returned stanza did not match expected format: %v\n", rawId)
+		}
+
+		metric := match[1]
+		idString := match[2]
+		id, err := strconv.Atoi(idString)
 		if err != nil {
-			return nil, fmt.Errorf("Could not get encounter ID back from response: %w", err)
+			return nil, fmt.Errorf("Could not convert id %v from string to int: %v\n", idString, err)
 		}
 
 		ranking := &Ranking{}
@@ -157,7 +175,22 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 			}
 		}
 
-		rankings.Rankings[id] = ranking
+		existingRankings, ok := rankings.Rankings[id]
+		if ok {
+			existingRankings.Ranks = append(existingRankings.Ranks, ranking.Ranks...)
+		} else {
+			rankings.Rankings[id] = ranking
+		}
+
+		for _, r := range ranking.Ranks {
+			r.Metric = Metric(metric)
+			j, ok := ffxiv.Jobs[r.Spec]
+			if !ok {
+				return nil, fmt.Errorf("Could not find job %s", r.Spec)
+			} else {
+				r.Job = j
+			}
+		}
 	}
 
 	return rankings, nil

@@ -30,7 +30,7 @@ func ultimateRoleString(clearedEncounters *Encounters, rankings *fflogs.Rankings
 		rank := ranking.RanksByTime()[0]
 		clearedString.WriteString(
 			fmt.Sprintf(
-				"  `%v` with `%v` on <t:%v:F> (%v).\n",
+				"     `%v` with `%v` on <t:%v:F> (%v).\n",
 				name,
 				rank.Job.Abbreviation,
 				rank.UnixTime(),

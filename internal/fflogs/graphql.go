@@ -161,7 +161,7 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 			return nil, fmt.Errorf("Could not convert id %v from string to int: %v\n", idString, err)
 		}
 
-		ranking := &Ranking{}
+		ranking := &Ranking{Metric: Metric(metric)}
 		err = json.Unmarshal(*rawRanking, ranking)
 		if err != nil {
 			return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)
@@ -175,22 +175,7 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 			}
 		}
 
-		existingRankings, ok := rankings.Rankings[id]
-		if ok {
-			existingRankings.Ranks = append(existingRankings.Ranks, ranking.Ranks...)
-		} else {
-			rankings.Rankings[id] = ranking
-		}
-
-		for _, r := range ranking.Ranks {
-			r.Metric = Metric(metric)
-			j, ok := ffxiv.Jobs[r.Spec]
-			if !ok {
-				return nil, fmt.Errorf("Could not find job %s", r.Spec)
-			} else {
-				r.Job = j
-			}
-		}
+		rankings.Add(id, ranking)
 	}
 
 	return rankings, nil

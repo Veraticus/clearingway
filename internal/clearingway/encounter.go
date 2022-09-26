@@ -126,7 +126,7 @@ func (es *Encounters) BestDPSRank(rankings *fflogs.Rankings) (*Encounter, *fflog
 			}
 
 			rank := encounterRanking.BestDPSRank()
-			if bestRank == nil || (rank.Percent > bestRank.Percent) {
+			if bestRank == nil || (rank.DPSPercent > bestRank.DPSPercent) {
 				bestRank = rank
 				bestEncounter = encounter
 			}
@@ -150,7 +150,7 @@ func (es *Encounters) WorstDPSRank(rankings *fflogs.Rankings) (*Encounter, *fflo
 			}
 
 			rank := encounterRanking.WorstDPSRank()
-			if worstRank == nil || (rank.Percent < worstRank.Percent) {
+			if worstRank == nil || (rank.DPSPercent < worstRank.DPSPercent) {
 				worstRank = rank
 				worstEncounter = encounter
 			}

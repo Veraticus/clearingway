@@ -23,81 +23,107 @@ const (
 type Ranking struct {
 	Error      string  `json:"error"`
 	TotalKills int     `json:"totalKills"`
+	Metric     Metric  `json:"metric"`
 	Ranks      []*Rank `json:"ranks"`
 }
 
 type Rank struct {
-	Percent   float64 `json:"rankPercent"`
-	Spec      string  `json:"spec"`
-	StartTime int     `json:"startTime"`
-	Report    Report  `json:"report"`
-	Metric    Metric
-	Job       *ffxiv.Job
+	RankPercent float64 `json:"rankPercent"`
+	Spec        string  `json:"spec"`
+	StartTime   int     `json:"startTime"`
+	Report      Report  `json:"report"`
+	Job         *ffxiv.Job
+
+	DPSPercent float64
+	HPSPercent float64
 }
 
 type Report struct {
-	Code    string `json:"code"`
-	FightId int    `json:"fightID"`
+	Code      string `json:"code"`
+	StartTime int    `json:"startTime"`
+	FightId   int    `json:"fightID"`
+}
+
+func (rs *Rankings) Add(id int, r *Ranking) error {
+	existingRankings, ok := rs.Rankings[id]
+
+	if !ok {
+		for _, rank := range r.Ranks {
+			if r.Metric == Hps {
+				rank.HPSPercent = rank.RankPercent
+			} else if r.Metric == Dps {
+				rank.DPSPercent = rank.RankPercent
+			}
+			j, ok := ffxiv.Jobs[rank.Spec]
+			if !ok {
+				return fmt.Errorf("Could not find job %s", rank.Spec)
+			}
+			rank.Job = j
+		}
+		rs.Rankings[id] = r
+		return nil
+	}
+
+	for _, existingRank := range existingRankings.Ranks {
+		for _, newRank := range r.Ranks {
+			if existingRank.SameFight(newRank) {
+				if r.Metric == Hps {
+					existingRank.HPSPercent = newRank.RankPercent
+				} else if r.Metric == Dps {
+					existingRank.DPSPercent = newRank.RankPercent
+				}
+				continue
+			}
+		}
+	}
+
+	return nil
+}
+
+func (r *Rank) SameFight(o *Rank) bool {
+	return r.StartTime == o.StartTime
 }
 
 func (r *Ranking) Cleared() bool {
 	return r.TotalKills > 0
 }
 
-func (r *Ranking) DPSRanks() []*Rank {
-	ranks := []*Rank{}
-	for _, r := range r.Ranks {
-		if r.Metric == Dps {
-			ranks = append(ranks, r)
-		}
-	}
-	return ranks
-}
-
-func (r *Ranking) DPSRanksByPercent() []*Rank {
-	ranks := r.DPSRanks()
-	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].Percent > ranks[j].Percent })
+func (r *Ranking) RanksByDPSPercent() []*Rank {
+	ranks := make([]*Rank, len(r.Ranks))
+	copy(ranks, r.Ranks)
+	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].DPSPercent > ranks[j].DPSPercent })
 	return ranks
 }
 
 func (r *Ranking) BestDPSRank() *Rank {
-	return r.DPSRanksByPercent()[0]
+	return r.RanksByDPSPercent()[0]
 }
 
 func (r *Ranking) WorstDPSRank() *Rank {
-	sortedRanks := r.DPSRanksByPercent()
+	sortedRanks := r.RanksByDPSPercent()
 	return sortedRanks[len(sortedRanks)-1]
 }
 
-func (r *Ranking) HPSRanks() []*Rank {
-	ranks := []*Rank{}
-	for _, r := range r.Ranks {
-		if r.Metric == Hps {
-			ranks = append(ranks, r)
-		}
-	}
-	return ranks
-}
-
-func (r *Ranking) HPSRanksByPercent() []*Rank {
-	ranks := r.HPSRanks()
-	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].Percent > ranks[j].Percent })
+func (r *Ranking) RanksByHPSPercent() []*Rank {
+	ranks := make([]*Rank, len(r.Ranks))
+	copy(ranks, r.Ranks)
+	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].HPSPercent > ranks[j].HPSPercent })
 	return ranks
 }
 
 func (r *Ranking) BestHPSRank() *Rank {
-	return r.HPSRanksByPercent()[0]
+	return r.RanksByHPSPercent()[0]
 }
 
 func (r *Ranking) WorstHPSRank() *Rank {
-	sortedRanks := r.HPSRanksByPercent()
+	sortedRanks := r.RanksByHPSPercent()
 	return sortedRanks[len(sortedRanks)-1]
 }
 
-func (r *Rank) BestParseString(encounterName string) string {
+func (r *Rank) BestDPSParseString(encounterName string) string {
 	return fmt.Sprintf(
 		"Best parse was *%v* with `%v` in `%v` on <t:%v:F> (%v).",
-		r.Percent,
+		r.DPSPercent,
 		r.Job.Abbreviation,
 		encounterName,
 		r.StartTime,

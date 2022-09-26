@@ -13,10 +13,10 @@ func ParsingRoles() *Roles {
 				if encounter == nil || rank == nil {
 					return false, "No encounter or rank found."
 				}
-				percent := rank.Percent
+				percent := rank.DPSPercent
 
 				if percent == 100 {
-					return true, rank.BestParseString(encounter.Name)
+					return true, rank.BestDPSParseString(encounter.Name)
 				}
 				return false, "Best parse was not 100."
 			},
@@ -28,10 +28,10 @@ func ParsingRoles() *Roles {
 				if encounter == nil || rank == nil {
 					return false, "No encounter or rank found."
 				}
-				percent := rank.Percent
+				percent := rank.DPSPercent
 
 				if percent >= 99.0 && percent < 100.0 {
-					return true, rank.BestParseString(encounter.Name)
+					return true, rank.BestDPSParseString(encounter.Name)
 				}
 				return false, "Best parse was not between 99 and 100."
 			},
@@ -43,10 +43,10 @@ func ParsingRoles() *Roles {
 				if encounter == nil || rank == nil {
 					return false, "No encounter or rank found."
 				}
-				percent := rank.Percent
+				percent := rank.DPSPercent
 
 				if percent >= 95.0 && percent < 99.0 {
-					return true, rank.BestParseString(encounter.Name)
+					return true, rank.BestDPSParseString(encounter.Name)
 				}
 				return false, "Best parse was not between 95 and 99."
 			},
@@ -58,10 +58,10 @@ func ParsingRoles() *Roles {
 				if encounter == nil || rank == nil {
 					return false, "No encounter or rank found."
 				}
-				percent := rank.Percent
+				percent := rank.DPSPercent
 
 				if percent >= 75.0 && percent < 95.0 {
-					return true, rank.BestParseString(encounter.Name)
+					return true, rank.BestDPSParseString(encounter.Name)
 				}
 				return false, "Best parse was not between 75 and 95."
 			},
@@ -73,10 +73,10 @@ func ParsingRoles() *Roles {
 				if encounter == nil || rank == nil {
 					return false, "No encounter or rank found."
 				}
-				percent := rank.Percent
+				percent := rank.DPSPercent
 
 				if percent >= 50.0 && percent < 75.0 {
-					return true, rank.BestParseString(encounter.Name)
+					return true, rank.BestDPSParseString(encounter.Name)
 				}
 				return false, "Best parse was not between 50 and 75."
 			},
@@ -88,10 +88,10 @@ func ParsingRoles() *Roles {
 				if encounter == nil || rank == nil {
 					return false, "No encounter or rank found."
 				}
-				percent := rank.Percent
+				percent := rank.DPSPercent
 
 				if percent >= 25.0 && percent < 50.0 {
-					return true, rank.BestParseString(encounter.Name)
+					return true, rank.BestDPSParseString(encounter.Name)
 				}
 				return false, "Best parse was not between 25 and 50."
 			},
@@ -103,10 +103,10 @@ func ParsingRoles() *Roles {
 				if encounter == nil || rank == nil {
 					return false, "No encounter or rank found."
 				}
-				percent := rank.Percent
+				percent := rank.DPSPercent
 
 				if percent > 0 && percent < 25.0 {
-					return true, rank.BestParseString(encounter.Name)
+					return true, rank.BestDPSParseString(encounter.Name)
 				}
 				return false, "Best parse was not between 0 and 25."
 			},
@@ -118,12 +118,12 @@ func ParsingRoles() *Roles {
 				if encounter == nil || rank == nil {
 					return false, "No encounter or rank found."
 				}
-				percent := rank.Percent
+				percent := rank.DPSPercent
 
 				if percent < 1 {
 					return true, fmt.Sprintf(
 						"Parsed 0 (%v) with %v in %v on <t:%v:F>",
-						rank.Percent,
+						rank.DPSPercent,
 						rank.Job.Abbreviation,
 						encounter.Name,
 						rank.StartTime,
@@ -145,12 +145,12 @@ func ParsingRoles() *Roles {
 							continue
 						}
 
-						for _, rank := range ranking.DPSRanks() {
-							if rank.Percent >= 69.0 && rank.Percent <= 69.9 {
+						for _, rank := range ranking.Ranks {
+							if rank.DPSPercent >= 69.0 && rank.DPSPercent <= 69.9 {
 								return true,
 									fmt.Sprintf(
 										"Parsed *69* (`%v`) with `%v` in `%v` on <t:%v:F>",
-										rank.Percent,
+										rank.DPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
 										rank.StartTime,
@@ -176,12 +176,12 @@ func ParsingRoles() *Roles {
 							continue
 						}
 
-						for _, rank := range ranking.HPSRanks() {
-							if rank.Percent < 1 && rank.Job.IsHealer() {
+						for _, rank := range ranking.Ranks {
+							if rank.HPSPercent < 1 && rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
 										"HPS parsed was *0* (`%v`) as a healer (`%v`) in `%v` on <t:%v:F>",
-										rank.Percent,
+										rank.HPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
 										rank.StartTime,
@@ -207,12 +207,12 @@ func ParsingRoles() *Roles {
 							continue
 						}
 
-						for _, rank := range ranking.HPSRanks() {
-							if rank.Percent == 100 && !rank.Job.IsHealer() {
+						for _, rank := range ranking.Ranks {
+							if rank.HPSPercent == 100 && !rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
 										"HPS parsed was *100* (`%v`) as a non-healer (`%v`) in `%v` on <t:%v:F>",
-										rank.Percent,
+										rank.HPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
 										rank.StartTime,

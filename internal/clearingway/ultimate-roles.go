@@ -105,12 +105,12 @@ func UltimateRoles() *Roles {
 							continue
 						}
 
-						for _, rank := range ranking.DPSRanks() {
-							if rank.Percent >= 69.0 && rank.Percent <= 69.9 {
+						for _, rank := range ranking.Ranks {
+							if rank.DPSPercent >= 69.0 && rank.DPSPercent <= 69.9 {
 								return true,
 									fmt.Sprintf(
 										"Parsed *69* (`%v`) with `%v` in `%v` on <t:%v:F>",
-										rank.Percent,
+										rank.DPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
 										rank.StartTime,
@@ -130,12 +130,12 @@ func UltimateRoles() *Roles {
 				if encounter == nil || rank == nil {
 					return false, "No encounter or rank found."
 				}
-				percent := rank.Percent
+				percent := rank.DPSPercent
 
 				if percent < 1 {
 					return true, fmt.Sprintf(
 						"Parsed *0* (`%v`) with `%v` in `%v` on <t:%v:F>",
-						rank.Percent,
+						rank.DPSPercent,
 						rank.Job.Abbreviation,
 						encounter.Name,
 						rank.StartTime,
@@ -157,12 +157,12 @@ func UltimateRoles() *Roles {
 							continue
 						}
 
-						for _, rank := range ranking.HPSRanks() {
-							if rank.Percent < 1 && rank.Job.IsHealer() {
+						for _, rank := range ranking.Ranks {
+							if rank.HPSPercent < 1 && rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
 										"HPS parsed was *0* (`%v`) as a healer (`%v`) in `%v` on <t:%v:F>",
-										rank.Percent,
+										rank.HPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
 										rank.StartTime,
@@ -188,12 +188,12 @@ func UltimateRoles() *Roles {
 							continue
 						}
 
-						for _, rank := range ranking.HPSRanks() {
-							if rank.Percent == 100 && !rank.Job.IsHealer() {
+						for _, rank := range ranking.Ranks {
+							if rank.HPSPercent == 100 && !rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
 										"HPS parsed was *100* (`%v`) as a non-healer (`%v`) in `%v` on <t:%v:F>",
-										rank.Percent,
+										rank.HPSPercent,
 										rank.Job.Abbreviation,
 										encounter.Name,
 										rank.StartTime,

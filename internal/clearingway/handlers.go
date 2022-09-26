@@ -264,7 +264,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	}
 
 	for _, roleText := range roleTexts {
-		err = discord.ContinueInteraction(s, i.Interaction, roleText)
+		err = discord.ContinueInteraction(s, i.Interaction, "_ _\n"+roleText)
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v", err)
 		}

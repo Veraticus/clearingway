@@ -123,7 +123,7 @@ func ParsingRoles() *Roles {
 				if percent < 1 {
 					return true, fmt.Sprintf(
 						"Parsed **0** (%v) with `%v` in `%v` on <t:%v:F> (%v).",
-						rank.DPSPercent,
+						rank.DPSPercentString(),
 						rank.Job.Abbreviation,
 						encounter.Name,
 						rank.UnixTime(),

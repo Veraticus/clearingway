@@ -120,7 +120,7 @@ func ParsingRoles() *Roles {
 				}
 				percent := rank.DPSPercent
 
-				if percent < 1 {
+				if rank.DPSParseFound && percent < 1 {
 					return true, fmt.Sprintf(
 						"Parsed **0** (%v) with `%v` in `%v` on <t:%v:F> (%v).",
 						rank.DPSPercentString(),
@@ -179,7 +179,7 @@ func ParsingRoles() *Roles {
 						}
 
 						for _, rank := range ranking.Ranks {
-							if rank.HPSPercent < 1 && rank.Job.IsHealer() {
+							if rank.HPSParseFound && rank.HPSPercent < 1 && rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
 										"HPS parsed was **0** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v).",
@@ -211,7 +211,7 @@ func ParsingRoles() *Roles {
 						}
 
 						for _, rank := range ranking.Ranks {
-							if rank.HPSPercent == 100 && !rank.Job.IsHealer() {
+							if rank.HPSParseFound && rank.HPSPercent == 100 && !rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
 										"HPS parsed was **100** (`%v`) as a non-healer (`%v`) in `%v` on <t:%v:F> (%v).",
@@ -243,7 +243,7 @@ func ParsingRoles() *Roles {
 						}
 
 						for _, rank := range ranking.Ranks {
-							if rank.HPSPercent == 100 && rank.Job.IsHealer() {
+							if rank.HPSParseFound && rank.HPSPercent == 100 && rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
 										"HPS parsed was **100** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v).",

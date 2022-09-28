@@ -92,6 +92,11 @@ func (rs *Rankings) Add(id int, r *Ranking) error {
 				newRank.DPSPercent = newRank.RankPercent
 				newRank.DPSParseFound = true
 			}
+			j, ok := ffxiv.Jobs[newRank.Spec]
+			if !ok {
+				return fmt.Errorf("Could not find job %s", newRank.Spec)
+			}
+			newRank.Job = j
 			rs.Rankings[id].Ranks = append(rs.Rankings[id].Ranks, newRank)
 		}
 	}

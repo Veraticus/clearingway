@@ -16,7 +16,7 @@ type Rankings struct {
 type Metric string
 
 const (
-	Dps Metric = "dps"
+	Dps Metric = "rdps"
 	Hps Metric = "hps"
 )
 
@@ -33,6 +33,9 @@ type Rank struct {
 	StartTime   int     `json:"startTime"`
 	Report      Report  `json:"report"`
 	Job         *ffxiv.Job
+
+	DPSParseFound bool
+	HPSParseFound bool
 
 	DPSPercent float64
 	HPSPercent float64
@@ -51,8 +54,10 @@ func (rs *Rankings) Add(id int, r *Ranking) error {
 		for _, rank := range r.Ranks {
 			if r.Metric == Hps {
 				rank.HPSPercent = rank.RankPercent
+				rank.HPSParseFound = true
 			} else if r.Metric == Dps {
 				rank.DPSPercent = rank.RankPercent
+				rank.DPSParseFound = true
 			}
 			j, ok := ffxiv.Jobs[rank.Spec]
 			if !ok {
@@ -64,16 +69,30 @@ func (rs *Rankings) Add(id int, r *Ranking) error {
 		return nil
 	}
 
-	for _, existingRank := range existingRankings.Ranks {
-		for _, newRank := range r.Ranks {
+	for _, newRank := range r.Ranks {
+		found := false
+		for _, existingRank := range existingRankings.Ranks {
 			if existingRank.SameFight(newRank) {
+				found = true
 				if r.Metric == Hps {
 					existingRank.HPSPercent = newRank.RankPercent
+					existingRank.HPSParseFound = true
 				} else if r.Metric == Dps {
 					existingRank.DPSPercent = newRank.RankPercent
+					existingRank.DPSParseFound = true
 				}
 				continue
 			}
+		}
+		if !found {
+			if r.Metric == Hps {
+				newRank.HPSPercent = newRank.RankPercent
+				newRank.HPSParseFound = true
+			} else if r.Metric == Dps {
+				newRank.DPSPercent = newRank.RankPercent
+				newRank.DPSParseFound = true
+			}
+			rs.Rankings[id].Ranks = append(rs.Rankings[id].Ranks, newRank)
 		}
 	}
 
@@ -89,8 +108,12 @@ func (r *Ranking) Cleared() bool {
 }
 
 func (r *Ranking) RanksByDPSPercent() []*Rank {
-	ranks := make([]*Rank, len(r.Ranks))
-	copy(ranks, r.Ranks)
+	ranks := []*Rank{}
+	for _, r := range r.Ranks {
+		if r.DPSParseFound {
+			ranks = append(ranks, r)
+		}
+	}
 	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].DPSPercent > ranks[j].DPSPercent })
 	return ranks
 }
@@ -101,12 +124,19 @@ func (r *Ranking) BestDPSRank() *Rank {
 
 func (r *Ranking) WorstDPSRank() *Rank {
 	sortedRanks := r.RanksByDPSPercent()
+	if len(sortedRanks) == 0 {
+		return nil
+	}
 	return sortedRanks[len(sortedRanks)-1]
 }
 
 func (r *Ranking) RanksByHPSPercent() []*Rank {
-	ranks := make([]*Rank, len(r.Ranks))
-	copy(ranks, r.Ranks)
+	ranks := []*Rank{}
+	for _, r := range r.Ranks {
+		if r.HPSParseFound {
+			ranks = append(ranks, r)
+		}
+	}
 	sort.SliceStable(ranks, func(i, j int) bool { return ranks[i].HPSPercent > ranks[j].HPSPercent })
 	return ranks
 }
@@ -117,6 +147,9 @@ func (r *Ranking) BestHPSRank() *Rank {
 
 func (r *Ranking) WorstHPSRank() *Rank {
 	sortedRanks := r.RanksByHPSPercent()
+	if len(sortedRanks) == 0 {
+		return nil
+	}
 	return sortedRanks[len(sortedRanks)-1]
 }
 

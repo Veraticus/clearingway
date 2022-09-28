@@ -106,9 +106,10 @@ func (es *Encounters) Roles() *Roles {
 func (es *Encounters) Add(e *Encounter) {
 	for _, existingEncounter := range es.Encounters {
 		if e.Name == existingEncounter.Name {
-			continue
+			return
 		}
 	}
+
 	es.Encounters = append(es.Encounters, e)
 }
 
@@ -117,15 +118,15 @@ func (es *Encounters) BestDPSRank(rankings *fflogs.Rankings) (*Encounter, *fflog
 	var bestEncounter *Encounter
 	for _, encounter := range es.Encounters {
 		for _, encounterId := range encounter.Ids {
-			encounterRanking, ok := rankings.Rankings[encounterId]
+			ranking, ok := rankings.Rankings[encounterId]
 			if !ok {
 				continue
 			}
-			if !encounterRanking.Cleared() {
+			if !ranking.Cleared() {
 				continue
 			}
 
-			rank := encounterRanking.BestDPSRank()
+			rank := ranking.BestDPSRank()
 			if bestRank == nil || (rank.DPSPercent > bestRank.DPSPercent) {
 				bestRank = rank
 				bestEncounter = encounter
@@ -141,15 +142,15 @@ func (es *Encounters) WorstDPSRank(rankings *fflogs.Rankings) (*Encounter, *fflo
 	var worstEncounter *Encounter
 	for _, encounter := range es.Encounters {
 		for _, encounterId := range encounter.Ids {
-			encounterRanking, ok := rankings.Rankings[encounterId]
+			ranking, ok := rankings.Rankings[encounterId]
 			if !ok {
 				continue
 			}
-			if !encounterRanking.Cleared() {
+			if !ranking.Cleared() {
 				continue
 			}
 
-			rank := encounterRanking.WorstDPSRank()
+			rank := ranking.WorstDPSRank()
 			if worstRank == nil || (rank.DPSPercent < worstRank.DPSPercent) {
 				worstRank = rank
 				worstEncounter = encounter
@@ -170,7 +171,7 @@ func (es *Encounters) Clears(rankings *fflogs.Rankings) *Encounters {
 			}
 
 			if rankings.Cleared() {
-				encounters.Encounters = append(encounters.Encounters, encounter)
+				encounters.Add(encounter)
 				continue
 			}
 		}
@@ -185,4 +186,17 @@ func (es *Encounters) Names() []string {
 		names = append(names, e.Name)
 	}
 	return names
+}
+
+func (e *Encounter) Ranks(rankings *fflogs.Rankings) []*fflogs.Rank {
+	ranks := []*fflogs.Rank{}
+	for id, ranking := range rankings.Rankings {
+		for _, encounterId := range e.Ids {
+			if encounterId == id {
+				ranks = append(ranks, ranking.Ranks...)
+			}
+		}
+	}
+
+	return ranks
 }

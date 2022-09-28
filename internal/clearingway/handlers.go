@@ -333,6 +333,22 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 		return nil, fmt.Errorf("Error retrieving encounter rankings: %w", err)
 	}
 
+	fmt.Printf("Found the following relevant rankings for %s (%s)...\n", char.Name(), char.World)
+	for _, e := range guild.Encounters.Encounters {
+		fmt.Printf("%s:\n", e.Name)
+		for _, r := range e.Ranks(rankings) {
+			fmt.Printf("  %+v\n", r)
+		}
+	}
+
+	fmt.Printf("Found the following ultimate rankings for %s (%s)...\n", char.Name(), char.World)
+	for _, e := range UltimateEncounters.Encounters {
+		fmt.Printf("%s:\n", e.Name)
+		for _, r := range e.Ranks(rankings) {
+			fmt.Printf("  %+v\n", r)
+		}
+	}
+
 	member, err := c.Discord.Session.GuildMember(guild.Id, discordUserId)
 	if err != nil {
 		return nil, fmt.Errorf("Could not retrieve roles for user: %w", err)

@@ -103,7 +103,7 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 		for _, id := range rankingToGet.IDs {
 			query.WriteString(
 				fmt.Sprintf(
-					"dpsZ%d:encounterRankings(encounterID: %d, difficulty: %d, metric: dps) ",
+					"rdpsZ%d:encounterRankings(encounterID: %d, difficulty: %d, metric: rdps) ",
 					id,
 					id,
 					rankingToGet.Difficulty,

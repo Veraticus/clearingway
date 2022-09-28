@@ -229,5 +229,37 @@ func ParsingRoles() *Roles {
 				return false, "No encounter had a non-healer HPS parse at 100."
 			},
 		},
+		{
+			Name: "Overhealer", Color: 0xFFFFFF,
+			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
+				for _, encounter := range opts.Encounters.Encounters {
+					for _, encounterId := range encounter.Ids {
+						ranking, ok := opts.Rankings.Rankings[encounterId]
+						if !ok {
+							continue
+						}
+						if !ranking.Cleared() {
+							continue
+						}
+
+						for _, rank := range ranking.Ranks {
+							if rank.HPSPercent == 100 && rank.Job.IsHealer() {
+								return true,
+									fmt.Sprintf(
+										"HPS parsed was *100* (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v).",
+										rank.HPSPercentString(),
+										rank.Job.Abbreviation,
+										encounter.Name,
+										rank.UnixTime(),
+										rank.Report.Url(),
+									)
+							}
+						}
+					}
+				}
+
+				return false, "No encounter had a healer HPS parse at 100."
+			},
+		},
 	}}
 }

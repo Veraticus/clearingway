@@ -214,7 +214,7 @@ func ParsingRoles() *Roles {
 							if rank.HPSPercent == 100 && !rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
-										"HPS parsed was *100* (`%v`) as a non-healer (`%v`) in `%v` on <t:%v:F> (%v).",
+										"HPS parsed was **100** (`%v`) as a non-healer (`%v`) in `%v` on <t:%v:F> (%v).",
 										rank.HPSPercentString(),
 										rank.Job.Abbreviation,
 										encounter.Name,
@@ -246,7 +246,7 @@ func ParsingRoles() *Roles {
 							if rank.HPSPercent == 100 && rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
-										"HPS parsed was *100* (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v).",
+										"HPS parsed was **100** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v).",
 										rank.HPSPercentString(),
 										rank.Job.Abbreviation,
 										encounter.Name,

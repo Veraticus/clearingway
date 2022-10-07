@@ -13,7 +13,7 @@ func WorldRoles() *Roles {
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				_, ok := ffxiv.AetherWorlds[opts.Character.World]
 				if ok {
-					return true, fmt.Sprintf("Charater `%v (%v)` is in Aether.", opts.Character.Name(), opts.Character.World)
+					return true, fmt.Sprintf("Character `%v (%v)` is in Aether.", opts.Character.Name(), opts.Character.World)
 				}
 				return false, fmt.Sprintf("Character `%v (%v)` is not in Aether.", opts.Character.Name(), opts.Character.World)
 			},
@@ -23,7 +23,7 @@ func WorldRoles() *Roles {
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				_, ok := ffxiv.CrystalWorlds[opts.Character.World]
 				if ok {
-					return true, fmt.Sprintf("Charater `%v (%v)` is in Crystal.", opts.Character.Name(), opts.Character.World)
+					return true, fmt.Sprintf("Character `%v (%v)` is in Crystal.", opts.Character.Name(), opts.Character.World)
 				}
 				return false, fmt.Sprintf("Character `%v (%v)` is not in Crystal.", opts.Character.Name(), opts.Character.World)
 			},
@@ -33,7 +33,7 @@ func WorldRoles() *Roles {
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				_, ok := ffxiv.PrimalWorlds[opts.Character.World]
 				if ok {
-					return true, fmt.Sprintf("Charater `%v (%v)` is in Primal.", opts.Character.Name(), opts.Character.World)
+					return true, fmt.Sprintf("Character `%v (%v)` is in Primal.", opts.Character.Name(), opts.Character.World)
 				}
 				return false, fmt.Sprintf("Character `%v (%v)` is not in Primal.", opts.Character.Name(), opts.Character.World)
 			},

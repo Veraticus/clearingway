@@ -69,6 +69,10 @@ func (rs *Rankings) Add(id int, r *Ranking) error {
 		return nil
 	}
 
+	if r.TotalKills != 0 {
+		rs.Rankings[id].TotalKills = r.TotalKills
+	}
+
 	for _, newRank := range r.Ranks {
 		found := false
 		for _, existingRank := range existingRankings.Ranks {

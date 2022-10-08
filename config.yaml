@@ -67,4 +67,42 @@ guilds:
       - name: "Cleared"
         type: "Cleared"
         color: 0xf58cba
+- name: UAR
+  roles:
+    relevantParsing: true
+    relevantFlexing: false
+    legend: true
+    ultimateFlexing: true
+    world: true
+  guildId: 973884326515191838
+  channelId: 1028344695597838356
+  encounters:
+  - ids: [1060, 1047, 1039]
+    name: "The Unending Coil of Bahamut (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "UCoB Cleared"
+        type: "Cleared"
+        color: 0xFFFD7F
+  - ids: [1061, 1048, 1042]
+    name: "The Weapon's Refrain (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "UWU Cleared"
+        type: "Cleared"
+        color: 0x9CBDD8
+  - ids: [1062, 1050]
+    name: "The Epic of Alexander (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "TEA Cleared"
+        type: "Cleared"
+        color: 0xFAE9C2
+  - ids: [1065]
+    name: "Dragonsong's Reprise (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "DSR Cleared"
+        type: "Cleared"
+        color: 0xF7DCB0
 

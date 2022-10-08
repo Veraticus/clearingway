@@ -104,5 +104,5 @@ guilds:
     roles:
       - name: "DSR Cleared"
         type: "Cleared"
-        color: 0xA53625
+        color: 0xCF8035
 

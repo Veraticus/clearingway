@@ -36,22 +36,44 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			fmt.Printf("Error ensuring encounter roles: %v", err)
 		}
 
-		guild.ParsingRoles = ParsingRoles()
-		err = guild.ParsingRoles.Ensure(gid, s, existingRoles)
-		if err != nil {
-			fmt.Printf("Error ensuring parsing roles: %v", err)
+		if guild.RelevantParsingEnabled {
+			guild.RelevantParsingRoles = RelevantParsingRoles()
+			err = guild.RelevantParsingRoles.Ensure(gid, s, existingRoles)
+			if err != nil {
+				fmt.Printf("Error ensuring relevant parsing roles: %v", err)
+			}
 		}
 
-		guild.UltimateRoles = UltimateRoles()
-		err = guild.UltimateRoles.Ensure(gid, s, existingRoles)
-		if err != nil {
-			fmt.Printf("Error ensuring ultimate roles: %v", err)
+		if guild.RelevantFlexingEnabled {
+			guild.RelevantFlexingRoles = RelevantFlexingRoles()
+			err = guild.RelevantFlexingRoles.Ensure(gid, s, existingRoles)
+			if err != nil {
+				fmt.Printf("Error ensuring relevant flexing roles: %v", err)
+			}
 		}
 
-		guild.WorldRoles = WorldRoles()
-		err = guild.WorldRoles.Ensure(gid, s, existingRoles)
-		if err != nil {
-			fmt.Printf("Error ensuring world roles: %v", err)
+		if guild.LegendEnabled {
+			guild.LegendRoles = LegendRoles()
+			err = guild.LegendRoles.Ensure(gid, s, existingRoles)
+			if err != nil {
+				fmt.Printf("Error ensuring legend roles: %v", err)
+			}
+		}
+
+		if guild.UltimateFlexingEnabled {
+			guild.UltimateFlexingRoles = UltimateFlexingRoles()
+			err = guild.UltimateFlexingRoles.Ensure(gid, s, existingRoles)
+			if err != nil {
+				fmt.Printf("Error ensuring ultimate roles: %v", err)
+			}
+		}
+
+		if guild.WorldEnabled {
+			guild.WorldRoles = WorldRoles()
+			err = guild.WorldRoles.Ensure(gid, s, existingRoles)
+			if err != nil {
+				fmt.Printf("Error ensuring world roles: %v", err)
+			}
 		}
 
 		fmt.Printf("Adding commands...\n")
@@ -383,7 +405,7 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 	}
 
 	// Add ultimate roles too
-	for _, role := range guild.UltimateRoles.Roles {
+	for _, role := range guild.UltRoles() {
 		if role.ShouldApply == nil {
 			continue
 		}
@@ -416,7 +438,7 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 			if err != nil {
 				return nil, fmt.Errorf("Error removing Discord role: %v", err)
 			}
-			text = append(text, fmt.Sprintf("Removing role: **%s**\n⮕ %s\n", role.Name, pendingRole.message))
+			text = append(text, fmt.Sprintf("__Removing role: **%s**__\n⮕ %s\n", role.Name, pendingRole.message))
 		}
 	}
 

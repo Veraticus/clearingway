@@ -1,5 +1,11 @@
 guilds:
 - name: NAPS 
+  roles:
+    relevantParsing: true
+    relevantFlexing: true
+    legend: true
+    ultimateFlexing: true
+    world: true
   guildId: 1008845758805594173
   channelId: 1008850017185955850
   encounters:
@@ -45,6 +51,12 @@ guilds:
         color: 0x78fa4c
     clearedColor: 0x78fa4c
 - name: APD 
+  roles:
+    relevantParsing: true
+    relevantFlexing: true
+    legend: true
+    ultimateFlexing: true
+    world: true
   guildId: 968960259081252884
   channelId: 972868045552877589
   encounters:

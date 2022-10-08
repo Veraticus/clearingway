@@ -9,6 +9,15 @@ type ConfigGuild struct {
 	GuildId          string             `yaml:"guildId"`
 	ChannelId        string             `yaml:"channelId"`
 	ConfigEncounters []*ConfigEncounter `yaml:"encounters"`
+	ConfigRoles      *ConfigRoles       `yaml:"roles"`
+}
+
+type ConfigRoles struct {
+	RelevantParsing bool `yaml:"relevantParsing"`
+	RelevantFlexing bool `yaml:"relevantFlexing"`
+	Legend          bool `yaml:"legend"`
+	UltimateFlexing bool `yaml:"ultimateFlexing"`
+	World           bool `yaml:"world"`
 }
 
 type ConfigEncounter struct {

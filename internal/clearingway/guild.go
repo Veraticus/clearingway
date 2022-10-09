@@ -9,24 +9,25 @@ type Guilds struct {
 }
 
 type Guild struct {
-	Name       string
-	Id         string
-	ChannelId  string
-	Encounters *Encounters
-	Characters *ffxiv.Characters
+	Name        string
+	Id          string
+	ChannelId   string
+	Encounters  *Encounters
+	Characters  *ffxiv.Characters
+	Datacenters *Datacenters
 
 	RelevantParsingEnabled bool
 	RelevantFlexingEnabled bool
 	LegendEnabled          bool
 	UltimateFlexingEnabled bool
-	WorldEnabled           bool
+	DatacenterEnabled      bool
 
 	EncounterRoles       *Roles
 	RelevantParsingRoles *Roles
 	RelevantFlexingRoles *Roles
 	LegendRoles          *Roles
 	UltimateFlexingRoles *Roles
-	WorldRoles           *Roles
+	DatacenterRoles      *Roles
 }
 
 func (g *Guild) Init(c *ConfigGuild) {
@@ -35,6 +36,9 @@ func (g *Guild) Init(c *ConfigGuild) {
 	g.ChannelId = c.ChannelId
 	g.Encounters = &Encounters{Encounters: []*Encounter{}}
 	g.Characters = &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}}
+
+	g.Datacenters = &Datacenters{}
+	g.Datacenters.Init(c.ConfigDatacenters)
 
 	for _, configEncounter := range c.ConfigEncounters {
 		encounter := &Encounter{}
@@ -66,10 +70,10 @@ func (g *Guild) Init(c *ConfigGuild) {
 		g.UltimateFlexingEnabled = true
 	}
 
-	if c.ConfigRoles != nil && c.ConfigRoles.World == false {
-		g.WorldEnabled = false
+	if c.ConfigRoles != nil && c.ConfigRoles.Datacenter == false {
+		g.DatacenterEnabled = false
 	} else {
-		g.WorldEnabled = true
+		g.DatacenterEnabled = true
 	}
 }
 
@@ -89,8 +93,8 @@ func (g *Guild) NonUltRoles() []*Role {
 	if g.RelevantFlexingEnabled {
 		roles = append(roles, g.RelevantFlexingRoles.Roles...)
 	}
-	if g.WorldEnabled {
-		roles = append(roles, g.WorldRoles.Roles...)
+	if g.DatacenterEnabled {
+		roles = append(roles, g.DatacenterRoles.Roles...)
 	}
 
 	return roles

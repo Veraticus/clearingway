@@ -1,5 +1,9 @@
 package ffxiv
 
+import (
+	"fmt"
+)
+
 var AetherWorlds = map[string]interface{}{
 	"Adamantoise":  nil,
 	"Cactuar":      nil,
@@ -31,6 +35,19 @@ var PrimalWorlds = map[string]interface{}{
 	"Lamia":     nil,
 	"Leviathan": nil,
 	"Ultros":    nil,
+}
+
+func WorldsForDatacenter(datacenter string) (map[string]interface{}, error) {
+	switch datacenter {
+	case "Aether":
+		return AetherWorlds, nil
+	case "Primal":
+		return PrimalWorlds, nil
+	case "Crystal":
+		return CrystalWorlds, nil
+	default:
+		return nil, fmt.Errorf("Could not find datacenter: %v", datacenter)
+	}
 }
 
 func AllWorlds() []string {

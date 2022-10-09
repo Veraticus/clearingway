@@ -68,9 +68,9 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			}
 		}
 
-		if guild.WorldEnabled {
-			guild.WorldRoles = WorldRoles()
-			err = guild.WorldRoles.Ensure(gid, s, existingRoles)
+		if guild.DatacenterEnabled {
+			guild.DatacenterRoles = guild.Datacenters.AllRoles()
+			err = guild.DatacenterRoles.Ensure(gid, s, existingRoles)
 			if err != nil {
 				fmt.Printf("Error ensuring world roles: %v", err)
 			}

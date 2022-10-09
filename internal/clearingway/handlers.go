@@ -21,7 +21,8 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		gid := discordGuild.ID
 		guild, ok := c.Guilds.Guilds[discordGuild.ID]
 		if !ok {
-			panic(fmt.Sprintf("Initialized in guild %s with no configuration!", gid))
+			fmt.Sprintf("Initialized in guild %s with no configuration!", gid)
+			continue
 		}
 		existingRoles, err := s.GuildRoles(gid)
 		if err != nil {
@@ -31,48 +32,66 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 
 		fmt.Printf("Initializing roles...\n")
 		guild.EncounterRoles = guild.Encounters.Roles()
-		err = guild.EncounterRoles.Ensure(gid, s, existingRoles)
-		if err != nil {
-			fmt.Printf("Error ensuring encounter roles: %v", err)
+		errs := guild.EncounterRoles.Ensure(gid, s, existingRoles)
+		if len(errs) != 0 {
+			fmt.Print("Error ensuring encounter roles:\n")
+			for _, e := range errs {
+				fmt.Printf("  %v", e)
+			}
 		}
 
 		if guild.RelevantParsingEnabled {
 			guild.RelevantParsingRoles = RelevantParsingRoles()
-			err = guild.RelevantParsingRoles.Ensure(gid, s, existingRoles)
-			if err != nil {
-				fmt.Printf("Error ensuring relevant parsing roles: %v", err)
+			errs = guild.RelevantParsingRoles.Ensure(gid, s, existingRoles)
+			if len(errs) != 0 {
+				fmt.Print("Error ensuring relevant parsing roles:\n")
+				for _, e := range errs {
+					fmt.Printf("  %v", e)
+				}
 			}
 		}
 
 		if guild.RelevantFlexingEnabled {
 			guild.RelevantFlexingRoles = RelevantFlexingRoles()
-			err = guild.RelevantFlexingRoles.Ensure(gid, s, existingRoles)
-			if err != nil {
-				fmt.Printf("Error ensuring relevant flexing roles: %v", err)
+			errs = guild.RelevantFlexingRoles.Ensure(gid, s, existingRoles)
+			if len(errs) != 0 {
+				fmt.Print("Error ensuring relevant flexing roles:\n")
+				for _, e := range errs {
+					fmt.Printf("  %v", e)
+				}
 			}
 		}
 
 		if guild.LegendEnabled {
 			guild.LegendRoles = LegendRoles()
-			err = guild.LegendRoles.Ensure(gid, s, existingRoles)
-			if err != nil {
-				fmt.Printf("Error ensuring legend roles: %v", err)
+			errs = guild.LegendRoles.Ensure(gid, s, existingRoles)
+			if len(errs) != 0 {
+				fmt.Print("Error ensuring legend roles:\n")
+				for _, e := range errs {
+					fmt.Printf("  %v", e)
+				}
 			}
 		}
 
 		if guild.UltimateFlexingEnabled {
 			guild.UltimateFlexingRoles = UltimateFlexingRoles()
-			err = guild.UltimateFlexingRoles.Ensure(gid, s, existingRoles)
-			if err != nil {
-				fmt.Printf("Error ensuring ultimate roles: %v", err)
+			errs = guild.UltimateFlexingRoles.Ensure(gid, s, existingRoles)
+			if len(errs) != 0 {
+				fmt.Print("Error ensuring ultimate roles:\n")
+				for _, e := range errs {
+					fmt.Printf("  %v", e)
+				}
 			}
 		}
 
 		if guild.DatacenterEnabled {
 			guild.DatacenterRoles = guild.Datacenters.AllRoles()
-			err = guild.DatacenterRoles.Ensure(gid, s, existingRoles)
-			if err != nil {
-				fmt.Printf("Error ensuring world roles: %v", err)
+			errs = guild.DatacenterRoles.Ensure(gid, s, existingRoles)
+			if len(errs) != 0 {
+				fmt.Print("Error ensuring datacenter roles:\n")
+				for _, e := range errs {
+					fmt.Printf("  %v", e)
+				}
 			}
 		}
 

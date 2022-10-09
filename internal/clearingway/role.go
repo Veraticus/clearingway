@@ -42,10 +42,11 @@ func (r *Role) Ensure(guildId string, s *discordgo.Session, existingRoles []*dis
 			existingRole = er
 		}
 	}
+
 	if existingRole == nil {
 		newRole, err := s.GuildRoleCreate(guildId)
 		if err != nil {
-			return fmt.Errorf("Could not create new role for %v: %w", r.Name, err)
+			return fmt.Errorf("Could not create new role for %v: %w.\n", r.Name, err)
 		}
 		existingRole = newRole
 	}
@@ -61,7 +62,7 @@ func (r *Role) Ensure(guildId string, s *discordgo.Session, existingRoles []*dis
 			false,
 		)
 		if err != nil {
-			return fmt.Errorf("Could not ensure role %v: %w", r.Name, err)
+			return fmt.Errorf("Could not ensure role %v: %w.\n", r.Name, err)
 		}
 		existingRole = newRole
 	}
@@ -88,15 +89,16 @@ func (r *Role) PresentInRoles(existingRoleIds []string) bool {
 	return false
 }
 
-func (rs *Roles) Ensure(guildId string, s *discordgo.Session, existingRoles []*discordgo.Role) error {
+func (rs *Roles) Ensure(guildId string, s *discordgo.Session, existingRoles []*discordgo.Role) []error {
+	errors := []error{}
 	for _, r := range rs.Roles {
 		err := r.Ensure(guildId, s, existingRoles)
 		fmt.Printf("Ensuring role: %+v\n", r)
 		if err != nil {
-			return fmt.Errorf("Could not ensure role %v: %w", r, err)
+			errors = append(errors, err)
 		}
 	}
-	return nil
+	return errors
 }
 
 func (rs *Roles) Reorder(guildId string, s *discordgo.Session) error {

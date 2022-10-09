@@ -8,7 +8,7 @@ type ConfigGuild struct {
 	Name              string              `yaml:"name"`
 	GuildId           string              `yaml:"guildId"`
 	ChannelId         string              `yaml:"channelId"`
-	ConfigDatacenters []*ConfigDatacenter `yaml:"worlds"`
+	ConfigDatacenters []*ConfigDatacenter `yaml:"datacenters"`
 	ConfigEncounters  []*ConfigEncounter  `yaml:"encounters"`
 	ConfigRoles       *ConfigRoles        `yaml:"roles"`
 }

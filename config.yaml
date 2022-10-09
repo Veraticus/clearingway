@@ -105,49 +105,52 @@ guilds:
       - name: "DSR Cleared"
         type: "Cleared"
         color: 0xCF8035
-# - name: UPR
-#   roles:
-#     relevantParsing: false
-#     relevantFlexing: false
-#     legend: false
-#     ultimateFlexing: false
-#     datacenter: true
-#   guildId: 404710160540368917
-#   channelId: 1028389598755311657
-#   datacenters:
-#     - name: "aether guest"
-#       datacenter: "Aether"
-#       color: 0x000000
-#     - name: "crystal guest"
-#       datacenter: "Crystal"
-#       color: 0xf9c9a9
-#   encounters:
-#   - ids: [1060, 1047, 1039]
-#     name: "The Unending Coil of Bahamut (Ultimate)"
-#     defaultRoles: false
-#     roles:
-#       - name: "Cleared Ucob"
-#         type: "Cleared"
-#         color: 0xEAC645
-#   - ids: [1061, 1048, 1042]
-#     name: "The Weapon's Refrain (Ultimate)"
-#     defaultRoles: false
-#     roles:
-#       - name: "Cleared UwU"
-#         type: "Cleared"
-#         color: 0x3bbdf5
-#   - ids: [1062, 1050]
-#     name: "The Epic of Alexander (Ultimate)"
-#     defaultRoles: false
-#     roles:
-#       - name: "Cleared TEA"
-#         type: "Cleared"
-#         color: 0x65C97A
-#   - ids: [1065]
-#     name: "Dragonsong's Reprise (Ultimate)"
-#     defaultRoles: false
-#     roles:
-#       - name: "Cleared DSR"
-#         type: "Cleared"
-#         color: 0xb660ff
-#             
+- name: UPR
+  roles:
+    relevantParsing: false
+    relevantFlexing: false
+    legend: false
+    ultimateFlexing: false
+    datacenter: true
+  guildId: 404710160540368917
+  channelId: 1028389598755311657
+  datacenters:
+    - name: "aether guest"
+      datacenter: "Aether"
+      color: 0x000001
+    - name: "crystal guest"
+      datacenter: "Crystal"
+      color: 0xf9c9a9
+    - name: "primal guest"
+      datacenter: "Primal"
+      color: 0xff0000
+  encounters:
+  - ids: [1060, 1047, 1039]
+    name: "The Unending Coil of Bahamut (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "Cleared Ucob"
+        type: "Cleared"
+        color: 0xEAC645
+  - ids: [1061, 1048, 1042]
+    name: "The Weapon's Refrain (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "Cleared UwU"
+        type: "Cleared"
+        color: 0x3bbdf5
+  - ids: [1062, 1050]
+    name: "The Epic of Alexander (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "Cleared TEA"
+        type: "Cleared"
+        color: 0x65C97A
+  - ids: [1065]
+    name: "Dragonsong's Reprise (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "Cleared DSR"
+        type: "Cleared"
+        color: 0xb660ff
+            

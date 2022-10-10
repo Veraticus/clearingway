@@ -191,37 +191,41 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 		return
 	}
 
-	relevantComfy := g.RelevantFlexingRoles.FindByName("NA's Comfiest")
-	ultimateComfy := g.UltimateFlexingRoles.FindByName("The Comfy Legend")
+	uncomfyRoles := []*Role{}
+	for _, r := range g.AllRoles() {
+		if r.Uncomfy {
+			uncomfyRoles = append(uncomfyRoles, r)
+		}
+	}
 
-	if relevantComfy == nil && ultimateComfy == nil {
-		err = discord.ContinueInteraction(s, i.Interaction, "Comfy roles are not present in this Discord!")
+	if len(uncomfyRoles) == 0 {
+		err = discord.ContinueInteraction(s, i.Interaction, "Uncomfy roles are not present in this Discord!")
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
 		return
 	}
 
-	if !relevantComfy.PresentInRoles(member.Roles) &&
-		!ultimateComfy.PresentInRoles(member.Roles) {
-		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any Comfy roles!")
+	rolesToRemove := []*Role{}
+	for _, r := range uncomfyRoles {
+		if r.PresentInRoles(member.Roles) {
+			rolesToRemove = append(rolesToRemove, r)
+		}
+	}
+	if len(rolesToRemove) == 0 {
+		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any uncomfy roles!")
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
 		return
 	}
 
-	err = relevantComfy.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
-	if err != nil {
-		fmt.Printf("Error removing relevant comfy: %+v\n", err)
+	for _, r := range rolesToRemove {
+		r.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+		fmt.Printf("Error removing uncomfy role: %+v\n", err)
 	}
 
-	err = ultimateComfy.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
-	if err != nil {
-		fmt.Printf("Error removing ultimate comfy: %+v\n", err)
-	}
-
-	err = discord.ContinueInteraction(s, i.Interaction, "Comfy roles cleansed!")
+	err = discord.ContinueInteraction(s, i.Interaction, "__Uncomfy roles:__\n⮕ Removed!\n")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 	}

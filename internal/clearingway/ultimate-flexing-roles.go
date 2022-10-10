@@ -39,7 +39,7 @@ func UltimateFlexingRoles() *Roles {
 			},
 		},
 		{
-			Name: "The Comfy Legend", Color: 0x636363,
+			Name: "The Comfy Legend", Color: 0x636363, Uncomfy: true,
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.WorstDPSRank(opts.Rankings)
 				if encounter == nil || rank == nil {
@@ -61,7 +61,7 @@ func UltimateFlexingRoles() *Roles {
 			},
 		},
 		{
-			Name: "The Chadding Legend", Color: 0x39FF14,
+			Name: "The Chadding Legend", Color: 0x39FF14, Uncomfy: true,
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
 					for _, encounterId := range encounter.Ids {
@@ -77,7 +77,7 @@ func UltimateFlexingRoles() *Roles {
 							if rank.HPSParseFound && rank.HPSPercent < 1 && rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
-										"HPS parsed was **0** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v).",
+										"HPS parsed was **0** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v). (Use `/uncomfy` if you don't want this role.)",
 										rank.HPSPercentString(),
 										rank.Job.Abbreviation,
 										encounter.Name,

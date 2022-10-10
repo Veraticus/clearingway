@@ -7,7 +7,7 @@ import (
 func RelevantFlexingRoles() *Roles {
 	return &Roles{Roles: []*Role{
 		{
-			Name: "NA's Comfiest", Color: 0x636363,
+			Name: "NA's Comfiest", Color: 0x636363, Uncomfy: true,
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.WorstDPSRank(opts.Rankings)
 				if encounter == nil || rank == nil {
@@ -61,7 +61,7 @@ func RelevantFlexingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Chad", Color: 0x39FF14,
+			Name: "Chad", Color: 0x39FF14, Uncomfy: true,
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
 					for _, encounterId := range encounter.Ids {
@@ -77,7 +77,7 @@ func RelevantFlexingRoles() *Roles {
 							if rank.HPSParseFound && rank.HPSPercent < 1 && rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
-										"HPS parsed was **0** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v).",
+										"HPS parsed was **0** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v). (Use `/uncomfy` if you don't want this role.)",
 										rank.HPSPercentString(),
 										rank.Job.Abbreviation,
 										encounter.Name,

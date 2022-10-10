@@ -112,3 +112,7 @@ func (g *Guild) UltRoles() []*Role {
 
 	return roles
 }
+
+func (g *Guild) AllRoles() []*Role {
+	return append(g.NonUltRoles(), g.UltRoles()...)
+}

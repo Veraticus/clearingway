@@ -21,7 +21,7 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		gid := discordGuild.ID
 		guild, ok := c.Guilds.Guilds[discordGuild.ID]
 		if !ok {
-			fmt.Sprintf("Initialized in guild %s with no configuration!", gid)
+			fmt.Printf("Initialized in guild %s with no configuration!", gid)
 			continue
 		}
 		existingRoles, err := s.GuildRoles(gid)
@@ -98,7 +98,12 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		fmt.Printf("Adding commands...\n")
 		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, ClearCommand)
 		if err != nil {
-			fmt.Printf("Could not add command: %v\n", err)
+			fmt.Printf("Could not add clears command: %v\n", err)
+		}
+
+		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, UncomfyCommand)
+		if err != nil {
+			fmt.Printf("Could not add uncomfy command: %v\n", err)
 		}
 
 		// fmt.Printf("Removing commands...\n")
@@ -140,19 +145,94 @@ var ClearCommand = &discordgo.ApplicationCommand{
 	},
 }
 
+var UncomfyCommand = &discordgo.ApplicationCommand{
+	Name:        "uncomfy",
+	Description: "Use this command to remove Comfy roles if you don't want them.",
+}
+
 func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	switch i.Type {
 	case discordgo.InteractionApplicationCommand:
-		c.Clears(s, i)
+		switch i.ApplicationCommandData().Name {
+		case "clears":
+			c.Clears(s, i)
+		case "uncomfy":
+			c.Uncomfy(s, i)
+		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)
 	}
+}
+
+func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	// Ignore messages not on the correct channel
+	if i.ChannelID != g.ChannelId {
+		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+	}
+
+	err := discord.StartInteraction(s, i.Interaction, "Uncomfying you...")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
+	member, err := c.Discord.Session.GuildMember(g.Id, i.Member.User.ID)
+	if err != nil {
+		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	relevantComfy := g.RelevantFlexingRoles.FindByName("NA's Comfiest")
+	ultimateComfy := g.UltimateFlexingRoles.FindByName("The Comfy Legend")
+
+	if relevantComfy == nil && ultimateComfy == nil {
+		err = discord.ContinueInteraction(s, i.Interaction, "Comfy roles are not present in this Discord!")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	if !relevantComfy.PresentInRoles(member.Roles) &&
+		!ultimateComfy.PresentInRoles(member.Roles) {
+		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any Comfy roles!")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	err = relevantComfy.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+	if err != nil {
+		fmt.Printf("Error removing relevant comfy: %+v\n", err)
+	}
+
+	err = ultimateComfy.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+	if err != nil {
+		fmt.Printf("Error removing ultimate comfy: %+v\n", err)
+	}
+
+	err = discord.ContinueInteraction(s, i.Interaction, "Uncomfy roles cleansed!")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+	}
+	return
 }
 
 func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	g, ok := c.Guilds.Guilds[i.GuildID]
 	if !ok {
 		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
 	}
 
 	// Ignore messages not on the correct channel
@@ -189,7 +269,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 			},
 		})
 		if err != nil {
-			fmt.Printf("Error sending Discord message: %v", err)
+			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
 		return
 	}
@@ -203,7 +283,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		fmt.Sprintf("Finding `%s %s (%s)` in the Lodestone...", firstName, lastName, world),
 	)
 	if err != nil {
-		fmt.Printf("Error sending Discord message: %v", err)
+		fmt.Printf("Error sending Discord message: %v\n", err)
 		return
 	}
 
@@ -211,7 +291,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	if err != nil {
 		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
 		if err != nil {
-			fmt.Printf("Error sending Discord message: %v", err)
+			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
 		return
 	}
@@ -224,7 +304,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 				err,
 			))
 		if err != nil {
-			fmt.Printf("Error sending Discord message: %v", err)
+			fmt.Printf("Error sending Discord message: %v\n", err)
 			return
 		}
 		err = lodestone.SetCharacterLodestoneID(char)
@@ -235,7 +315,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 					err,
 				))
 			if err != nil {
-				fmt.Printf("Error sending Discord message: %v", err)
+				fmt.Printf("Error sending Discord message: %v\n", err)
 				return
 			}
 		}
@@ -245,7 +325,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		fmt.Sprintf("Verifying ownership of `%s (%s)`...", char.Name(), char.World),
 	)
 	if err != nil {
-		fmt.Printf("Error sending Discord message: %v", err)
+		fmt.Printf("Error sending Discord message: %v\n", err)
 	}
 
 	discordId := i.Member.User.ID
@@ -253,7 +333,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	if err != nil {
 		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
 		if err != nil {
-			fmt.Printf("Error sending Discord message: %v", err)
+			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
 		return
 	}
@@ -267,7 +347,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 			),
 		)
 		if err != nil {
-			fmt.Printf("Error sending Discord message: %v", err)
+			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
 		return
 	}
@@ -276,7 +356,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		fmt.Sprintf("Analyzing logs for `%s (%s)`...", char.Name(), char.World),
 	)
 	if err != nil {
-		fmt.Printf("Error sending Discord message: %v", err)
+		fmt.Printf("Error sending Discord message: %v\n", err)
 	}
 
 	if char.UpdatedRecently() {
@@ -284,7 +364,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 			fmt.Sprintf("Finished analysis for `%s (%s)`.", char.Name(), char.World),
 		)
 		if err != nil {
-			fmt.Printf("Error sending Discord message: %v", err)
+			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
 		return
 	}
@@ -301,13 +381,13 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		fmt.Sprintf("Finished analysis for `%s (%s)`.", char.Name(), char.World),
 	)
 	if err != nil {
-		fmt.Printf("Error sending Discord message: %v", err)
+		fmt.Printf("Error sending Discord message: %v\n", err)
 	}
 
 	for _, roleText := range roleTexts {
 		err = discord.ContinueInteraction(s, i.Interaction, "_ _\n"+roleText)
 		if err != nil {
-			fmt.Printf("Error sending Discord message: %v", err)
+			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
 	}
 
@@ -442,7 +522,7 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 	for _, pendingRole := range rolesToApply {
 		role := pendingRole.role
 		if !role.PresentInRoles(member.Roles) {
-			err := role.AddToCharacter(guild.Id, discordUserId, c.Discord.Session, char)
+			err := role.AddToCharacter(guild.Id, discordUserId, c.Discord.Session)
 			if err != nil {
 				return nil, fmt.Errorf("Error adding Discord role: %v", err)
 			}
@@ -453,7 +533,7 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 	for _, pendingRole := range rolesToRemove {
 		role := pendingRole.role
 		if role.PresentInRoles(member.Roles) {
-			err := role.RemoveFromCharacter(guild.Id, discordUserId, c.Discord.Session, char)
+			err := role.RemoveFromCharacter(guild.Id, discordUserId, c.Discord.Session)
 			if err != nil {
 				return nil, fmt.Errorf("Error removing Discord role: %v", err)
 			}

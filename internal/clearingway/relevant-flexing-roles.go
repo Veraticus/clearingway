@@ -17,7 +17,7 @@ func RelevantFlexingRoles() *Roles {
 
 				if rank.DPSParseFound && percent < 1 {
 					return true, fmt.Sprintf(
-						"Parsed **0** (%v) with `%v` in `%v` on <t:%v:F> (%v).",
+						"Parsed **0** (%v) with `%v` in `%v` on <t:%v:F> (%v). (Use `/uncomfy` if you don't want this role.)",
 						rank.DPSPercentString(),
 						rank.Job.Abbreviation,
 						encounter.Name,

@@ -71,11 +71,11 @@ func (r *Role) Ensure(guildId string, s *discordgo.Session, existingRoles []*dis
 	return nil
 }
 
-func (r *Role) AddToCharacter(guildId, userId string, s *discordgo.Session, char *ffxiv.Character) error {
+func (r *Role) AddToCharacter(guildId, userId string, s *discordgo.Session) error {
 	return s.GuildMemberRoleAdd(guildId, userId, r.DiscordRole.ID)
 }
 
-func (r *Role) RemoveFromCharacter(guildId, userId string, s *discordgo.Session, char *ffxiv.Character) error {
+func (r *Role) RemoveFromCharacter(guildId, userId string, s *discordgo.Session) error {
 	return s.GuildMemberRoleRemove(guildId, userId, r.DiscordRole.ID)
 }
 
@@ -110,4 +110,14 @@ func (rs *Roles) Reorder(guildId string, s *discordgo.Session) error {
 
 	_, err := s.GuildRoleReorder(guildId, discordRoles)
 	return err
+}
+
+func (rs *Roles) FindByName(name string) *Role {
+	for _, r := range rs.Roles {
+		if r.Name == name {
+			return r
+		}
+	}
+
+	return nil
 }

@@ -221,7 +221,7 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 		fmt.Printf("Error removing ultimate comfy: %+v\n", err)
 	}
 
-	err = discord.ContinueInteraction(s, i.Interaction, "Uncomfy roles cleansed!")
+	err = discord.ContinueInteraction(s, i.Interaction, "Comfy roles cleansed!")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 	}

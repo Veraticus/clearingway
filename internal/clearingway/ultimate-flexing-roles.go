@@ -49,7 +49,7 @@ func UltimateFlexingRoles() *Roles {
 
 				if rank.DPSParseFound && percent < 1 {
 					return true, fmt.Sprintf(
-						"Parsed **0** (`%v`) with `%v` in `%v` on <t:%v:F> (%v). (Use `/uncomfy` if you don't want this role.)",
+						"Parsed **0** (`%v`) with `%v` in `%v` on <t:%v:F> (%v).\nUse `/uncomfy` if you don't want this role.",
 						rank.DPSPercentString(),
 						rank.Job.Abbreviation,
 						encounter.Name,
@@ -77,7 +77,7 @@ func UltimateFlexingRoles() *Roles {
 							if rank.HPSParseFound && rank.HPSPercent < 1 && rank.Job.IsHealer() {
 								return true,
 									fmt.Sprintf(
-										"HPS parsed was **0** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v). (Use `/uncomfy` if you don't want this role.)",
+										"HPS parsed was **0** (`%v`) as a healer (`%v`) in `%v` on <t:%v:F> (%v).\nUse `/uncomfy` if you don't want this role.",
 										rank.HPSPercentString(),
 										rank.Job.Abbreviation,
 										encounter.Name,

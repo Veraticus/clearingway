@@ -70,5 +70,8 @@ func AllWorlds() []string {
 	for world := range PrimalWorlds {
 		worlds = append(worlds, world)
 	}
+	for world := range DynamisWorlds {
+		worlds = append(worlds, world)
+	}
 	return worlds
 }

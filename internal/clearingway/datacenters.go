@@ -21,6 +21,7 @@ func (ds *Datacenters) Init(c []*ConfigDatacenter) {
 		ds.Datacenters["Aether"] = &Datacenter{Datacenter: "Aether", Role: &Role{Name: "Aether", Color: 0x71368a}}
 		ds.Datacenters["Primal"] = &Datacenter{Datacenter: "Primal", Role: &Role{Name: "Primal", Color: 0x992d22}}
 		ds.Datacenters["Crystal"] = &Datacenter{Datacenter: "Crystal", Role: &Role{Name: "Crystal", Color: 0x206694}}
+		ds.Datacenters["Dynamis"] = &Datacenter{Datacenter: "Dynamis", Role: &Role{Name: "Dynamis", Color: 0xEAC645}}
 	} else {
 		for _, d := range c {
 			ds.Datacenters[d.Datacenter] = &Datacenter{Datacenter: d.Datacenter, Role: &Role{Name: d.Name, Color: d.Color}}

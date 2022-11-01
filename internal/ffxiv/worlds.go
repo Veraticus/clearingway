@@ -37,6 +37,13 @@ var PrimalWorlds = map[string]interface{}{
 	"Ultros":    nil,
 }
 
+var DynamisWorlds = map[string]interface{}{
+	"Halicarnassus": nil,
+	"Maduin":        nil,
+	"Marilith":      nil,
+	"Seraph":        nil,
+}
+
 func WorldsForDatacenter(datacenter string) (map[string]interface{}, error) {
 	switch datacenter {
 	case "Aether":
@@ -45,6 +52,8 @@ func WorldsForDatacenter(datacenter string) (map[string]interface{}, error) {
 		return PrimalWorlds, nil
 	case "Crystal":
 		return CrystalWorlds, nil
+	case "Dynamis":
+		return DynamisWorlds, nil
 	default:
 		return nil, fmt.Errorf("Could not find datacenter: %v", datacenter)
 	}

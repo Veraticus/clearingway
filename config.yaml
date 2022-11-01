@@ -124,6 +124,9 @@ guilds:
     - name: "primal guest"
       datacenter: "Primal"
       color: 0xff0000
+    - name: "dynamis guest"
+      datacenter: "Dynamis"
+      color: 0xEAC645
   encounters:
   - ids: [1060, 1047, 1039]
     name: "The Unending Coil of Bahamut (Ultimate)"

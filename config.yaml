@@ -105,6 +105,44 @@ guilds:
       - name: "DSR Cleared"
         type: "Cleared"
         color: 0xCF8035
+- name: UDR
+  roles:
+    relevantParsing: true
+    relevantFlexing: false
+    legend: true
+    ultimateFlexing: true
+    datacenter: true
+  guildId: 1021602454716022845
+  channelId: 1037083485543866479
+  encounters:
+  - ids: [1060, 1047, 1039]
+    name: "The Unending Coil of Bahamut (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "i killed ucob"
+        type: "Cleared"
+        color: 0xb89c00
+  - ids: [1061, 1048, 1042]
+    name: "The Weapon's Refrain (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "i killed uwu"
+        type: "Cleared"
+        color: 0x23f3f7
+  - ids: [1062, 1050]
+    name: "The Epic of Alexander (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "i killed tea"
+        type: "Cleared"
+        color: 0xf5cbff
+  - ids: [1065]
+    name: "Dragonsong's Reprise (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "i killed dsr"
+        type: "Cleared"
+        color: 0xD8833B
 - name: UPR
   roles:
     relevantParsing: false

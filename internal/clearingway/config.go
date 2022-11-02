@@ -5,12 +5,13 @@ type Config struct {
 }
 
 type ConfigGuild struct {
-	Name              string              `yaml:"name"`
-	GuildId           string              `yaml:"guildId"`
-	ChannelId         string              `yaml:"channelId"`
-	ConfigDatacenters []*ConfigDatacenter `yaml:"datacenters"`
-	ConfigEncounters  []*ConfigEncounter  `yaml:"encounters"`
-	ConfigRoles       *ConfigRoles        `yaml:"roles"`
+	Name                   string                    `yaml:"name"`
+	GuildId                string                    `yaml:"guildId"`
+	ChannelId              string                    `yaml:"channelId"`
+	ConfigDatacenters      []*ConfigDatacenter       `yaml:"datacenters"`
+	ConfigEncounters       []*ConfigEncounter        `yaml:"encounters"`
+	ConfigRoles            *ConfigRoles              `yaml:"roles"`
+	ConfigReconfigureRoles []*ConfigReconfigureRoles `yaml:"reconfigureRoles"`
 }
 
 type ConfigRoles struct {
@@ -39,4 +40,10 @@ type ConfigDatacenter struct {
 	Name       string `yaml:"name"`
 	Datacenter string `yaml:"datacenter"`
 	Color      int    `yaml:"color"`
+}
+
+type ConfigReconfigureRoles struct {
+	From  string `yaml:"from"`
+	To    string `yaml:"to"`
+	Color int    `yaml:"color"`
 }

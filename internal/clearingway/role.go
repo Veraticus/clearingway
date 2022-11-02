@@ -90,18 +90,6 @@ func (r *Role) PresentInRoles(existingRoleIds []string) bool {
 	return false
 }
 
-func (rs *Roles) Ensure(guildId string, s *discordgo.Session, existingRoles []*discordgo.Role) []error {
-	errors := []error{}
-	for _, r := range rs.Roles {
-		err := r.Ensure(guildId, s, existingRoles)
-		fmt.Printf("Ensuring role: %+v\n", r)
-		if err != nil {
-			errors = append(errors, err)
-		}
-	}
-	return errors
-}
-
 func (rs *Roles) Reorder(guildId string, s *discordgo.Session) error {
 	discordRoles := []*discordgo.Role{}
 

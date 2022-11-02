@@ -21,7 +21,7 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		gid := discordGuild.ID
 		guild, ok := c.Guilds.Guilds[discordGuild.ID]
 		if !ok {
-			fmt.Printf("Initialized in guild %s with no configuration!", gid)
+			fmt.Printf("Initialized in guild %s with no configuration!\n", gid)
 			continue
 		}
 		existingRoles, err := s.GuildRoles(gid)
@@ -31,67 +31,11 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		}
 
 		fmt.Printf("Initializing roles...\n")
-		guild.EncounterRoles = guild.Encounters.Roles()
-		errs := guild.EncounterRoles.Ensure(gid, s, existingRoles)
-		if len(errs) != 0 {
-			fmt.Print("Error ensuring encounter roles:\n")
-			for _, e := range errs {
-				fmt.Printf("  %v", e)
-			}
-		}
-
-		if guild.RelevantParsingEnabled {
-			guild.RelevantParsingRoles = RelevantParsingRoles()
-			errs = guild.RelevantParsingRoles.Ensure(gid, s, existingRoles)
-			if len(errs) != 0 {
-				fmt.Print("Error ensuring relevant parsing roles:\n")
-				for _, e := range errs {
-					fmt.Printf("  %v", e)
-				}
-			}
-		}
-
-		if guild.RelevantFlexingEnabled {
-			guild.RelevantFlexingRoles = RelevantFlexingRoles()
-			errs = guild.RelevantFlexingRoles.Ensure(gid, s, existingRoles)
-			if len(errs) != 0 {
-				fmt.Print("Error ensuring relevant flexing roles:\n")
-				for _, e := range errs {
-					fmt.Printf("  %v", e)
-				}
-			}
-		}
-
-		if guild.LegendEnabled {
-			guild.LegendRoles = LegendRoles()
-			errs = guild.LegendRoles.Ensure(gid, s, existingRoles)
-			if len(errs) != 0 {
-				fmt.Print("Error ensuring legend roles:\n")
-				for _, e := range errs {
-					fmt.Printf("  %v", e)
-				}
-			}
-		}
-
-		if guild.UltimateFlexingEnabled {
-			guild.UltimateFlexingRoles = UltimateFlexingRoles()
-			errs = guild.UltimateFlexingRoles.Ensure(gid, s, existingRoles)
-			if len(errs) != 0 {
-				fmt.Print("Error ensuring ultimate roles:\n")
-				for _, e := range errs {
-					fmt.Printf("  %v", e)
-				}
-			}
-		}
-
-		if guild.DatacenterEnabled {
-			guild.DatacenterRoles = guild.Datacenters.AllRoles()
-			errs = guild.DatacenterRoles.Ensure(gid, s, existingRoles)
-			if len(errs) != 0 {
-				fmt.Print("Error ensuring datacenter roles:\n")
-				for _, e := range errs {
-					fmt.Printf("  %v", e)
-				}
+		for _, r := range guild.AllRoles() {
+			fmt.Printf("Ensuring role: %+v\n", r)
+			err := r.Ensure(gid, s, existingRoles)
+			if err != nil {
+				fmt.Printf("Error ensuring role %+v: %+v\n", r, err)
 			}
 		}
 

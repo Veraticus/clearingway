@@ -75,6 +75,39 @@ func (g *Guild) Init(c *ConfigGuild) {
 	} else {
 		g.DatacenterEnabled = true
 	}
+
+	g.EncounterRoles = g.Encounters.Roles()
+
+	if g.RelevantParsingEnabled {
+		g.RelevantParsingRoles = RelevantParsingRoles()
+	}
+
+	if g.RelevantFlexingEnabled {
+		g.RelevantFlexingRoles = RelevantFlexingRoles()
+	}
+
+	if g.LegendEnabled {
+		g.LegendRoles = LegendRoles()
+	}
+
+	if g.UltimateFlexingEnabled {
+		g.UltimateFlexingRoles = UltimateFlexingRoles()
+	}
+
+	if g.DatacenterEnabled {
+		g.DatacenterRoles = g.Datacenters.AllRoles()
+	}
+
+	if len(c.ConfigReconfigureRoles) != 0 {
+		for _, configReconfigureRole := range c.ConfigReconfigureRoles {
+			for _, role := range g.AllRoles() {
+				if role.Name == configReconfigureRole.From {
+					role.Name = configReconfigureRole.To
+					role.Color = configReconfigureRole.Color
+				}
+			}
+		}
+	}
 }
 
 func (g *Guild) AllEncounters() []*Encounter {

@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"golang.org/x/text/feature/plural"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
+
 	"github.com/Veraticus/clearingway/internal/fflogs"
 )
 
@@ -24,8 +28,21 @@ func legendRoleString(clearedEncounters *Encounters, rankings *fflogs.Rankings) 
 		}
 	}
 
+	message.Set(language.English, "Cleared the following %d Ultimate fights:\n",
+		plural.Selectf(
+			1,
+			"%d",
+			"=1", "Cleared the following one Ultimate fight:\n",
+			"=2", "Cleared the following two Ultimate fights:\n",
+			"=3", "Cleared the following three Ultimate fights:\n",
+			"=4", "Cleared the following four Ultimate fights:\n",
+			"other", "Cleared the following Ultimate fights:\n",
+		),
+	)
+	p := message.NewPrinter(language.English)
+
 	clearedString := strings.Builder{}
-	clearedString.WriteString("Cleared the following Ultimate fights:\n")
+	clearedString.WriteString(p.Sprintf("Cleared the following %d Ultimate fights:\n", len(clears)))
 	for name, ranking := range clears {
 		rank := ranking.RanksByTime()[0]
 		clearedString.WriteString(

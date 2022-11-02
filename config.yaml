@@ -143,6 +143,10 @@ guilds:
       - name: "i killed dsr"
         type: "Cleared"
         color: 0xD8833B
+  reconfigureRoles:
+  - from: "The Quad Legend"
+    to: "dodge on sight"
+    color: 0xff0003
 - name: UPR
   roles:
     relevantParsing: false
@@ -194,4 +198,3 @@ guilds:
       - name: "Cleared DSR"
         type: "Cleared"
         color: 0xb660ff
-            

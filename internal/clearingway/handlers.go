@@ -379,7 +379,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	}
 
 	chunks := discord.NewChunks()
-	chunks.Write(fmt.Sprintf("Finished analysis for `%s (%s)`.", char.Name(), char.World))
+	chunks.Write(fmt.Sprintf("Finished analysis for `%s (%s)`.\n\n", char.Name(), char.World))
 
 	for _, roleText := range roleTexts {
 		chunks.Write(roleText + "\n")

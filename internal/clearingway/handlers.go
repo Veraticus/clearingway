@@ -2,7 +2,6 @@ package clearingway
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/Veraticus/clearingway/internal/discord"
@@ -201,26 +200,32 @@ func (c *Clearingway) Roles(s *discordgo.Session, i *discordgo.InteractionCreate
 		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
 	}
 
-	o := strings.Builder{}
-	o.WriteString("_ _\n")
-	o.WriteString("Clearingway considers the following encounters relevant:\n")
+	chunks := discord.NewChunks()
+	chunks.Write("_ _\n")
+	chunks.Write("Clearingway considers the following encounters relevant:\n")
 
 	for _, e := range g.Encounters.Encounters {
-		o.WriteString("⮕ " + e.Name + "\n")
+		chunks.Write("⮕ " + e.Name + "\n")
 	}
 
-	o.WriteString("\nClearingway can give out these roles with `/clears`:\n")
+	chunks.Write("\nClearingway can give out these roles with `/clears`:\n")
 
 	for _, r := range g.AllRoles() {
-		o.WriteString(fmt.Sprintf("__**%s**__\n⮕ %s\n\n", r.Name, r.Description))
+		chunks.Write(fmt.Sprintf("__**%s**__\n⮕ %s\n\n", r.Name, r.Description))
 	}
 
-	err := discord.StartInteraction(s, i.Interaction, o.String())
-	if err != nil {
-		fmt.Printf("Error sending Discord message: %v\n", err)
-		return
+	for n, c := range chunks.Chunks {
+		var err error
+		if n == 1 {
+			err = discord.StartInteraction(s, i.Interaction, c.String())
+		} else {
+			err = discord.StartInteraction(s, i.Interaction, c.String())
+		}
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+			return
+		}
 	}
-
 	return
 }
 
@@ -373,15 +378,15 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		return
 	}
 
-	err = discord.ContinueInteraction(s, i.Interaction,
-		fmt.Sprintf("Finished analysis for `%s (%s)`.", char.Name(), char.World),
-	)
-	if err != nil {
-		fmt.Printf("Error sending Discord message: %v\n", err)
-	}
+	chunks := discord.NewChunks()
+	chunks.Write(fmt.Sprintf("Finished analysis for `%s (%s)`.", char.Name(), char.World))
 
 	for _, roleText := range roleTexts {
-		err = discord.ContinueInteraction(s, i.Interaction, "_ _\n"+roleText)
+		chunks.Write(roleText + "\n")
+	}
+
+	for _, c := range chunks.Chunks {
+		err = discord.ContinueInteraction(s, i.Interaction, "_ _\n"+c.String())
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}

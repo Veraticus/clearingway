@@ -86,13 +86,13 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 		}
 		switch roleType {
 		case PfRole:
-			role.Description = "Wants to PF " + e.Name
+			role.Description = "Wants to PF " + e.Name + "."
 		case ReclearRole:
-			role.Description = "Wants to reclear " + e.Name
+			role.Description = "Wants to reclear " + e.Name + "."
 		case ParseRole:
-			role.Description = "Wants to parse " + e.Name
+			role.Description = "Wants to parse " + e.Name + "."
 		case ClearedRole:
-			role.Description = "Cleared " + e.Name
+			role.Description = "Cleared " + e.Name + "."
 		}
 	}
 

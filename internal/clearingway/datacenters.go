@@ -18,10 +18,22 @@ type Datacenter struct {
 func (ds *Datacenters) Init(c []*ConfigDatacenter) {
 	ds.Datacenters = map[string]*Datacenter{}
 	if len(c) == 0 {
-		ds.Datacenters["Aether"] = &Datacenter{Datacenter: "Aether", Role: &Role{Name: "Aether", Color: 0x71368a}}
-		ds.Datacenters["Primal"] = &Datacenter{Datacenter: "Primal", Role: &Role{Name: "Primal", Color: 0x992d22}}
-		ds.Datacenters["Crystal"] = &Datacenter{Datacenter: "Crystal", Role: &Role{Name: "Crystal", Color: 0x206694}}
-		ds.Datacenters["Dynamis"] = &Datacenter{Datacenter: "Dynamis", Role: &Role{Name: "Dynamis", Color: 0xEAC645}}
+		ds.Datacenters["Aether"] = &Datacenter{
+			Datacenter: "Aether",
+			Role:       &Role{Name: "Aether", Description: "Is in the Aether datacenter.", Color: 0x71368a},
+		}
+		ds.Datacenters["Primal"] = &Datacenter{
+			Datacenter: "Primal",
+			Role:       &Role{Name: "Primal", Description: "Is in the Primal datacenter.", Color: 0x992d22},
+		}
+		ds.Datacenters["Crystal"] = &Datacenter{
+			Datacenter: "Crystal",
+			Role:       &Role{Name: "Crystal", Description: "Is in the Crystal datacenter.", Color: 0x206694},
+		}
+		ds.Datacenters["Dynamis"] = &Datacenter{
+			Datacenter: "Dynamis",
+			Role:       &Role{Name: "Dynamis", Description: "Is in the Dynamis datacenter.", Color: 0xEAC645},
+		}
 	} else {
 		for _, d := range c {
 			ds.Datacenters[d.Datacenter] = &Datacenter{Datacenter: d.Datacenter, Role: &Role{Name: d.Name, Color: d.Color}}

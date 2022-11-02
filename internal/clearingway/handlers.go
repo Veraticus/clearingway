@@ -2,6 +2,7 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/Veraticus/clearingway/internal/discord"
@@ -50,6 +51,11 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			fmt.Printf("Could not add uncomfy command: %v\n", err)
 		}
 
+		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RolesCommand)
+		if err != nil {
+			fmt.Printf("Could not add uncomfy command: %v\n", err)
+		}
+
 		// fmt.Printf("Removing commands...\n")
 		// cmd, err := s.ApplicationCommandCreate(event.User.ID, guild.ID, verifyCommand)
 		// if err != nil {
@@ -94,6 +100,11 @@ var UncomfyCommand = &discordgo.ApplicationCommand{
 	Description: "Use this command to remove Comfy roles if you don't want them.",
 }
 
+var RolesCommand = &discordgo.ApplicationCommand{
+	Name:        "roles",
+	Description: "See what roles Clearingway has set up and how to get them.",
+}
+
 func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	switch i.Type {
 	case discordgo.InteractionApplicationCommand:
@@ -102,6 +113,8 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.Clears(s, i)
 		case "uncomfy":
 			c.Uncomfy(s, i)
+		case "roles":
+			c.Roles(s, i)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)
@@ -173,6 +186,41 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 	}
+	return
+}
+
+func (c *Clearingway) Roles(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	// Ignore messages not on the correct channel
+	if i.ChannelID != g.ChannelId {
+		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+	}
+
+	o := strings.Builder{}
+	o.WriteString("_ _\n")
+	o.WriteString("Clearingway considers the following encounters relevant:\n")
+
+	for _, e := range g.Encounters.Encounters {
+		o.WriteString("⮕ " + e.Name + "\n")
+	}
+
+	o.WriteString("\nClearingway can give out these roles with `/clears`:\n")
+
+	for _, r := range g.AllRoles() {
+		o.WriteString(fmt.Sprintf("__**%s**__\n⮕ %s\n\n", r.Name, r.Description))
+	}
+
+	err := discord.StartInteraction(s, i.Interaction, o.String())
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
 	return
 }
 

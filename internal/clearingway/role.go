@@ -30,6 +30,7 @@ type Roles struct {
 type Role struct {
 	Type        RoleType
 	Name        string
+	Description string
 	Color       int
 	Uncomfy     bool
 	ShouldApply func(*ShouldApplyOpts) (bool, string)

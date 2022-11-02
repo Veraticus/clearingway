@@ -8,6 +8,7 @@ func RelevantFlexingRoles() *Roles {
 	return &Roles{Roles: []*Role{
 		{
 			Name: "NA's Comfiest", Color: 0x636363, Uncomfy: true,
+			Description: "DPS parse rounds to zero in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.WorstDPSRank(opts.Rankings)
 				if encounter == nil || rank == nil {
@@ -30,6 +31,7 @@ func RelevantFlexingRoles() *Roles {
 		},
 		{
 			Name: "Nice", Color: 0xE48CA3,
+			Description: "DPS parse rounds to 69 (nice) in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
 					for _, encounterId := range encounter.Ids {
@@ -62,6 +64,7 @@ func RelevantFlexingRoles() *Roles {
 		},
 		{
 			Name: "Chad", Color: 0x39FF14, Uncomfy: true,
+			Description: "HPS parse as a healer rounds to 0 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
 					for _, encounterId := range encounter.Ids {
@@ -94,6 +97,7 @@ func RelevantFlexingRoles() *Roles {
 		},
 		{
 			Name: "Bloodbather", Color: 0x8a0303,
+			Description: "HPS parse as a non-healer is 100 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
 					for _, encounterId := range encounter.Ids {
@@ -126,6 +130,7 @@ func RelevantFlexingRoles() *Roles {
 		},
 		{
 			Name: "Overhealer", Color: 0xFFFFFF,
+			Description: "HPS parse as a healer is 100 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
 					for _, encounterId := range encounter.Ids {

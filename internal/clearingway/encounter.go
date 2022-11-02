@@ -40,10 +40,26 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 	e.Roles = map[RoleType]*Role{}
 
 	if e.DefaultRoles {
-		e.Roles[PfRole] = &Role{Name: e.Name + "-PF", Color: 0x11806a, Type: PfRole}
-		e.Roles[ReclearRole] = &Role{Name: e.Name + "-Reclear", Color: 0x11806a, Type: ReclearRole}
-		e.Roles[ParseRole] = &Role{Name: e.Name + "-Parse", Color: 0x11806a, Type: ParseRole}
-		e.Roles[ClearedRole] = &Role{Name: e.Name + "-Cleared", Color: 0x11806a, Type: ClearedRole}
+		e.Roles[PfRole] = &Role{
+			Name:  e.Name + "-PF",
+			Color: 0x11806a,
+			Type:  PfRole,
+		}
+		e.Roles[ReclearRole] = &Role{
+			Name:  e.Name + "-Reclear",
+			Color: 0x11806a,
+			Type:  ReclearRole,
+		}
+		e.Roles[ParseRole] = &Role{
+			Name:  e.Name + "-Parse",
+			Color: 0x11806a,
+			Type:  ParseRole,
+		}
+		e.Roles[ClearedRole] = &Role{
+			Name:  e.Name + "-Cleared",
+			Color: 0x11806a,
+			Type:  ClearedRole,
+		}
 	}
 
 	for _, configRole := range c.ConfigRoles {
@@ -56,8 +72,27 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 		if len(configRole.Name) != 0 {
 			role.Name = configRole.Name
 		}
+		if len(configRole.Description) != 0 {
+			role.Description = configRole.Description
+		}
 		if configRole.Color != 0 {
 			role.Color = configRole.Color
+		}
+	}
+
+	for roleType, role := range e.Roles {
+		if len(role.Description) != 0 {
+			continue
+		}
+		switch roleType {
+		case PfRole:
+			role.Description = "Wants to PF " + e.Name
+		case ReclearRole:
+			role.Description = "Wants to reclear " + e.Name
+		case ParseRole:
+			role.Description = "Wants to parse " + e.Name
+		case ClearedRole:
+			role.Description = "Cleared " + e.Name
 		}
 	}
 

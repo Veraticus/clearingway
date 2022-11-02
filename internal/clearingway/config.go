@@ -31,9 +31,10 @@ type ConfigEncounter struct {
 }
 
 type ConfigRole struct {
-	Name  string `yaml:"name"`
-	Type  string `yaml:"type"`
-	Color int    `yaml:"color"`
+	Name        string `yaml:"name"`
+	Type        string `yaml:"type"`
+	Color       int    `yaml:"color"`
+	Description string `yaml:"description"`
 }
 
 type ConfigDatacenter struct {

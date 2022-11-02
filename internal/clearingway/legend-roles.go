@@ -63,6 +63,7 @@ func LegendRoles() *Roles {
 	return &Roles{Roles: []*Role{
 		{
 			Name: "The Legend", Color: 0x3498db,
+			Description: "Cleared exactly one ultimate.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
 				if len(clearedEncounters.Encounters) == 1 {
@@ -75,6 +76,7 @@ func LegendRoles() *Roles {
 		},
 		{
 			Name: "The Double Legend", Color: 0x3498db,
+			Description: "Cleared exactly two ultimates.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
 				if len(clearedEncounters.Encounters) == 2 {
@@ -87,6 +89,7 @@ func LegendRoles() *Roles {
 		},
 		{
 			Name: "The Triple Legend", Color: 0x3498db,
+			Description: "Cleared exactly three ultimates.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
 				if len(clearedEncounters.Encounters) == 3 {
@@ -99,6 +102,7 @@ func LegendRoles() *Roles {
 		},
 		{
 			Name: "The Quad Legend", Color: 0x3498db,
+			Description: "Cleared exactly four ultimates.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
 				if len(clearedEncounters.Encounters) == 4 {

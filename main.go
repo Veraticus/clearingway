@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/Veraticus/clearingway/internal/clearingway"
 	"github.com/Veraticus/clearingway/internal/discord"
@@ -109,6 +110,11 @@ func run(c *clearingway.Clearingway) {
 	err := c.Discord.Session.Open()
 	if err != nil {
 		panic(fmt.Errorf("Could not open Discord session: %f", err))
+	}
+
+	for c.Discord.Session.DataReady {
+		fmt.Printf("Waiting for Discord to be ready...\n")
+		time.Sleep(200 * time.Millisecond)
 	}
 
 	char, err := guild.Characters.Init(world, firstName, lastName)

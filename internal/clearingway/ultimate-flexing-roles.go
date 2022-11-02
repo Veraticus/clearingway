@@ -21,7 +21,7 @@ func UltimateFlexingRoles() *Roles {
 						}
 
 						for _, rank := range ranking.Ranks {
-							if rank.DPSPercent >= 69.0 && rank.DPSPercent <= 69.9 {
+							if rank.DPSPercent >= 69.0 && rank.DPSPercent < 70.0 {
 								return true,
 									fmt.Sprintf(
 										"Parsed **69** (`%v`) with `%v` in `%v` on <t:%v:F> (%v).",

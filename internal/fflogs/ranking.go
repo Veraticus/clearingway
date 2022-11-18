@@ -128,7 +128,11 @@ func (r *Ranking) RanksByDPSPercent() []*Rank {
 }
 
 func (r *Ranking) BestDPSRank() *Rank {
-	return r.RanksByDPSPercent()[0]
+	sortedRanks := r.RanksByDPSPercent()
+	if len(sortedRanks) == 0 {
+		return nil
+	}
+	return sortedRanks[0]
 }
 
 func (r *Ranking) WorstDPSRank() *Rank {
@@ -151,7 +155,11 @@ func (r *Ranking) RanksByHPSPercent() []*Rank {
 }
 
 func (r *Ranking) BestHPSRank() *Rank {
-	return r.RanksByHPSPercent()[0]
+	sortedRanks := r.RanksByHPSPercent()
+	if len(sortedRanks) == 0 {
+		return nil
+	}
+	return sortedRanks[0]
 }
 
 func (r *Ranking) WorstHPSRank() *Rank {

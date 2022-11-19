@@ -3,6 +3,7 @@ package ffxiv
 import (
 	"fmt"
 	"hash/adler32"
+	"strings"
 	"time"
 
 	"golang.org/x/text/cases"
@@ -29,6 +30,7 @@ func (cs *Characters) Init(world, firstName, lastName string) (*Character, error
 		return nil, fmt.Errorf("Last name must be at least two characters.")
 	}
 	name := firstName + " " + lastName
+	name = strings.Replace(name, "’", "'", 1)
 
 	title := cases.Title(language.AmericanEnglish)
 	char, ok := cs.Characters[name+"-"+world]

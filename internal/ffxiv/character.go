@@ -30,7 +30,6 @@ func (cs *Characters) Init(world, firstName, lastName string) (*Character, error
 		return nil, fmt.Errorf("Last name must be at least two characters.")
 	}
 	name := firstName + " " + lastName
-	name = strings.Replace(name, "’", "'", 1)
 
 	title := cases.Title(language.AmericanEnglish)
 	char, ok := cs.Characters[name+"-"+world]
@@ -54,7 +53,9 @@ func (c *Character) UpdatedRecently() bool {
 
 func (c *Character) Name() string {
 	title := cases.Title(language.AmericanEnglish)
-	return title.String(c.FirstName) + " " + title.String(c.LastName)
+	name := title.String(c.FirstName) + " " + title.String(c.LastName)
+	name = strings.Replace(name, "’", "'", 1)
+	return name
 }
 
 func (c *Character) LodestoneSlug(discordId string) string {

@@ -2,6 +2,8 @@ package clearingway
 
 import (
 	"fmt"
+
+	"github.com/Veraticus/clearingway/internal/fflogs"
 )
 
 func UltimateFlexingRoles() *Roles {
@@ -159,6 +161,89 @@ func UltimateFlexingRoles() *Roles {
 				}
 
 				return false, "No encounter had a healer HPS parse at 100."
+			},
+		},
+		{
+			Name: "The Rainbow Legend", Color: 0xb6719f,
+			Description: "At least one DPS parse at every percentile color (except gold) in a single ultimate.",
+			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
+				for _, encounter := range opts.Encounters.Encounters {
+					for _, encounterId := range encounter.Ids {
+						ranking, ok := opts.Rankings.Rankings[encounterId]
+						if !ok {
+							continue
+						}
+						if !ranking.Cleared() {
+							continue
+						}
+
+						var pinkFound, orangeFound, purpleFound, blueFound, greenFound, grayFound bool
+						var pinkRank, orangeRank, purpleRank, blueRank, greenRank, grayRank *fflogs.Rank
+
+						for _, rank := range ranking.Ranks {
+							if rank.DPSParseFound {
+								if rank.DPSPercent >= 99.0 {
+									pinkFound = true
+									pinkRank = rank
+								}
+								if rank.DPSPercent >= 95.0 && rank.DPSPercent < 99.0 {
+									orangeFound = true
+									orangeRank = rank
+								}
+								if rank.DPSPercent >= 75.0 && rank.DPSPercent < 95.0 {
+									purpleFound = true
+									purpleRank = rank
+								}
+								if rank.DPSPercent >= 50.0 && rank.DPSPercent < 75.0 {
+									blueFound = true
+									blueRank = rank
+								}
+								if rank.DPSPercent >= 25.0 && rank.DPSPercent < 50.0 {
+									greenFound = true
+									greenRank = rank
+								}
+								if rank.DPSPercent < 25.0 {
+									grayFound = true
+									grayRank = rank
+								}
+							}
+						}
+
+						if pinkFound && orangeFound && purpleFound && blueFound && greenFound && grayFound {
+							return true,
+								fmt.Sprintf(
+									"DPS parse at every percentile (except gold) found in `%v`:\n  Pink parse **%v** with `%v` on <t:%v:F> (%v).\n  Orange parse **%v** with `%v` on <t:%v:F> (%v).\n  Purple parse **%v** with `%v` on <t:%v:F> (%v).\n  Blue parse **%v** with `%v` on <t:%v:F> (%v).\n  Green parse **%v** with `%v` on <t:%v:F> (%v).\n  Gray parse **%v** with `%v` on <t:%v:F> (%v).",
+									encounter.Name,
+									pinkRank.DPSPercentString(),
+									pinkRank.Job.Abbreviation,
+									pinkRank.UnixTime(),
+									pinkRank.Report.Url(),
+									orangeRank.DPSPercentString(),
+									orangeRank.Job.Abbreviation,
+									orangeRank.UnixTime(),
+									orangeRank.Report.Url(),
+									purpleRank.DPSPercentString(),
+									purpleRank.Job.Abbreviation,
+									purpleRank.UnixTime(),
+									purpleRank.Report.Url(),
+									blueRank.DPSPercentString(),
+									blueRank.Job.Abbreviation,
+									blueRank.UnixTime(),
+									blueRank.Report.Url(),
+									greenRank.DPSPercentString(),
+									greenRank.Job.Abbreviation,
+									greenRank.UnixTime(),
+									greenRank.Report.Url(),
+									greenRank.DPSPercentString(),
+									grayRank.Job.Abbreviation,
+									grayRank.UnixTime(),
+									grayRank.Report.Url(),
+								)
+						}
+					}
+				}
+
+				return false, "No single relevant encounter had at least one DPS parse at every percentile color (except gold)."
 			},
 		},
 	}}

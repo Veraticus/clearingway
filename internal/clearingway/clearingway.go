@@ -9,16 +9,19 @@ import (
 )
 
 type Clearingway struct {
-	Config           *Config
-	Discord          *discord.Discord
-	Guilds           *Guilds
-	Fflogs           *fflogs.Fflogs
+	Config  *Config
+	Discord *discord.Discord
+	Guilds  *Guilds
+	Fflogs  *fflogs.Fflogs
+
+	AllWorlds        []string
 	AutoCompleteTrie *trie.Trie
 }
 
 func (c *Clearingway) Init() {
+	c.AllWorlds = ffxiv.AllWorlds()
 	c.AutoCompleteTrie = trie.New()
-	for _, world := range ffxiv.AllWorlds() {
+	for _, world := range c.AllWorlds {
 		c.AutoCompleteTrie.Insert(world)
 	}
 

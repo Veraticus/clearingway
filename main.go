@@ -54,6 +54,30 @@ func main() {
 	fmt.Printf("Clearingway is: %+v\n", c)
 	for _, guild := range c.Guilds.Guilds {
 		fmt.Printf("Guild added: %+v\n", guild)
+
+		if guild.EncounterRoles != nil {
+			fmt.Printf("Encounter roles: %+v\n", guild.EncounterRoles.Roles)
+		}
+
+		if guild.RelevantParsingRoles != nil {
+			fmt.Printf("Relevant parsing roles: %+v\n", guild.RelevantParsingRoles.Roles)
+		}
+
+		if guild.RelevantFlexingRoles != nil {
+			fmt.Printf("Relevant flexing roles: %+v\n", guild.RelevantFlexingRoles.Roles)
+		}
+
+		if guild.LegendRoles != nil {
+			fmt.Printf("Legend roles: %+v\n", guild.LegendRoles.Roles)
+		}
+
+		if guild.UltimateFlexingRoles != nil {
+			fmt.Printf("Ultimate flexing roles: %+v\n", guild.UltimateFlexingRoles.Roles)
+		}
+
+		if guild.DatacenterRoles != nil {
+			fmt.Printf("Datacenter roles: %+v\n", guild.DatacenterRoles.Roles)
+		}
 	}
 
 	fmt.Printf("Starting Discord...\n")
@@ -103,7 +127,7 @@ func run(c *clearingway.Clearingway) {
 
 	guild, ok := c.Guilds.Guilds[guildId]
 	if !ok {
-		panic(fmt.Sprintf("Could %s not setup in config.yaml!", guildId))
+		panic(fmt.Sprintf("Guild %s not setup in config.yaml but you tried to run me in it!", guildId))
 	}
 
 	c.Discord.Session.AddHandler(c.DiscordReady)

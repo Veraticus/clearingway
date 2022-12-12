@@ -41,9 +41,10 @@ type RankingToGet struct {
 
 func (f *Fflogs) SetCharacterLodestoneID(char *ffxiv.Character) error {
 	query := fmt.Sprintf(
-		"query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"NA\"){lodestoneID}}}",
+		"query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"%s\"){lodestoneID}}}",
 		char.Name(),
 		char.World,
+		char.PhysicalDatacenter().Abbreviation,
 	)
 
 	raw, err := f.graphqlClient.ExecRaw(context.Background(), query, nil)
@@ -94,9 +95,10 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 	query := strings.Builder{}
 	query.WriteString(
 		fmt.Sprintf(
-			"query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"NA\"){",
+			"query{characterData{character(name: \"%s\", serverSlug: \"%s\", serverRegion: \"%s\"){",
 			char.Name(),
 			char.World,
+			char.PhysicalDatacenter().Abbreviation,
 		),
 	)
 	for _, rankingToGet := range rankingsToGet {

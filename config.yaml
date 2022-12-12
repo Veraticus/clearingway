@@ -8,6 +8,8 @@ guilds:
     datacenter: true
   guildId: 1008845758805594173
   channelId: 1008850017185955850
+  physicalDatacenters:
+  - name: "NA"
   encounters:
   - ids: [87]
     name: "P8SP2"
@@ -59,6 +61,8 @@ guilds:
     datacenter: true
   guildId: 968960259081252884
   channelId: 972868045552877589
+  physicalDatacenters:
+  - name: "NA"
   encounters:
   - ids: [1065]
     name: "Dragonsong's Reprise (Ultimate)"
@@ -76,6 +80,8 @@ guilds:
     datacenter: true
   guildId: 973884326515191838
   channelId: 1028344695597838356
+  physicalDatacenters:
+  - name: "NA"
   encounters:
   - ids: [1060, 1047, 1039]
     name: "The Unending Coil of Bahamut (Ultimate)"
@@ -114,6 +120,8 @@ guilds:
     datacenter: true
   guildId: 1021602454716022845
   channelId: 1037083485543866479
+  physicalDatacenters:
+  - name: "NA"
   encounters:
   - ids: [1060, 1047, 1039]
     name: "The Unending Coil of Bahamut (Ultimate)"
@@ -156,19 +164,21 @@ guilds:
     datacenter: true
   guildId: 404710160540368917
   channelId: 1028389598755311657
-  datacenters:
-    - name: "aether guest"
-      datacenter: "Aether"
-      color: 0x000001
-    - name: "crystal guest"
-      datacenter: "Crystal"
-      color: 0xf9c9a9
-    - name: "primal guest"
-      datacenter: "Primal"
-      color: 0xff0000
-    - name: "dynamis guest"
-      datacenter: "Dynamis"
-      color: 0xEAC645
+  physicalDatacenters:
+  - name: "NA"
+    logicalDatacenters:
+      - to: "aether guest"
+        from: "Aether"
+        color: 0x000001
+      - to: "crystal guest"
+        from: "Crystal"
+        color: 0xf9c9a9
+      - to: "primal guest"
+        from: "Primal"
+        color: 0xff0000
+      - to: "dynamis guest"
+        from: "Dynamis"
+        color: 0xEAC645
   encounters:
   - ids: [1060, 1047, 1039]
     name: "The Unending Coil of Bahamut (Ultimate)"

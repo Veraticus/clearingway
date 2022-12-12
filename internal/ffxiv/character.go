@@ -61,3 +61,7 @@ func (c *Character) Name() string {
 func (c *Character) LodestoneSlug(discordId string) string {
 	return fmt.Sprintf("clearingway-%d", adler32.Checksum([]byte(discordId)))
 }
+
+func (c *Character) PhysicalDatacenter() *PhysicalDatacenter {
+	return PhysicalDatacenterForWorld(c.World)
+}

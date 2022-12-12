@@ -411,7 +411,7 @@ func (c *Clearingway) Autocomplete(s *discordgo.Session, i *discordgo.Interactio
 	title := cases.Title(language.AmericanEnglish)
 
 	if len(world) == 0 {
-		for _, world := range ffxiv.AllWorlds() {
+		for _, world := range c.AllWorlds {
 			worldTitle := title.String(world)
 			choices = append(choices, &discordgo.ApplicationCommandOptionChoice{
 				Name:  worldTitle,

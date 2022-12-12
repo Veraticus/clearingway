@@ -1,6 +1,8 @@
 package clearingway
 
 import (
+	"fmt"
+
 	"github.com/Veraticus/clearingway/internal/ffxiv"
 )
 
@@ -9,12 +11,12 @@ type Guilds struct {
 }
 
 type Guild struct {
-	Name        string
-	Id          string
-	ChannelId   string
-	Encounters  *Encounters
-	Characters  *ffxiv.Characters
-	Datacenters *Datacenters
+	Name                string
+	Id                  string
+	ChannelId           string
+	Encounters          *Encounters
+	Characters          *ffxiv.Characters
+	PhysicalDatacenters *PhysicalDatacenters
 
 	RelevantParsingEnabled bool
 	RelevantFlexingEnabled bool
@@ -37,8 +39,9 @@ func (g *Guild) Init(c *ConfigGuild) {
 	g.Encounters = &Encounters{Encounters: []*Encounter{}}
 	g.Characters = &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}}
 
-	g.Datacenters = &Datacenters{}
-	g.Datacenters.Init(c.ConfigDatacenters)
+	g.PhysicalDatacenters = &PhysicalDatacenters{PhysicalDatacenters: map[string]*PhysicalDatacenter{}}
+	fmt.Printf("Datacenters are %+v\n", c.ConfigPhysicalDatacenters)
+	g.PhysicalDatacenters.Init(c.ConfigPhysicalDatacenters)
 
 	for _, configEncounter := range c.ConfigEncounters {
 		encounter := &Encounter{}
@@ -95,7 +98,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 	}
 
 	if g.DatacenterEnabled {
-		g.DatacenterRoles = g.Datacenters.AllRoles()
+		g.DatacenterRoles = g.PhysicalDatacenters.AllRoles()
 	}
 
 	if len(c.ConfigReconfigureRoles) != 0 {

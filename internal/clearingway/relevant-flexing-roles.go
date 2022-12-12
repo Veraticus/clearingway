@@ -212,7 +212,7 @@ func RelevantFlexingRoles() *Roles {
 						if pinkFound && orangeFound && purpleFound && blueFound && greenFound && grayFound {
 							return true,
 								fmt.Sprintf(
-									"DPS parse at every percentile (except gold) found in `%v`:\n  Pink parse **%v** with `%v` on <t:%v:F> (%v).\n  Orange parse **%v** with `%v` on <t:%v:F> (%v).\n  Purple parse **%v** with `%v` on <t:%v:F> (%v).\n  Blue parse **%v** with `%v` on <t:%v:F> (%v).\n  Green parse **%v** with `%v` on <t:%v:F> (%v).\n  Gray parse **%v** with `%v` on <t:%v:F> (%v).",
+									"DPS parse at every percentile (except gold) found in `%v`:\n    Pink parse **%v** with `%v` on <t:%v:F> (%v).\n    Orange parse **%v** with `%v` on <t:%v:F> (%v).\n    Purple parse **%v** with `%v` on <t:%v:F> (%v).\n    Blue parse **%v** with `%v` on <t:%v:F> (%v).\n    Green parse **%v** with `%v` on <t:%v:F> (%v).\n    Gray parse **%v** with `%v` on <t:%v:F> (%v).",
 									encounter.Name,
 									pinkRank.DPSPercentString(),
 									pinkRank.Job.Abbreviation,
@@ -234,7 +234,7 @@ func RelevantFlexingRoles() *Roles {
 									greenRank.Job.Abbreviation,
 									greenRank.UnixTime(),
 									greenRank.Report.Url(),
-									greenRank.DPSPercentString(),
+									grayRank.DPSPercentString(),
 									grayRank.Job.Abbreviation,
 									grayRank.UnixTime(),
 									grayRank.Report.Url(),

@@ -33,6 +33,7 @@ type Role struct {
 	Description string
 	Color       int
 	Uncomfy     bool
+	Skip        bool
 	ShouldApply func(*ShouldApplyOpts) (bool, string)
 	DiscordRole *discordgo.Role
 }

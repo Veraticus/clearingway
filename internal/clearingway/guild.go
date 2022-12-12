@@ -23,6 +23,7 @@ type Guild struct {
 	LegendEnabled          bool
 	UltimateFlexingEnabled bool
 	DatacenterEnabled      bool
+	SkipRemoval            bool
 
 	EncounterRoles       *Roles
 	RelevantParsingRoles *Roles
@@ -79,6 +80,12 @@ func (g *Guild) Init(c *ConfigGuild) {
 		g.DatacenterEnabled = true
 	}
 
+	if c.ConfigRoles != nil && c.ConfigRoles.SkipRemoval == true {
+		g.SkipRemoval = true
+	} else {
+		g.SkipRemoval = false
+	}
+
 	g.EncounterRoles = g.Encounters.Roles()
 
 	if g.RelevantParsingEnabled {
@@ -105,8 +112,19 @@ func (g *Guild) Init(c *ConfigGuild) {
 		for _, configReconfigureRole := range c.ConfigReconfigureRoles {
 			for _, role := range g.AllRoles() {
 				if role.Name == configReconfigureRole.From {
-					role.Name = configReconfigureRole.To
-					role.Color = configReconfigureRole.Color
+					if configReconfigureRole.To != "" {
+						role.Name = configReconfigureRole.To
+					}
+					if configReconfigureRole.Color != 0 {
+						role.Color = configReconfigureRole.Color
+					}
+					if configReconfigureRole.Skip == true {
+						role.Skip = true
+					}
+					if configReconfigureRole.DontSkip == true {
+						role.Skip = false
+					}
+
 				}
 			}
 		}

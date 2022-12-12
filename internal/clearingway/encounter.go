@@ -229,6 +229,15 @@ func (es *Encounters) Names() []string {
 	return names
 }
 
+func (es *Encounters) ForName(name string) *Encounter {
+	for _, e := range es.Encounters {
+		if e.Name == name {
+			return e
+		}
+	}
+	return nil
+}
+
 func (e *Encounter) Ranks(rankings *fflogs.Rankings) []*fflogs.Rank {
 	ranks := []*fflogs.Rank{}
 	for id, ranking := range rankings.Rankings {

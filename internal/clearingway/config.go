@@ -20,6 +20,7 @@ type ConfigRoles struct {
 	Legend          bool `yaml:"legend"`
 	UltimateFlexing bool `yaml:"ultimateFlexing"`
 	Datacenter      bool `yaml:"datacenter"`
+	SkipRemoval     bool `yaml:"skipRemoval"`
 }
 
 type ConfigEncounter struct {
@@ -49,7 +50,9 @@ type ConfigLogicalDatacenter struct {
 }
 
 type ConfigReconfigureRoles struct {
-	From  string `yaml:"from"`
-	To    string `yaml:"to"`
-	Color int    `yaml:"color"`
+	From     string `yaml:"from"`
+	To       string `yaml:"to"`
+	Color    int    `yaml:"color"`
+	Skip     bool   `yaml:"skip"`
+	DontSkip bool   `yaml:"dontSkip"`
 }

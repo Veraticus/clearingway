@@ -39,6 +39,10 @@ type Role struct {
 }
 
 func (r *Role) Ensure(guildId string, s *discordgo.Session, existingRoles []*discordgo.Role) error {
+	if r.Skip {
+		return nil
+	}
+
 	var existingRole *discordgo.Role
 	for _, er := range existingRoles {
 		if er.Name == r.Name {

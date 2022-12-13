@@ -124,7 +124,6 @@ func (g *Guild) Init(c *ConfigGuild) {
 					if configReconfigureRole.DontSkip == true {
 						role.Skip = false
 					}
-
 				}
 			}
 		}

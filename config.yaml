@@ -217,7 +217,7 @@ guilds:
     datacenter: false
     skipRemoval: true
   guildId: 556243090256560129
-  channelId: 1037083485543866479
+  channelId: 1051743822863925278
   physicalDatacenters:
   - name: "NA"
   encounters:
@@ -225,36 +225,48 @@ guilds:
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false
     roles:
-      - name: "cleared-ucob"
+      - name: "cleared ucob"
         type: "Cleared"
         color: 0xf8ff00
   - ids: [1061, 1048, 1042]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
     roles:
-      - name: "cleared-uwu"
+      - name: "cleared uwu"
         type: "Cleared"
         color: 0x30d2fb
   - ids: [1062, 1050]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
     roles:
-      - name: "cleared-tea"
+      - name: "cleared tea"
         type: "Cleared"
         color: 0x2daf55
   - ids: [1065]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
     roles:
-      - name: "cleared-dru"
+      - name: "cleared dru"
         type: "Cleared"
         color: 0xe67cba
   reconfigureRoles:
+  - from: "NA's Comfiest"
+    to: "comfiest"
+  - from: "Nice"
+    to: "nice"
+  - from: "Chad"
+    to: "chad"
+  - from: "Bloodbather"
+    to: "bloodbather"
+  - from: "Overhealer"
+    to: "overhealer"
+  - from: "Rainbow"
+    to: "rainbow"
   - from: "The Man"
     to: "the man"
     dontSkip: true
   - from: "The Myth"
-    to: "the man"
+    to: "the myth"
     dontSkip: true
   - from: "The Legend"
     skip: true

@@ -161,7 +161,7 @@ func LegendRoles() *Roles {
 			},
 		},
 		{
-			Name: "The Myth", Color: 0xff001e, Skip: true,
+			Name: "The Myth", Color: 0xaa01ff, Skip: true,
 			Description: "Cleared the Unending Coil of Bahamut (Ultimate), the Weapon's Refrain (Ultimate), and the Epic of Alexander (Ultimate).",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)

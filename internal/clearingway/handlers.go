@@ -211,6 +211,9 @@ func (c *Clearingway) Roles(s *discordgo.Session, i *discordgo.InteractionCreate
 	chunks.Write("\nClearingway can give out these roles with `/clears`:\n")
 
 	for _, r := range g.AllRoles() {
+		if r.Skip == true {
+			continue
+		}
 		chunks.Write(fmt.Sprintf("__**%s**__\n⮕ %s\n\n", r.Name, r.Description))
 	}
 

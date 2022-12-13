@@ -136,9 +136,9 @@ func run(c *clearingway.Clearingway) {
 		panic(fmt.Errorf("Could not open Discord session: %f", err))
 	}
 
-	for c.Discord.Session.DataReady {
-		fmt.Printf("Waiting for Discord to be ready...\n")
-		time.Sleep(200 * time.Millisecond)
+	for c.Ready != true {
+		fmt.Printf("Waiting for Clearingway to be ready...\n")
+		time.Sleep(2 * time.Second)
 	}
 
 	char, err := guild.Characters.Init(world, firstName, lastName)

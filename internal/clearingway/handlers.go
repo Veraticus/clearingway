@@ -66,6 +66,7 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		// }
 	}
 	fmt.Printf("Clearingway ready!\n")
+	c.Ready = true
 }
 
 var ClearCommand = &discordgo.ApplicationCommand{
@@ -539,12 +540,14 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 	if guild.SkipRemoval != true {
 		for _, pendingRole := range rolesToRemove {
 			role := pendingRole.role
-			if role.PresentInRoles(member.Roles) {
-				err := role.RemoveFromCharacter(guild.Id, discordUserId, c.Discord.Session)
-				if err != nil {
-					return nil, fmt.Errorf("Error removing Discord role: %v", err)
+			if role.Skip != true {
+				if role.PresentInRoles(member.Roles) {
+					err := role.RemoveFromCharacter(guild.Id, discordUserId, c.Discord.Session)
+					if err != nil {
+						return nil, fmt.Errorf("Error removing Discord role: %v", err)
+					}
+					text = append(text, fmt.Sprintf("__Removing role: **%s**__\n⮕ %s\n", role.Name, pendingRole.message))
 				}
-				text = append(text, fmt.Sprintf("__Removing role: **%s**__\n⮕ %s\n", role.Name, pendingRole.message))
 			}
 		}
 	}

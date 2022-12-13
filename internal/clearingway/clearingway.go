@@ -13,6 +13,7 @@ type Clearingway struct {
 	Discord *discord.Discord
 	Guilds  *Guilds
 	Fflogs  *fflogs.Fflogs
+	Ready   bool
 
 	AllWorlds        []string
 	AutoCompleteTrie *trie.Trie

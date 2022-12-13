@@ -217,7 +217,7 @@ guilds:
     datacenter: false
     skipRemoval: true
   guildId: 556243090256560129
-  channelId: 1051743822863925278
+  channelId: 1052040182330822727
   physicalDatacenters:
   - name: "NA"
   encounters:

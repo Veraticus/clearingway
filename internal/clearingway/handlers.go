@@ -220,7 +220,7 @@ func (c *Clearingway) Roles(s *discordgo.Session, i *discordgo.InteractionCreate
 
 	for n, c := range chunks.Chunks {
 		var err error
-		if n == 1 {
+		if n == 0 {
 			err = discord.StartInteraction(s, i.Interaction, c.String())
 		} else {
 			err = discord.ContinueInteraction(s, i.Interaction, c.String())
@@ -230,6 +230,7 @@ func (c *Clearingway) Roles(s *discordgo.Session, i *discordgo.InteractionCreate
 			return
 		}
 	}
+
 	return
 }
 

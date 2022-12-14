@@ -223,7 +223,7 @@ func (c *Clearingway) Roles(s *discordgo.Session, i *discordgo.InteractionCreate
 		if n == 1 {
 			err = discord.StartInteraction(s, i.Interaction, c.String())
 		} else {
-			err = discord.StartInteraction(s, i.Interaction, c.String())
+			err = discord.ContinueInteraction(s, i.Interaction, c.String())
 		}
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)

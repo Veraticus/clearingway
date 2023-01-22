@@ -36,6 +36,7 @@ func legendRoleString(clearedEncounters *Encounters, rankings *fflogs.Rankings) 
 			"=2", "Cleared the following two Ultimate fights:\n",
 			"=3", "Cleared the following three Ultimate fights:\n",
 			"=4", "Cleared the following four Ultimate fights:\n",
+			"=5", "Cleared the following five Ultimate fights:\n",
 			"other", "Cleared the following Ultimate fights:\n",
 		),
 	)
@@ -111,6 +112,19 @@ func LegendRoles() *Roles {
 				}
 
 				return false, "Did not clear all four ultimates."
+			},
+		},
+		{
+			Name: "The Penta Legend", Color: 0x3498db,
+			Description: "Cleared exactly five ultimates.",
+			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
+				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
+				if len(clearedEncounters.Encounters) == 5 {
+					output := legendRoleString(clearedEncounters, opts.Rankings)
+					return true, output
+				}
+
+				return false, "Did not clear all five ultimates."
 			},
 		},
 		{
@@ -206,6 +220,56 @@ func LegendRoles() *Roles {
 				}
 
 				return false, "Did not clear the Unending Coil of Bahamut (Ultimate), the Weapon's Refrain (Ultimate), and the Epic of Alexander (Ultimate)."
+			},
+		},
+		{
+			Name: "The Uncoiled Legend", Color: 0x9192fc, Skip: true,
+			Description: "Cleared the Unending Coil of Bahamut (Ultimate), the Weapon's Refrain (Ultimate), the Epic of Alexander (Ultimate), Dragonsong's Refrain (Ultimate), and the Omega Protocol (Ultimate).",
+			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
+				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
+
+				ucob := clearedEncounters.ForName("The Unending Coil of Bahamut (Ultimate)")
+				uwu := clearedEncounters.ForName("The Weapon's Refrain (Ultimate)")
+				tea := clearedEncounters.ForName("The Epic of Alexander (Ultimate)")
+				dsr := clearedEncounters.ForName("Dragonsong's Reprise (Ultimate)")
+				top := clearedEncounters.ForName("The Omega Protocol (Ultimate)")
+
+				if ucob != nil && uwu != nil && tea != nil && dsr != nil && top != nil {
+					clears := map[string]*fflogs.Ranking{}
+
+					for _, clearedEncounter := range []*Encounter{ucob, uwu, tea} {
+						for _, encounterId := range clearedEncounter.Ids {
+							ranking, ok := opts.Rankings.Rankings[encounterId]
+							if !ok {
+								continue
+							}
+							if !ranking.Cleared() {
+								continue
+							}
+
+							clears[clearedEncounter.Name] = ranking
+						}
+					}
+					clearedString := strings.Builder{}
+					clearedString.WriteString(
+						"Cleared the Unending Coil of Bahamut (Ultimate), the Weapon's Refrain (Ultimate), the Epic of Alexander (Ultimate), Dragonsong's Refrain (Ultimate), and the Omega Protocol (Ultimate):\n",
+					)
+					for name, ranking := range clears {
+						rank := ranking.RanksByTime()[0]
+						clearedString.WriteString(
+							fmt.Sprintf(
+								"     `%v` with `%v` on <t:%v:F> (%v).\n",
+								name,
+								rank.Job.Abbreviation,
+								rank.UnixTime(),
+								rank.Report.Url(),
+							),
+						)
+					}
+					return true, strings.TrimSuffix(clearedString.String(), "\n")
+				}
+
+				return false, "Did not clear the Unending Coil of Bahamut (Ultimate), the Weapon's Refrain (Ultimate), the Epic of Alexander (Ultimate), Dragonsong's Refrain (Ultimate), and the Omega Protocol (Ultimate)."
 			},
 		},
 	}}

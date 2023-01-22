@@ -268,6 +268,9 @@ guilds:
   - from: "The Myth"
     to: "the myth"
     dontSkip: true
+  - from: "The Uncoiled Legend"
+    to: "the legend"
+    dontSkip: true
   - from: "The Legend"
     skip: true
   - from: "The Double Legend"

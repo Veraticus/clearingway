@@ -17,6 +17,7 @@ var UltimateEncounters = &Encounters{
 		{Name: "The Weapon's Refrain (Ultimate)", Ids: []int{1061, 1048, 1042}, Difficulty: "Ultimate", DefaultRoles: false},
 		{Name: "The Epic of Alexander (Ultimate)", Ids: []int{1062, 1050}, Difficulty: "Ultimate", DefaultRoles: false},
 		{Name: "Dragonsong's Reprise (Ultimate)", Ids: []int{1065}, Difficulty: "Ultimate", DefaultRoles: false},
+		{Name: "The Omega Protocol (Ultimate)", Ids: []int{1068}, Difficulty: "Ultimate", DefaultRoles: false},
 	},
 }
 

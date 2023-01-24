@@ -111,6 +111,13 @@ guilds:
       - name: "DSR Cleared"
         type: "Cleared"
         color: 0xCF8035
+  - ids: [1068]
+    name: "The Omega Protocol (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "TOP Cleared"
+        type: "Cleared"
+        color: 0xd1e5f4
 - name: UDR
   roles:
     relevantParsing: true

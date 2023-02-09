@@ -2,6 +2,7 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 )
 
 func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
@@ -41,6 +42,10 @@ func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
 		var furthestProgRole *Role
 		var furthestProgRoleIndex int
 
+		// Create return message.
+		messageString := strings.Builder{}
+		messageString.WriteString(fmt.Sprintf("⮕ %s\n", furthestFight.ReportURL()))
+
 		// Does this report contain a kill?
 		if furthestFight.Kill {
 			furthestProgRoleIndex = len(roles.Roles) + 1
@@ -53,25 +58,25 @@ func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
 		// Bail out if the furthest prog point in the fight is less than one
 		// the user already possesses
 		if existingProgRole != nil && furthestProgRoleIndex < existingProgRoleIndex {
-			return false, fmt.Sprintf(
-				"You already have a prog role further than the furthest prog in this report! Your existing prog point is `%s` (%s), and the furthest prog point seen by you in this report is `%s` (%s) ⮕ %s",
+			messageString.WriteString(fmt.Sprintf(
+				"You already have a prog role further than the furthest prog in this report! Your existing prog point is `%s` (%s), and the furthest prog point seen by you in this report is `%s` (%s).",
 				existingProgRole.Name,
 				existingProgRole.Phase(existingProgRoleIndex+1),
 				furthestProgRole.Name,
 				furthestProgRole.Phase(furthestProgRoleIndex+1),
-				furthestFight.ReportURL(),
-			), nil, nil
+			))
+			return false, messageString.String(), nil, nil
 		}
 
 		// If this fight has the same furthest prog point the user already has,
 		// we are done.
 		if existingProgRole != nil && existingProgRoleIndex == furthestProgRoleIndex {
-			return false, fmt.Sprintf(
-				"Your furthest prog point `%s` (%s) is the same as the furthest prog point in this report ⮕ %s",
+			messageString.WriteString(fmt.Sprintf(
+				"Your furthest prog point `%s` (%s) is the same as the furthest prog point in this report.",
 				existingProgRole.Name,
 				existingProgRole.Phase(existingProgRoleIndex+1),
-				furthestFight.ReportURL(),
-			), nil, nil
+			))
+			return false, messageString.String(), nil, nil
 		}
 
 		// Looks like we have some real prog to give!
@@ -82,14 +87,12 @@ func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
 			lowerRoles = roles.Roles[0:furthestProgRoleIndex]
 		}
 
-		return true, fmt.Sprintf(
-				"Your furthest prog is now `%s` (%s) ⮕ %s",
-				furthestProgRole.Name,
-				furthestProgRole.Phase(furthestProgRoleIndex+1),
-				furthestFight.ReportURL(),
-			), []*Role{
-				furthestProgRole,
-			}, lowerRoles
+		messageString.WriteString(fmt.Sprintf(
+			"Your furthest prog is now `%s` (%s).",
+			furthestProgRole.Name,
+			furthestProgRole.Phase(furthestProgRoleIndex+1),
+		))
+		return true, messageString.String(), []*Role{furthestProgRole}, lowerRoles
 	}
 
 	return roles

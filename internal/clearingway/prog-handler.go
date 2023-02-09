@@ -132,7 +132,7 @@ func (c *Clearingway) Prog(s *discordgo.Session, i *discordgo.InteractionCreate)
 	if !isOwner {
 		discord.ContinueInteraction(s, i.Interaction,
 			fmt.Sprintf(
-				"I could not verify your ownership of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile and then run `/clears` again:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
+				"I could not verify your ownership of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile and then run `/prog` again:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
 				char.Name(),
 				char.World,
 				char.LodestoneSlug(discordId),
@@ -145,7 +145,7 @@ func (c *Clearingway) Prog(s *discordgo.Session, i *discordgo.InteractionCreate)
 	}
 
 	err = discord.ContinueInteraction(s, i.Interaction,
-		fmt.Sprintf("Analyzing report for `%s (%s)`...", char.Name(), char.World),
+		fmt.Sprintf("Analyzing report %s for `%s (%s)`...", reportId, char.Name(), char.World),
 	)
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
@@ -242,6 +242,8 @@ func (c *Clearingway) UpdateProgForCharacterInGuild(
 		text = append(text, message)
 
 		if shouldApply {
+			text = append(text, "\n")
+
 			for _, role := range rolesToApply {
 				if role.Skip != true {
 					if !role.PresentInRoles(member.Roles) {
@@ -274,6 +276,7 @@ func (c *Clearingway) UpdateProgForCharacterInGuild(
 }
 
 func cleanReportId(reportId string) string {
+	reportId = strings.TrimRight(reportId, "/")
 	reportIds := strings.Split(reportId, "/")
 	reportId = reportIds[len(reportIds)-1]
 	reportIds = strings.Split(reportId, "#")

@@ -60,7 +60,7 @@ func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
 		// the user already possesses
 		if existingProgRole != nil && furthestProgRoleIndex < existingProgRoleIndex {
 			messageString.WriteString(fmt.Sprintf(
-				"  You already have a prog role further than the furthest prog in this report! Your existing prog point is `%s` (%s), and the furthest prog point seen by you in this report is `%s` (%s).",
+				"You already have a prog role further than the furthest prog in this report! Your existing prog point is `%s` (%s), and the furthest prog point seen by you in this report is `%s` (%s).",
 				existingProgRole.Name,
 				existingProgRole.Phase(existingProgRoleIndex+1),
 				furthestProgRole.Name,
@@ -73,7 +73,7 @@ func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
 		// we are done.
 		if existingProgRole != nil && existingProgRoleIndex == furthestProgRoleIndex {
 			messageString.WriteString(fmt.Sprintf(
-				"  Your furthest prog point `%s` (%s) is the same as the furthest prog point in this report.",
+				"Your furthest prog point `%s` (%s) is the same as the furthest prog point in this report.",
 				existingProgRole.Name,
 				existingProgRole.Phase(existingProgRoleIndex+1),
 			))
@@ -89,7 +89,7 @@ func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
 		}
 
 		messageString.WriteString(fmt.Sprintf(
-			"  Your furthest prog point is now `%s` (%s).",
+			"Your furthest prog point is now `%s` (%s).\n",
 			furthestProgRole.Name,
 			furthestProgRole.Phase(furthestProgRoleIndex+1),
 		))

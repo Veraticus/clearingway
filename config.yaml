@@ -71,6 +71,21 @@ guilds:
       - name: "Cleared"
         type: "Cleared"
         color: 0xf58cba
+    prog:
+    - name: P1 (Vault Knights)
+      color: 0x9C491B
+    - name: P2 (Thordan)
+      color: 0x693986
+    - name: P3 (Nidstinien)
+      color: 0x356590
+    - name: P4 (The Eyes)
+      color: 0x596D79
+    - name: P5 (Thordan Reprise)
+      color: 0x925CB1
+    - name: P6 (Double Dragon)
+      color: 0x5195D3
+    - name: P7 (Dragon-king Thordan)
+      color: 0xE8C444
 - name: UAR
   roles:
     relevantParsing: true
@@ -288,3 +303,36 @@ guilds:
   - from: "The Quad Legend"
     to: "tetrislegendbtw"
     color: 0xffa6c9
+- name: TOP
+  roles:
+    relevantParsing: true
+    relevantFlexing: false
+    legend: false
+    ultimateFlexing: false
+    datacenter: true
+  guildId: 982459453578285056
+  channelId: 1073363433489170442
+  physicalDatacenters:
+  - name: "NA"
+  encounters:
+  - ids: [1068]
+    name: "The Omega Protocol (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "Cleared"
+        type: "Cleared"
+        color: 0xf58cba
+    prog:
+    - name: P1 (Omega)
+      color: 0x693986
+    - name: P2 (Omega-M/F)
+      color: 0x356590
+    - name: P3 (Omega Reconfigured)
+      color: 0x596D79
+    - name: P4 (Blue Screen)
+      color: 0x925CB1
+    - name: "P5 (Run: Dynamis)"
+      color: 0x5195D3
+    - name: P6 (Alpha Omega)
+      color: 0xE8C444
+    - name: P7 (Dragon-king Thordan)

@@ -169,3 +169,13 @@ func (g *Guild) UltRoles() []*Role {
 func (g *Guild) AllRoles() []*Role {
 	return append(g.NonUltRoles(), g.UltRoles()...)
 }
+
+func (g *Guild) IsProgEnabled() bool {
+	for _, encounter := range g.Encounters.Encounters {
+		if encounter.ProgRoles != nil {
+			return true
+		}
+	}
+
+	return false
+}

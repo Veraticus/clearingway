@@ -10,9 +10,11 @@ import (
 )
 
 type ShouldApplyOpts struct {
-	Character  *ffxiv.Character
-	Encounters *Encounters
-	Rankings   *fflogs.Rankings
+	Character     *ffxiv.Character
+	Encounters    *Encounters
+	Rankings      *fflogs.Rankings
+	Fights        *fflogs.Fights
+	ExistingRoles *Roles
 }
 
 type RoleType string
@@ -22,11 +24,16 @@ var (
 	ReclearRole RoleType = "Reclear"
 	ParseRole   RoleType = "Parse"
 	ClearedRole RoleType = "Cleared"
+	ProgRole    RoleType = "Prog"
 )
 
 type Roles struct {
 	Roles []*Role
+
+	// The first list of roles is roles to add; the second is roles to remove.
+	ShouldApply func(*ShouldApplyOpts) (bool, string, []*Role, []*Role)
 }
+
 type Role struct {
 	Type        RoleType
 	Name        string
@@ -34,6 +41,7 @@ type Role struct {
 	Color       int
 	Uncomfy     bool
 	Skip        bool
+	Mention     bool
 	ShouldApply func(*ShouldApplyOpts) (bool, string)
 	DiscordRole *discordgo.Role
 }
@@ -66,7 +74,7 @@ func (r *Role) Ensure(guildId string, s *discordgo.Session, existingRoles []*dis
 			r.Color,
 			false,
 			0,
-			false,
+			r.Mention,
 		)
 		if err != nil {
 			return fmt.Errorf("Could not ensure role %v: %w.\n", r.Name, err)
@@ -96,6 +104,14 @@ func (r *Role) PresentInRoles(existingRoleIds []string) bool {
 	return false
 }
 
+func (r *Role) Phase(i int) string {
+	if r.Type == ClearedRole {
+		return "**Cleared**"
+	}
+
+	return fmt.Sprintf("Phase **%d**", i)
+}
+
 func (rs *Roles) Reorder(guildId string, s *discordgo.Session) error {
 	discordRoles := []*discordgo.Role{}
 
@@ -115,4 +131,27 @@ func (rs *Roles) FindByName(name string) *Role {
 	}
 
 	return nil
+}
+
+func (rs *Roles) IndexOfRole(role *Role) (bool, int) {
+	for i, r := range rs.Roles {
+		if r.Name == role.Name {
+			return true, i
+		}
+	}
+
+	return false, 0
+}
+
+func (rs *Roles) InDiscordRoles(ids []string) []*Role {
+	roles := []*Role{}
+	for _, r := range rs.Roles {
+		for _, id := range ids {
+			if r.DiscordRole.ID == id {
+				roles = append(roles, r)
+			}
+		}
+	}
+
+	return roles
 }

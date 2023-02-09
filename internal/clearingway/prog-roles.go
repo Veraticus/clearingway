@@ -52,7 +52,7 @@ func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
 
 		// Bail out if the furthest prog point in the fight is less than one
 		// the user already possesses
-		if existingProgRole != nil && furthestProgRoleIndex <= existingProgRoleIndex {
+		if existingProgRole != nil && furthestProgRoleIndex < existingProgRoleIndex {
 			return false, fmt.Sprintf(
 				"You already have a prog role further than the furthest prog in this report! Your existing prog point is `%s` (%s), and the furthest prog point seen by you in this report is `%s` (%s) ⮕ %s",
 				existingProgRole.Name,

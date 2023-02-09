@@ -36,6 +36,8 @@ type ConfigRole struct {
 	Name        string `yaml:"name"`
 	Type        string `yaml:"type"`
 	Color       int    `yaml:"color"`
+	Hoist       bool   `yaml:"hoist"`
+	Mention     bool   `yaml:"mention"`
 	Description string `yaml:"description"`
 }
 

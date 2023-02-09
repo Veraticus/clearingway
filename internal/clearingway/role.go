@@ -42,6 +42,7 @@ type Role struct {
 	Uncomfy     bool
 	Skip        bool
 	Mention     bool
+	Hoist       bool
 	ShouldApply func(*ShouldApplyOpts) (bool, string)
 	DiscordRole *discordgo.Role
 }
@@ -72,7 +73,7 @@ func (r *Role) Ensure(guildId string, s *discordgo.Session, existingRoles []*dis
 			existingRole.ID,
 			r.Name,
 			r.Color,
-			false,
+			r.Hoist,
 			0,
 			r.Mention,
 		)

@@ -322,16 +322,23 @@ guilds:
       - name: "ALPHA LEGEND"
         type: "Cleared"
         color: 0xf58cba
+        hoist: true
     prog:
     - name: Omega
       color: 0x693986
+      hoist: true
     - name: Omega-M/F
       color: 0x356590
+      hoist: true
     - name: Omega Reconfigured
       color: 0x596D79
+      hoist: true
     - name: Blue Screen
       color: 0x925CB1
+      hoist: true
     - name: "Run: Dynamis"
       color: 0x5195D3
+      hoist: true
     - name: Alpha Omega
       color: 0xE8C444
+      hoist: true

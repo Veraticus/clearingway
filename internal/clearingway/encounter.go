@@ -80,6 +80,12 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 		if configRole.Color != 0 {
 			role.Color = configRole.Color
 		}
+		if configRole.Hoist {
+			role.Hoist = true
+		}
+		if configRole.Mention {
+			role.Mention = true
+		}
 	}
 
 	for roleType, role := range e.Roles {

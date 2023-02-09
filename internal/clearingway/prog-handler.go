@@ -145,7 +145,7 @@ func (c *Clearingway) Prog(s *discordgo.Session, i *discordgo.InteractionCreate)
 	}
 
 	err = discord.ContinueInteraction(s, i.Interaction,
-		fmt.Sprintf("Analyzing report %s for `%s (%s)`...", reportId, char.Name(), char.World),
+		fmt.Sprintf("Analyzing report https://fflogs.com/reports/%s for `%s (%s)`...", reportId, char.Name(), char.World),
 	)
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
@@ -242,8 +242,6 @@ func (c *Clearingway) UpdateProgForCharacterInGuild(
 		text = append(text, message)
 
 		if shouldApply {
-			text = append(text, "\n")
-
 			for _, role := range rolesToApply {
 				if role.Skip != true {
 					if !role.PresentInRoles(member.Roles) {

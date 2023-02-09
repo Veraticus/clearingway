@@ -83,11 +83,11 @@ func (f *Fflogs) GetProgForReport(r string, rankingsToGet []*RankingToGet, char 
 		return nil, fmt.Errorf("Master data not found correctly for %s!", r)
 	}
 
-	var characterActorId int
+	characterActorIds := []int{}
 	characterFoundInMasterData := false
 	for _, a := range report.MasterData.Actors {
 		if a.Name == char.Name() && a.Server == char.World {
-			characterActorId = a.Id
+			characterActorIds = append(characterActorIds, a.Id)
 			characterFoundInMasterData = true
 		}
 	}
@@ -110,8 +110,10 @@ func (f *Fflogs) GetProgForReport(r string, rankingsToGet []*RankingToGet, char 
 
 				characterIsInFight := false
 				for _, friendlyId := range f.FriendlyPlayers {
-					if friendlyId == characterActorId {
-						characterIsInFight = true
+					for _, characterActorId := range characterActorIds {
+						if friendlyId == characterActorId {
+							characterIsInFight = true
+						}
 					}
 				}
 				if !characterIsInFight {

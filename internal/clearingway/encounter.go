@@ -31,6 +31,7 @@ type Encounter struct {
 	DefaultRoles bool   `yaml:"defaultRoles"`
 	Ids          []int  `yaml:"ids"`
 	Roles        map[RoleType]*Role
+	ProgRoles    *Roles
 }
 
 func (e *Encounter) Init(c *ConfigEncounter) {
@@ -117,6 +118,10 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 
 		return false, fmt.Sprintf("Has not cleared %v.", e.Name)
 	}
+
+	if c.ConfigProg != nil {
+		e.ProgRoles = ProgRoles(c.ConfigProg, e)
+	}
 }
 
 func (e *Encounter) DifficultyInt() int {
@@ -133,6 +138,9 @@ func (es *Encounters) Roles() *Roles {
 	for _, encounter := range es.Encounters {
 		for _, role := range encounter.Roles {
 			roles.Roles = append(roles.Roles, role)
+		}
+		if encounter.ProgRoles != nil {
+			roles.Roles = append(roles.Roles, encounter.ProgRoles.Roles...)
 		}
 	}
 
@@ -250,4 +258,17 @@ func (e *Encounter) Ranks(rankings *fflogs.Rankings) []*fflogs.Rank {
 	}
 
 	return ranks
+}
+
+func (e *Encounter) Fights(fights *fflogs.Fights) []*fflogs.Fight {
+	fs := []*fflogs.Fight{}
+	for _, fight := range fights.Fights {
+		for _, encounterId := range e.Ids {
+			if encounterId == fight.EncounterID {
+				fs = append(fs, fight)
+			}
+		}
+	}
+
+	return fs
 }

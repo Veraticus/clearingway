@@ -2,6 +2,7 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/Veraticus/clearingway/internal/discord"
@@ -375,7 +376,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		return
 	}
 
-	roleTexts, err := c.UpdateCharacterInGuild(char, i.Member.User.ID, g)
+	roleTexts, err := c.UpdateClearsForCharacterInGuild(char, i.Member.User.ID, g)
 	if err != nil {
 		err = discord.ContinueInteraction(s, i.Interaction,
 			fmt.Sprintf("Could not analyze clears for `%s (%s)`: %s", char.Name(), char.World, err),
@@ -450,7 +451,11 @@ type pendingRole struct {
 	message string
 }
 
-func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserId string, guild *Guild) ([]string, error) {
+func (c *Clearingway) UpdateClearsForCharacterInGuild(
+	char *ffxiv.Character,
+	discordUserId string,
+	guild *Guild,
+) ([]string, error) {
 	rankingsToGet := []*fflogs.RankingToGet{}
 	for _, encounter := range guild.AllEncounters() {
 		rankingsToGet = append(rankingsToGet, &fflogs.RankingToGet{IDs: encounter.Ids, Difficulty: encounter.DifficultyInt()})
@@ -548,6 +553,96 @@ func (c *Clearingway) UpdateCharacterInGuild(char *ffxiv.Character, discordUserI
 						return nil, fmt.Errorf("Error removing Discord role: %v", err)
 					}
 					text = append(text, fmt.Sprintf("__Removing role: **%s**__\n⮕ %s\n", role.Name, pendingRole.message))
+				}
+			}
+		}
+	}
+
+	char.LastUpdateTime = time.Now()
+
+	return text, nil
+}
+
+func (c *Clearingway) UpdateProgForCharacterInGuild(
+	reportId string,
+	char *ffxiv.Character,
+	discordUserId string,
+	guild *Guild,
+) ([]string, error) {
+	reportIds := strings.Split(reportId, "/")
+	reportId = reportIds[len(reportIds)-1]
+
+	rankingsToGet := []*fflogs.RankingToGet{}
+	for _, encounter := range guild.AllEncounters() {
+		rankingsToGet = append(rankingsToGet, &fflogs.RankingToGet{IDs: encounter.Ids, Difficulty: encounter.DifficultyInt()})
+	}
+	fights, err := c.Fflogs.GetProgForReport(reportId, rankingsToGet, char)
+	if err != nil {
+		return nil, fmt.Errorf("Error retrieving prog: %w", err)
+	}
+
+	fmt.Printf("Found the following relevant fights in %s for %s (%s)...\n", reportId, char.Name(), char.World)
+	for _, e := range guild.Encounters.Encounters {
+		for _, r := range e.Fights(fights) {
+			fmt.Printf("  %+v\n", r)
+		}
+	}
+
+	member, err := c.Discord.Session.GuildMember(guild.Id, discordUserId)
+	if err != nil {
+		return nil, fmt.Errorf("Could not retrieve roles for user: %w", err)
+	}
+	existingRoles := &Roles{Roles: []*Role{}}
+	for _, guildRole := range guild.AllRoles() {
+		if guildRole.Skip {
+			continue
+		}
+		for _, memberDiscordRole := range member.Roles {
+			if memberDiscordRole == guildRole.DiscordRole.ID {
+				existingRoles.Roles = append(existingRoles.Roles, guildRole)
+			}
+		}
+	}
+	text := []string{}
+
+	shouldApplyOpts := &ShouldApplyOpts{
+		Character:     char,
+		Fights:        fights,
+		ExistingRoles: existingRoles,
+		Encounters:    guild.Encounters,
+	}
+
+	for _, encounter := range guild.Encounters.Encounters {
+		if encounter.ProgRoles == nil {
+			continue
+		}
+
+		shouldApply, message, rolesToApply, rolesToRemove := encounter.ProgRoles.ShouldApply(shouldApplyOpts)
+
+		text = append(text, message)
+
+		if shouldApply {
+			for _, role := range rolesToApply {
+				if role.Skip != true {
+					if !role.PresentInRoles(member.Roles) {
+						err := role.AddToCharacter(guild.Id, discordUserId, c.Discord.Session)
+						if err != nil {
+							return nil, fmt.Errorf("Error adding Discord role: %v", err)
+						}
+						text = append(text, fmt.Sprintf("__Adding role: **%s**__\n", role.Name))
+					}
+				}
+			}
+
+			for _, role := range rolesToRemove {
+				if role.Skip != true {
+					if role.PresentInRoles(member.Roles) {
+						err := role.RemoveFromCharacter(guild.Id, discordUserId, c.Discord.Session)
+						if err != nil {
+							return nil, fmt.Errorf("Error removing Discord role: %v", err)
+						}
+						text = append(text, fmt.Sprintf("__Removing role: **%s**__\n", role.Name))
+					}
 				}
 			}
 		}

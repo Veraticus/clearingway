@@ -29,6 +29,7 @@ type ConfigEncounter struct {
 	Difficulty   string        `yaml:"difficulty"`
 	DefaultRoles bool          `yaml:"defaultRoles"`
 	ConfigRoles  []*ConfigRole `yaml:"roles"`
+	ConfigProg   []*ConfigRole `yaml:"prog"`
 }
 
 type ConfigRole struct {

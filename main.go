@@ -95,8 +95,10 @@ func main() {
 		arg = args[0]
 	}
 	switch arg {
-	case "run":
-		run(c)
+	case "clears":
+		clears(c)
+	case "prog":
+		prog(c)
 	default:
 		start(c)
 	}
@@ -115,7 +117,7 @@ func start(c *clearingway.Clearingway) {
 	<-sc
 }
 
-func run(c *clearingway.Clearingway) {
+func clears(c *clearingway.Clearingway) {
 	if len(os.Args) != 7 {
 		panic("Provide a world, firstName, lastName, guildId, and discordId!")
 	}
@@ -163,14 +165,75 @@ func run(c *clearingway.Clearingway) {
 		panic("That character is not owned by that Discord ID!")
 	}
 
-	roleTexts, err := c.UpdateCharacterInGuild(char, discordId, guild)
+	roleTexts, err := c.UpdateClearsForCharacterInGuild(char, discordId, guild)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Character %s (%s) updated in guild %s.\n", char.Name(), char.World, guild.Name)
+	fmt.Printf("Character %s (%s) clears updated in guild %s.\n", char.Name(), char.World, guild.Name)
 
 	for _, roleText := range roleTexts {
 		fmt.Printf(roleText + "\n")
+	}
+}
+
+func prog(c *clearingway.Clearingway) {
+	if len(os.Args) != 8 {
+		panic("Provide a world, firstName, lastName, guildId, discordId, and a report ID or url!")
+	}
+	world := os.Args[2]
+	firstName := os.Args[3]
+	lastName := os.Args[4]
+	guildId := os.Args[5]
+	discordId := os.Args[6]
+	reportId := os.Args[7]
+
+	guild, ok := c.Guilds.Guilds[guildId]
+	if !ok {
+		panic(fmt.Sprintf("Guild %s not setup in config.yaml but you tried to run me in it!", guildId))
+	}
+
+	c.Discord.Session.AddHandler(c.DiscordReady)
+	err := c.Discord.Session.Open()
+	if err != nil {
+		panic(fmt.Errorf("Could not open Discord session: %f", err))
+	}
+
+	for c.Ready != true {
+		fmt.Printf("Waiting for Clearingway to be ready...\n")
+		time.Sleep(2 * time.Second)
+	}
+
+	char, err := guild.Characters.Init(world, firstName, lastName)
+	if err != nil {
+		panic(err)
+	}
+
+	err = c.Fflogs.SetCharacterLodestoneID(char)
+	if err != nil {
+		fmt.Printf("Could not find character in FF Logs: %+v\n", err)
+		err = lodestone.SetCharacterLodestoneID(char)
+		if err != nil {
+			panic(fmt.Errorf("Could not find character in the Lodestone: %+v", err))
+		}
+	}
+
+	isOwner, err := lodestone.CharacterIsOwnedByDiscordUser(char, discordId)
+	if err != nil {
+		panic(err)
+	}
+	if !isOwner {
+		panic("That character is not owned by that Discord ID!")
+	}
+
+	progTexts, err := c.UpdateProgForCharacterInGuild(reportId, char, discordId, guild)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Character %s (%s) prog updated in guild %s.\n", char.Name(), char.World, guild.Name)
+
+	for _, progText := range progTexts {
+		fmt.Printf(progText + "\n")
 	}
 }

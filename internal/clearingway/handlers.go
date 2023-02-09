@@ -40,20 +40,30 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			}
 		}
 
-		fmt.Printf("Adding commands...\n")
+		fmt.Printf("Adding clear command...\n")
 		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, ClearCommand)
 		if err != nil {
 			fmt.Printf("Could not add clears command: %v\n", err)
 		}
 
+		fmt.Printf("Adding uncomfy command...\n")
 		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, UncomfyCommand)
 		if err != nil {
 			fmt.Printf("Could not add uncomfy command: %v\n", err)
 		}
 
+		fmt.Printf("Adding roles command...\n")
 		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RolesCommand)
 		if err != nil {
-			fmt.Printf("Could not add uncomfy command: %v\n", err)
+			fmt.Printf("Could not add roles command: %v\n", err)
+		}
+
+		if guild.IsProgEnabled() {
+			fmt.Printf("Adding prog command...\n")
+			_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, ProgCommand)
+			if err != nil {
+				fmt.Printf("Could not add prog command: %v\n", err)
+			}
 		}
 
 		// fmt.Printf("Removing commands...\n")
@@ -106,6 +116,38 @@ var RolesCommand = &discordgo.ApplicationCommand{
 	Description: "See what roles Clearingway has set up and how to get them.",
 }
 
+var ProgCommand = &discordgo.ApplicationCommand{
+	Name:        "prog",
+	Description: "Assign yourself roles based on prog from a linked fflogs report",
+	Options: []*discordgo.ApplicationCommandOption{
+		{
+			Type:         discordgo.ApplicationCommandOptionString,
+			Name:         "world",
+			Description:  "Your character's world",
+			Required:     true,
+			Autocomplete: true,
+		},
+		{
+			Type:        discordgo.ApplicationCommandOptionString,
+			Name:        "first-name",
+			Description: "Your character's first name",
+			Required:    true,
+		},
+		{
+			Type:        discordgo.ApplicationCommandOptionString,
+			Name:        "last-name",
+			Description: "Your character's last name",
+			Required:    true,
+		},
+		{
+			Type:        discordgo.ApplicationCommandOptionString,
+			Name:        "report-id",
+			Description: "An fflogs report URL or ID",
+			Required:    true,
+		},
+	},
+}
+
 func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	switch i.Type {
 	case discordgo.InteractionApplicationCommand:
@@ -116,6 +158,8 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.Uncomfy(s, i)
 		case "roles":
 			c.Roles(s, i)
+		case "prog":
+			c.Prog(s, i)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)
@@ -449,6 +493,176 @@ func (c *Clearingway) Autocomplete(s *discordgo.Session, i *discordgo.Interactio
 type pendingRole struct {
 	role    *Role
 	message string
+}
+
+func (c *Clearingway) Prog(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	// Ignore messages not on the correct channel
+	if i.ChannelID != g.ChannelId {
+		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+	}
+
+	// Retrieve all the options sent to the command
+	options := i.ApplicationCommandData().Options
+	optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
+	for _, opt := range options {
+		optionMap[opt.Name] = opt
+	}
+
+	var world string
+	var firstName string
+	var lastName string
+	var reportId string
+
+	if option, ok := optionMap["world"]; ok {
+		world = option.StringValue()
+	}
+	if option, ok := optionMap["first-name"]; ok {
+		firstName = option.StringValue()
+	}
+	if option, ok := optionMap["last-name"]; ok {
+		lastName = option.StringValue()
+	}
+	if option, ok := optionMap["report-id"]; ok {
+		lastName = option.StringValue()
+	}
+
+	if len(world) == 0 || len(firstName) == 0 || len(lastName) == 0 || len(reportId) == 0 {
+		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "`/prog` command failed! Make sure you input your world, first name, last name, and fflogs report URL or ID.",
+			},
+		})
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	title := cases.Title(language.AmericanEnglish)
+	world = title.String(world)
+	firstName = title.String(firstName)
+	lastName = title.String(lastName)
+
+	err := discord.StartInteraction(s, i.Interaction,
+		fmt.Sprintf("Finding `%s %s (%s)` in the Lodestone...", firstName, lastName, world),
+	)
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
+	char, err := g.Characters.Init(world, firstName, lastName)
+	if err != nil {
+		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	err = c.Fflogs.SetCharacterLodestoneID(char)
+	if err != nil {
+		err = discord.ContinueInteraction(s, i.Interaction,
+			fmt.Sprintf(
+				"Error finding this character's Lodestone ID from FF Logs: %v\nTo make lookups faster in the future, please link your character in FF Logs to the Lodestone here: https://www.fflogs.com/lodestone/import",
+				err,
+			))
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+			return
+		}
+		err = lodestone.SetCharacterLodestoneID(char)
+		if err != nil {
+			err = discord.ContinueInteraction(s, i.Interaction,
+				fmt.Sprintf(
+					"Error finding this character's Lodestone ID in the Lodestone: %v\nIf your character name is short or very common this can frequently fail. Please link your character in FF Logs to the Lodestone here: https://www.fflogs.com/lodestone/import",
+					err,
+				))
+			if err != nil {
+				fmt.Printf("Error sending Discord message: %v\n", err)
+				return
+			}
+		}
+	}
+
+	err = discord.ContinueInteraction(s, i.Interaction,
+		fmt.Sprintf("Verifying ownership of `%s (%s)`...", char.Name(), char.World),
+	)
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+	}
+
+	discordId := i.Member.User.ID
+	isOwner, err := lodestone.CharacterIsOwnedByDiscordUser(char, discordId)
+	if err != nil {
+		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+	if !isOwner {
+		discord.ContinueInteraction(s, i.Interaction,
+			fmt.Sprintf(
+				"I could not verify your ownership of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile and then run `/clears` again:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
+				char.Name(),
+				char.World,
+				char.LodestoneSlug(discordId),
+			),
+		)
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	err = discord.ContinueInteraction(s, i.Interaction,
+		fmt.Sprintf("Analyzing report for `%s (%s)`...", char.Name(), char.World),
+	)
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+	}
+
+	if char.UpdatedRecently() {
+		err = discord.ContinueInteraction(s, i.Interaction,
+			fmt.Sprintf("Finished report analysis for `%s (%s)`.", char.Name(), char.World),
+		)
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	roleTexts, err := c.UpdateProgForCharacterInGuild(reportId, char, i.Member.User.ID, g)
+	if err != nil {
+		err = discord.ContinueInteraction(s, i.Interaction,
+			fmt.Sprintf("Could not analyze prog for `%s (%s)`: %s", char.Name(), char.World, err),
+		)
+		return
+	}
+
+	chunks := discord.NewChunks()
+	chunks.Write(fmt.Sprintf("Finished analysis for `%s (%s)`.\n\n", char.Name(), char.World))
+
+	for _, roleText := range roleTexts {
+		chunks.Write(roleText + "\n")
+	}
+
+	for _, c := range chunks.Chunks {
+		err = discord.ContinueInteraction(s, i.Interaction, "_ _\n"+c.String())
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+	}
+
+	return
 }
 
 func (c *Clearingway) UpdateClearsForCharacterInGuild(

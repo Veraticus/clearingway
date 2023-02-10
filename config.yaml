@@ -75,31 +75,30 @@ guilds:
     - name: Vault Knights
       color: 0x9C491B
       hoist: false
-      mention: true
     - name: Thordan
       color: 0x693986
       hoist: false
-      mention: true
+      mention: false
     - name: Nidstinien
       color: 0x356590
       hoist: false
-      mention: true
+      mention: false
     - name: The Eyes
       color: 0x596D79
       hoist: false
-      mention: true
+      mention: false
     - name: Thordan Reprise
       color: 0x925CB1
       hoist: false
-      mention: true
+      mention: false
     - name: Double Dragon
       color: 0x5195D3
       hoist: false
-      mention: true
+      mention: false
     - name: Dragon-king Thordan
       color: 0xE8C444
       hoist: false
-      mention: true
+      mention: false
 - name: UAR
   roles:
     relevantParsing: true

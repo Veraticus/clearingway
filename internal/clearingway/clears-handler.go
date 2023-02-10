@@ -65,6 +65,19 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	firstName = title.String(firstName)
 	lastName = title.String(lastName)
 
+	if !ffxiv.IsWorld(world) {
+		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: fmt.Sprintf("`%s` is not a valid world! Make sure you spelled your world name properly.", world),
+			},
+		})
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
 	err := discord.StartInteraction(s, i.Interaction,
 		fmt.Sprintf("Finding `%s %s (%s)` in the Lodestone...", firstName, lastName, world),
 	)

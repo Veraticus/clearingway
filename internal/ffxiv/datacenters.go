@@ -230,6 +230,15 @@ func AllWorlds() []string {
 	return worlds
 }
 
+func IsWorld(w string) bool {
+	for _, world := range AllWorlds() {
+		if w == world {
+			return true
+		}
+	}
+	return false
+}
+
 func AllPhysicalDatacenters() []*PhysicalDatacenter {
 	return []*PhysicalDatacenter{NA, EU, OC, JP}
 }

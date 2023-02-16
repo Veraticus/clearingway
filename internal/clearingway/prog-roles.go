@@ -73,7 +73,7 @@ func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
 		// we are done.
 		if existingProgRole != nil && existingProgRoleIndex == furthestProgRoleIndex {
 			messageString.WriteString(fmt.Sprintf(
-				"Your furthest prog point `%s` (%s) is the same as the furthest prog point in this report.",
+				"Your furthest prog point, `%s` (%s), is the same as the furthest prog point in this report.",
 				existingProgRole.Name,
 				existingProgRole.Phase(existingProgRoleIndex+1),
 			))

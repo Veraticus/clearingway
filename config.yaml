@@ -350,7 +350,7 @@ guilds:
       color: 0x925CB1
       hoist: true
     - name: "Run: Dynamis"
-      color: 0x5195D3
+      color: 0x6fd9f3
       hoist: true
     - name: Alpha Omega
       color: 0xE8C444

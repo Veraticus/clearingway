@@ -45,7 +45,7 @@ func ProgRoles(rs []*ConfigRole, e *Encounter) *Roles {
 
 		// Create return message.
 		messageString := strings.Builder{}
-		messageString.WriteString(fmt.Sprintf("⮕ %s\n", furthestFight.ReportURL()))
+		messageString.WriteString(fmt.Sprintf("⮕ Fight %d\n", furthestFight.ID))
 
 		// Does this report contain a kill?
 		if furthestFight.Kill {

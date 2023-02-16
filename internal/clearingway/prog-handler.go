@@ -158,7 +158,7 @@ func (c *Clearingway) Prog(s *discordgo.Session, i *discordgo.InteractionCreate)
 	}
 
 	err = discord.ContinueInteraction(s, i.Interaction,
-		fmt.Sprintf("Analyzing report https://fflogs.com/reports/%s for `%s (%s)`...", reportId, char.Name(), char.World),
+		fmt.Sprintf("Analyzing report for `%s (%s)`...", char.Name(), char.World),
 	)
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
@@ -214,7 +214,7 @@ func (c *Clearingway) UpdateProgForCharacterInGuild(
 		return nil, fmt.Errorf("Error retrieving prog: %w", err)
 	}
 
-	fmt.Printf("Found the following relevant fights in %s for %s (%s)...\n", reportId, char.Name(), char.World)
+	fmt.Printf("Found the following relevant fights for %s (%s)...\n", char.Name(), char.World)
 	for _, e := range guild.Encounters.Encounters {
 		for _, r := range e.Fights(fights) {
 			fmt.Printf("  %+v\n", r)

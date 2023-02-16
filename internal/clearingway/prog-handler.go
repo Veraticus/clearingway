@@ -69,7 +69,7 @@ func (c *Clearingway) Prog(s *discordgo.Session, i *discordgo.InteractionCreate)
 	world = title.String(cleanWorld(world))
 	firstName = title.String(firstName)
 	lastName = title.String(lastName)
-	reportId = cleanReportId(reportId)
+	reportId = CleanReportId(reportId)
 
 	if !ffxiv.IsWorld(world) {
 		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -286,9 +286,11 @@ func (c *Clearingway) UpdateProgForCharacterInGuild(
 	return text, nil
 }
 
-func cleanReportId(reportId string) string {
+func CleanReportId(reportId string) string {
 	reportId = strings.TrimRight(reportId, "/")
-	reportIds := strings.Split(reportId, "/")
+	reportIds := strings.Split(reportId, "#")
+	reportId = reportIds[0]
+	reportIds = strings.Split(reportId, "/")
 	reportId = reportIds[len(reportIds)-1]
 	reportIds = strings.Split(reportId, "#")
 	reportId = reportIds[0]

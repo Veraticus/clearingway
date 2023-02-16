@@ -188,6 +188,8 @@ func prog(c *clearingway.Clearingway) {
 	discordId := os.Args[6]
 	reportId := os.Args[7]
 
+	reportId = clearingway.CleanReportId(reportId)
+
 	guild, ok := c.Guilds.Guilds[guildId]
 	if !ok {
 		panic(fmt.Sprintf("Guild %s not setup in config.yaml but you tried to run me in it!", guildId))

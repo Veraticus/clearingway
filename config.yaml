@@ -285,7 +285,7 @@ guilds:
         type: "Cleared"
         color: 0xe67cba
   - ids: [1068]
-    name: "The Omega Protocl (Ultimate)"
+    name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
     roles:
       - name: "cleared top"

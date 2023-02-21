@@ -284,6 +284,13 @@ guilds:
       - name: "cleared dru"
         type: "Cleared"
         color: 0xe67cba
+  - ids: [1068]
+    name: "The Omega Protocl (Ultimate)"
+    defaultRoles: false
+    roles:
+      - name: "cleared top"
+        type: "Cleared"
+        color: 0x3498db
   reconfigureRoles:
   - from: "NA's Comfiest"
     to: "comfiest"

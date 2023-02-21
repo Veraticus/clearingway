@@ -311,7 +311,7 @@ guilds:
     to: "the myth"
     dontSkip: true
   - from: "The Uncoiled Legend"
-    to: "the legend"
+    to: "the legend (over time)"
     dontSkip: true
   - from: "The Legend"
     skip: true

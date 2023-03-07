@@ -3,7 +3,7 @@ package clearingway
 func RelevantParsingRoles() *Roles {
 	return &Roles{Roles: []*Role{
 		{
-			Name: "Gold", Color: 0xe1cc8a,
+			Name: "Gold", Color: 0xe1cc8a, Uncolor: true,
 			Description: "DPS parse is 100 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.BestDPSRank(opts.Rankings)
@@ -19,7 +19,7 @@ func RelevantParsingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Pink", Color: 0xd06fa4,
+			Name: "Pink", Color: 0xd06fa4, Uncolor: true,
 			Description: "DPS parse is between 99 and 100 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.BestDPSRank(opts.Rankings)
@@ -35,7 +35,7 @@ func RelevantParsingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Orange", Color: 0xef8633,
+			Name: "Orange", Color: 0xef8633, Uncolor: true,
 			Description: "DPS parse is between 95 and 99 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.BestDPSRank(opts.Rankings)
@@ -51,7 +51,7 @@ func RelevantParsingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Purple", Color: 0x9644e5,
+			Name: "Purple", Color: 0x9644e5, Uncolor: true,
 			Description: "DPS parse is between 75 and 95 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.BestDPSRank(opts.Rankings)
@@ -67,7 +67,7 @@ func RelevantParsingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Blue", Color: 0x2a72f6,
+			Name: "Blue", Color: 0x2a72f6, Uncolor: true,
 			Description: "DPS parse is between 50 and 75 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.BestDPSRank(opts.Rankings)
@@ -83,7 +83,7 @@ func RelevantParsingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Green", Color: 0x78fa4c,
+			Name: "Green", Color: 0x78fa4c, Uncolor: true,
 			Description: "DPS parse is between 25 and 50 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.BestDPSRank(opts.Rankings)
@@ -99,7 +99,7 @@ func RelevantParsingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Gray", Color: 0x636363,
+			Name: "Gray", Color: 0x636363, Uncolor: true,
 			Description: "DPS parse is between 0 and 25 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.BestDPSRank(opts.Rankings)

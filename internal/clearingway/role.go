@@ -40,6 +40,7 @@ type Role struct {
 	Description string
 	Color       int
 	Uncomfy     bool
+	Uncolor     bool
 	Skip        bool
 	Mention     bool
 	Hoist       bool

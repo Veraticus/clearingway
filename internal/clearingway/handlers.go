@@ -53,6 +53,12 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			fmt.Printf("Could not add uncomfy command: %v\n", err)
 		}
 
+		fmt.Printf("Adding uncolor command...\n")
+		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, UncolorCommand)
+		if err != nil {
+			fmt.Printf("Could not add uncolor command: %v\n", err)
+		}
+
 		fmt.Printf("Adding roles command...\n")
 		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RolesCommand)
 		if err != nil {
@@ -112,6 +118,11 @@ var UncomfyCommand = &discordgo.ApplicationCommand{
 	Description: "Use this command to remove Comfy roles if you don't want them.",
 }
 
+var UncolorCommand = &discordgo.ApplicationCommand{
+	Name:        "uncomfy",
+	Description: "Use this command to remove parsing roles if you don't want them.",
+}
+
 var RolesCommand = &discordgo.ApplicationCommand{
 	Name:        "roles",
 	Description: "See what roles Clearingway has set up and how to get them.",
@@ -157,6 +168,8 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.Clears(s, i)
 		case "uncomfy":
 			c.Uncomfy(s, i)
+		case "uncolor":
+			c.Uncolor(s, i)
 		case "roles":
 			c.Roles(s, i)
 		case "prog":
@@ -229,6 +242,74 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 	}
 
 	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Uncomfy roles:__\n⮕ Removed!\n")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+	}
+	return
+}
+
+func (c *Clearingway) Uncolor(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	// Ignore messages not on the correct channel
+	if i.ChannelID != g.ChannelId {
+		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+	}
+
+	err := discord.StartInteraction(s, i.Interaction, "Uncoloring you...")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
+	member, err := c.Discord.Session.GuildMember(g.Id, i.Member.User.ID)
+	if err != nil {
+		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	uncolorRoles := []*Role{}
+	for _, r := range g.AllRoles() {
+		if r.Uncolor {
+			uncolorRoles = append(uncolorRoles, r)
+		}
+	}
+
+	if len(uncolorRoles) == 0 {
+		err = discord.ContinueInteraction(s, i.Interaction, "Parsing roles are not present in this Discord!")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	rolesToRemove := []*Role{}
+	for _, r := range uncolorRoles {
+		if r.PresentInRoles(member.Roles) {
+			rolesToRemove = append(rolesToRemove, r)
+		}
+	}
+	if len(rolesToRemove) == 0 {
+		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any parsing roles!")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	for _, r := range rolesToRemove {
+		r.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+		fmt.Printf("Error removing parsing role: %+v\n", err)
+	}
+
+	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Parsing roles:__\n⮕ Removed!\n")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 	}

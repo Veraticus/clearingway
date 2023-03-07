@@ -179,7 +179,7 @@ func (r *Ranking) RanksByTime() []*Rank {
 
 func (r *Rank) BestDPSParseString(encounterName string) string {
 	return fmt.Sprintf(
-		"Best parse was **%v** with `%v` in `%v` on <t:%v:F> (%v).",
+		"Best parse was **%v** with `%v` in `%v` on <t:%v:F> (%v).\nUse `/uncolor` if you don't want this role.",
 		r.DPSPercentString(),
 		r.Job.Abbreviation,
 		encounterName,

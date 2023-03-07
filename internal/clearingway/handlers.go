@@ -119,7 +119,7 @@ var UncomfyCommand = &discordgo.ApplicationCommand{
 }
 
 var UncolorCommand = &discordgo.ApplicationCommand{
-	Name:        "uncomfy",
+	Name:        "uncolor",
 	Description: "Use this command to remove parsing roles if you don't want them.",
 }
 

@@ -326,9 +326,9 @@ guilds:
 - name: TOP
   roles:
     relevantParsing: true
-    relevantFlexing: false
-    legend: false
-    ultimateFlexing: false
+    relevantFlexing: true
+    legend: true
+    ultimateFlexing: true
     datacenter: true
   guildId: 982459453578285056
   channelId: 1073363433489170442

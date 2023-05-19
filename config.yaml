@@ -121,6 +121,8 @@ guilds:
   - ids: [1060, 1047, 1039]
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Legendary"
     roles:
       - name: "UCoB Cleared"
         type: "Cleared"
@@ -128,6 +130,8 @@ guilds:
   - ids: [1061, 1048, 1042]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Ultimate"
     roles:
       - name: "UWU Cleared"
         type: "Cleared"
@@ -135,6 +139,8 @@ guilds:
   - ids: [1062, 1050]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 17
+    the: "Perfect"
     roles:
       - name: "TEA Cleared"
         type: "Cleared"
@@ -142,6 +148,8 @@ guilds:
   - ids: [1065]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 19
+    the: "Heavenly"
     roles:
       - name: "DSR Cleared"
         type: "Cleared"
@@ -149,6 +157,8 @@ guilds:
   - ids: [1068]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 19
+    the: "Alpha"
     roles:
       - name: "TOP Cleared"
         type: "Cleared"
@@ -170,6 +180,8 @@ guilds:
   - ids: [1060, 1047, 1039]
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Legendary"
     roles:
       - name: "i killed ucob"
         type: "Cleared"
@@ -177,6 +189,8 @@ guilds:
   - ids: [1061, 1048, 1042]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Ultimate"
     roles:
       - name: "i killed uwu"
         type: "Cleared"
@@ -184,6 +198,8 @@ guilds:
   - ids: [1062, 1050]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 17
+    the: "Perfect"
     roles:
       - name: "i killed tea"
         type: "Cleared"
@@ -191,6 +207,8 @@ guilds:
   - ids: [1065]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 19
+    the: "Heavenly"
     roles:
       - name: "i killed dsr"
         type: "Cleared"
@@ -347,13 +365,13 @@ guilds:
     datacenter: true
   guildId: 982459453578285056
   channelId: 1073363433489170442
-  totalWeaponsAvailable: 19
   physicalDatacenters:
   - name: "NA"
   encounters:
   - ids: [1068]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
+    totalWeaponsAvailable: 19
     roles:
       - name: "ALPHA LEGEND"
         type: "Cleared"

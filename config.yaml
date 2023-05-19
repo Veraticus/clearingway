@@ -3,10 +3,10 @@ guilds:
   roles:
     relevantParsing: true
     relevantFlexing: true
-    relevantReptition: true
+    relevantRepetition: true
     legend: true
     ultimateFlexing: true
-    ultimateReptition: true
+    ultimateRepetition: true
     datacenter: true
   guildId: 1008845758805594173
   channelId: 1008850017185955850
@@ -58,10 +58,10 @@ guilds:
   roles:
     relevantParsing: true
     relevantFlexing: true
-    relevantReptition: true
+    relevantRepetition: true
     legend: true
     ultimateFlexing: true
-    ultimateReptition: true
+    ultimateRepetition: true
     datacenter: true
   guildId: 968960259081252884
   channelId: 972868045552877589
@@ -108,7 +108,7 @@ guilds:
   roles:
     relevantParsing: true
     relevantFlexing: false
-    relevantReptition: false
+    relevantRepetition: false
     legend: true
     ultimateFlexing: true
     ultimateRepetition: true
@@ -167,10 +167,10 @@ guilds:
   roles:
     relevantParsing: true
     relevantFlexing: false
-    relevantReptition: false
+    relevantRepetition: false
     legend: true
     ultimateFlexing: true
-    ultimateReptition: false
+    ultimateRepetition: false
     datacenter: true
   guildId: 1021602454716022845
   channelId: 1037083485543866479
@@ -221,10 +221,10 @@ guilds:
   roles:
     relevantParsing: false
     relevantFlexing: false
-    relevantReptition: false
+    relevantRepetition: false
     legend: false
     ultimateFlexing: false
-    ultimateReptition: false
+    ultimateRepetition: false
     datacenter: true
   guildId: 404710160540368917
   channelId: 1028389598755311657
@@ -358,7 +358,7 @@ guilds:
   roles:
     relevantParsing: true
     relevantFlexing: true
-    relevantReptition: true
+    relevantRepetition: true
     legend: true
     ultimateFlexing: true
     ultimateRepetition: true

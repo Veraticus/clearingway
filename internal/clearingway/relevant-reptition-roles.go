@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func RelevantReptitionRoles(encs *Encounters) *Roles {
+func RelevantRepetitionRoles(encs *Encounters) *Roles {
 	roles := &Roles{Roles: []*Role{}}
 
 	for _, enc := range encs.Encounters {

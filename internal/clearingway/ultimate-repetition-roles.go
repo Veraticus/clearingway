@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func UltimateReptitionRoles() *Roles {
+func UltimateRepetitionRoles() *Roles {
 	roles := &Roles{Roles: []*Role{}}
 
 	for _, ult := range UltimateEncounters.Encounters {

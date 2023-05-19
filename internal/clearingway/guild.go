@@ -113,7 +113,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 	}
 
 	if g.RelevantRepetitionEnabled {
-		g.RelevantRepetitionRoles = RelevantReptitionRoles(g.Encounters)
+		g.RelevantRepetitionRoles = RelevantRepetitionRoles(g.Encounters)
 	}
 
 	if g.LegendEnabled {
@@ -125,7 +125,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 	}
 
 	if g.UltimateRepetitionEnabled {
-		g.UltimateRepetitionRoles = UltimateReptitionRoles()
+		g.UltimateRepetitionRoles = UltimateRepetitionRoles()
 	}
 
 	if g.DatacenterEnabled {

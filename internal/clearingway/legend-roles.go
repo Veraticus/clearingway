@@ -111,7 +111,7 @@ func LegendRoles() *Roles {
 					return true, output
 				}
 
-				return false, "Did not clear all four ultimates."
+				return false, "Did not clear only four ultimates."
 			},
 		},
 		{

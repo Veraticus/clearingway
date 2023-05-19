@@ -9,15 +9,45 @@ import (
 var UltimateEncounters = &Encounters{
 	Encounters: []*Encounter{
 		{
-			Name:         "The Unending Coil of Bahamut (Ultimate)",
-			Ids:          []int{1060, 1047, 1039},
-			Difficulty:   "Ultimate",
-			DefaultRoles: false,
+			Name:                  "The Unending Coil of Bahamut (Ultimate)",
+			Ids:                   []int{1060, 1047, 1039},
+			Difficulty:            "Ultimate",
+			DefaultRoles:          false,
+			TotalWeaponsAvailable: 15,
+			The:                   "Legendary",
 		},
-		{Name: "The Weapon's Refrain (Ultimate)", Ids: []int{1061, 1048, 1042}, Difficulty: "Ultimate", DefaultRoles: false},
-		{Name: "The Epic of Alexander (Ultimate)", Ids: []int{1062, 1050}, Difficulty: "Ultimate", DefaultRoles: false},
-		{Name: "Dragonsong's Reprise (Ultimate)", Ids: []int{1065}, Difficulty: "Ultimate", DefaultRoles: false},
-		{Name: "The Omega Protocol (Ultimate)", Ids: []int{1068}, Difficulty: "Ultimate", DefaultRoles: false},
+		{
+			Name:                  "The Weapon's Refrain (Ultimate)",
+			Ids:                   []int{1061, 1048, 1042},
+			Difficulty:            "Ultimate",
+			DefaultRoles:          false,
+			TotalWeaponsAvailable: 15,
+			The:                   "Ultimate",
+		},
+		{
+			Name:                  "The Epic of Alexander (Ultimate)",
+			Ids:                   []int{1062, 1050},
+			Difficulty:            "Ultimate",
+			DefaultRoles:          false,
+			TotalWeaponsAvailable: 17,
+			The:                   "Perfect",
+		},
+		{
+			Name:                  "Dragonsong's Reprise (Ultimate)",
+			Ids:                   []int{1065},
+			Difficulty:            "Ultimate",
+			DefaultRoles:          false,
+			TotalWeaponsAvailable: 19,
+			The:                   "Heavenly",
+		},
+		{
+			Name:                  "The Omega Protocol (Ultimate)",
+			Ids:                   []int{1068},
+			Difficulty:            "Ultimate",
+			DefaultRoles:          false,
+			TotalWeaponsAvailable: 19,
+			The:                   "Alpha",
+		},
 	},
 }
 
@@ -26,12 +56,14 @@ type Encounters struct {
 }
 
 type Encounter struct {
-	Name         string `yaml:"name"`
-	Difficulty   string `yaml:"difficulty"`
-	DefaultRoles bool   `yaml:"defaultRoles"`
-	Ids          []int  `yaml:"ids"`
-	Roles        map[RoleType]*Role
-	ProgRoles    *Roles
+	Name                  string `yaml:"name"`
+	Difficulty            string `yaml:"difficulty"`
+	DefaultRoles          bool   `yaml:"defaultRoles"`
+	Ids                   []int  `yaml:"ids"`
+	TotalWeaponsAvailable int
+	Roles                 map[RoleType]*Role
+	ProgRoles             *Roles
+	The                   string
 }
 
 func (e *Encounter) Init(c *ConfigEncounter) {
@@ -39,6 +71,8 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 	e.Name = c.Name
 	e.Difficulty = c.Difficulty
 	e.DefaultRoles = c.DefaultRoles
+	e.TotalWeaponsAvailable = c.TotalWeaponsAvailable
+	e.The = c.The
 	e.Roles = map[RoleType]*Role{}
 
 	if e.DefaultRoles {

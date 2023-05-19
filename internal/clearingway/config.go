@@ -15,21 +15,25 @@ type ConfigGuild struct {
 }
 
 type ConfigRoles struct {
-	RelevantParsing bool `yaml:"relevantParsing"`
-	RelevantFlexing bool `yaml:"relevantFlexing"`
-	Legend          bool `yaml:"legend"`
-	UltimateFlexing bool `yaml:"ultimateFlexing"`
-	Datacenter      bool `yaml:"datacenter"`
-	SkipRemoval     bool `yaml:"skipRemoval"`
+	RelevantParsing    bool `yaml:"relevantParsing"`
+	RelevantFlexing    bool `yaml:"relevantFlexing"`
+	RelevantRepetition bool `yaml:"relevantRepetition"`
+	Legend             bool `yaml:"legend"`
+	UltimateFlexing    bool `yaml:"ultimateFlexing"`
+	UltimateRepetition bool `yaml:"ultimateRepetition"`
+	Datacenter         bool `yaml:"datacenter"`
+	SkipRemoval        bool `yaml:"skipRemoval"`
 }
 
 type ConfigEncounter struct {
-	Ids          []int         `yaml:"ids"`
-	Name         string        `yaml:"name"`
-	Difficulty   string        `yaml:"difficulty"`
-	DefaultRoles bool          `yaml:"defaultRoles"`
-	ConfigRoles  []*ConfigRole `yaml:"roles"`
-	ConfigProg   []*ConfigRole `yaml:"prog"`
+	Ids                   []int         `yaml:"ids"`
+	Name                  string        `yaml:"name"`
+	Difficulty            string        `yaml:"difficulty"`
+	DefaultRoles          bool          `yaml:"defaultRoles"`
+	TotalWeaponsAvailable int           `yaml:"totalWeaponsAvailable"`
+	The                   string        `yaml:"the"`
+	ConfigRoles           []*ConfigRole `yaml:"roles"`
+	ConfigProg            []*ConfigRole `yaml:"prog"`
 }
 
 type ConfigRole struct {

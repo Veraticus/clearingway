@@ -18,19 +18,23 @@ type Guild struct {
 	Characters          *ffxiv.Characters
 	PhysicalDatacenters *PhysicalDatacenters
 
-	RelevantParsingEnabled bool
-	RelevantFlexingEnabled bool
-	LegendEnabled          bool
-	UltimateFlexingEnabled bool
-	DatacenterEnabled      bool
-	SkipRemoval            bool
+	RelevantParsingEnabled    bool
+	RelevantFlexingEnabled    bool
+	RelevantRepetitionEnabled bool
+	LegendEnabled             bool
+	UltimateFlexingEnabled    bool
+	UltimateRepetitionEnabled bool
+	DatacenterEnabled         bool
+	SkipRemoval               bool
 
-	EncounterRoles       *Roles
-	RelevantParsingRoles *Roles
-	RelevantFlexingRoles *Roles
-	LegendRoles          *Roles
-	UltimateFlexingRoles *Roles
-	DatacenterRoles      *Roles
+	EncounterRoles          *Roles
+	RelevantParsingRoles    *Roles
+	RelevantFlexingRoles    *Roles
+	RelevantRepetitionRoles *Roles
+	LegendRoles             *Roles
+	UltimateFlexingRoles    *Roles
+	UltimateRepetitionRoles *Roles
+	DatacenterRoles         *Roles
 }
 
 func (g *Guild) Init(c *ConfigGuild) {
@@ -62,6 +66,12 @@ func (g *Guild) Init(c *ConfigGuild) {
 		g.RelevantFlexingEnabled = true
 	}
 
+	if c.ConfigRoles != nil && c.ConfigRoles.RelevantRepetition == false {
+		g.RelevantRepetitionEnabled = false
+	} else {
+		g.RelevantRepetitionEnabled = true
+	}
+
 	if c.ConfigRoles != nil && c.ConfigRoles.Legend == false {
 		g.LegendEnabled = false
 	} else {
@@ -72,6 +82,12 @@ func (g *Guild) Init(c *ConfigGuild) {
 		g.UltimateFlexingEnabled = false
 	} else {
 		g.UltimateFlexingEnabled = true
+	}
+
+	if c.ConfigRoles != nil && c.ConfigRoles.UltimateRepetition == false {
+		g.UltimateRepetitionEnabled = false
+	} else {
+		g.UltimateRepetitionEnabled = true
 	}
 
 	if c.ConfigRoles != nil && c.ConfigRoles.Datacenter == false {
@@ -96,12 +112,20 @@ func (g *Guild) Init(c *ConfigGuild) {
 		g.RelevantFlexingRoles = RelevantFlexingRoles()
 	}
 
+	if g.RelevantRepetitionEnabled {
+		g.RelevantRepetitionRoles = RelevantReptitionRoles(g.Encounters)
+	}
+
 	if g.LegendEnabled {
 		g.LegendRoles = LegendRoles()
 	}
 
 	if g.UltimateFlexingEnabled {
 		g.UltimateFlexingRoles = UltimateFlexingRoles()
+	}
+
+	if g.UltimateRepetitionEnabled {
+		g.UltimateRepetitionRoles = UltimateReptitionRoles()
 	}
 
 	if g.DatacenterEnabled {
@@ -146,6 +170,9 @@ func (g *Guild) NonUltRoles() []*Role {
 	if g.RelevantFlexingEnabled {
 		roles = append(roles, g.RelevantFlexingRoles.Roles...)
 	}
+	if g.RelevantRepetitionEnabled {
+		roles = append(roles, g.RelevantRepetitionRoles.Roles...)
+	}
 	if g.DatacenterEnabled {
 		roles = append(roles, g.DatacenterRoles.Roles...)
 	}
@@ -161,6 +188,9 @@ func (g *Guild) UltRoles() []*Role {
 	}
 	if g.UltimateFlexingEnabled {
 		roles = append(roles, g.UltimateFlexingRoles.Roles...)
+	}
+	if g.UltimateRepetitionEnabled {
+		roles = append(roles, g.UltimateRepetitionRoles.Roles...)
 	}
 
 	return roles

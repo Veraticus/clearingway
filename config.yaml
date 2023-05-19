@@ -104,6 +104,11 @@ guilds:
       color: 0xE8C444
       hoist: false
       mention: false
+  reconfigureRoles:
+  - from: "Heavenly"
+    skip: true
+  - from: "Heavenly Limbo"
+    skip: true
 - name: UAR
   roles:
     relevantParsing: true
@@ -396,3 +401,8 @@ guilds:
     - name: Alpha Omega
       color: 0xE8C444
       hoist: true
+  reconfigureRoles:
+  - from: "Alpha"
+    skip: true
+  - from: "Alpha Limbo"
+    skip: true

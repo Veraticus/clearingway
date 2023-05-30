@@ -13,44 +13,36 @@ guilds:
   physicalDatacenters:
   - name: "NA"
   encounters:
-  - ids: [87]
-    name: "P8SP2"
+  - ids: [91]
+    name: "P12S"
     difficulty: "Savage"
     defaultRoles: true
     roles:
-      - name: "P8SP2-Cleared"
-        type: "Cleared"
-        color: 0xd06fa4
-  - ids: [86]
-    name: "P8SP1"
-    difficulty: "Savage"
-    defaultRoles: true
-    roles:
-      - name: "P8SP1-Cleared"
+      - name: "P12S-Cleared"
         type: "Cleared"
         color: 0xef8633
-  - ids: [85]
-    name: "P7S"
+  - ids: [90]
+    name: "P11S"
     difficulty: "Savage"
     defaultRoles: true
     roles:
-      - name: "P7S-Cleared"
+      - name: "P11S-Cleared"
         type: "Cleared"
         color: 0x9644e5
-  - ids: [84]
-    name: "P6S"
+  - ids: [89]
+    name: "P10S"
     difficulty: "Savage"
     defaultRoles: true
     roles:
-      - name: "P6S-Cleared"
+      - name: "P10S-Cleared"
         type: "Cleared"
         color: 0x2a72f6
-  - ids: [83]
-    name: "P5S"
+  - ids: [88]
+    name: "P9S"
     difficulty: "Savage"
     defaultRoles: true
     roles:
-      - name: "P5S-Cleared"
+      - name: "P9S-Cleared"
         type: "Cleared"
         color: 0x78fa4c
     clearedColor: 0x78fa4c

@@ -425,7 +425,7 @@ guilds:
         from: "Dynamis"
         color: 0x99a7f7
   encounters:
-  - ids: [91]
+  - ids: [92]
     name: "P12S P2"
     difficulty: "Savage"
     defaultRoles: false

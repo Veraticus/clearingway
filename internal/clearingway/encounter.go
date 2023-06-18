@@ -167,7 +167,7 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 				}
 				s.WriteString(fmt.Sprintf("Cleared `%v` at least **%v** %v (**%v** %v total):", e.Name, e.RequiredKillsToClear, requiredWord, ranking.TotalKills, actualWord))
 				for _, rank := range ranking.RanksByTime() {
-					s.WriteString(fmt.Sprintf("\n     With `%v` on <t:%v:F> (%v).",
+					s.WriteString(fmt.Sprintf("\n     `%v` on <t:%v:F> (%v).",
 						rank.Job.Abbreviation,
 						rank.UnixTime(),
 						rank.Report.Url(),

@@ -472,17 +472,17 @@ guilds:
         color: 0xff0000
   reconfigureRoles:
   - from: "The Legend"
-    to: "Legend"
+    to: "<Legend>"
     color: 0x947a27
   - from: "The Double Legend"
-    to: "Double Legend"
+    to: "<Double Legend>"
     color: 0x947a27
   - from: "The Triple Legend"
-    to: "Triple Legend"
+    to: "<Triple Legend>"
     color: 0x947a27
   - from: "The Quad Legend"
-    to: "Quad Legend"
+    to: "<Quad Legend>"
     color: 0x947a27
   - from: "The Penta Legend"
-    to: "Penta Legend"
+    to: "<Penta Legend>"
     color: 0x947a27

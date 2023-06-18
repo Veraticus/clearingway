@@ -34,6 +34,7 @@ type ConfigEncounter struct {
 	The                   string        `yaml:"the"`
 	ConfigRoles           []*ConfigRole `yaml:"roles"`
 	ConfigProg            []*ConfigRole `yaml:"prog"`
+	RequiredKillsToClear  int           `yaml:"requiredKillsToClear"`
 }
 
 type ConfigRole struct {

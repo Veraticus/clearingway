@@ -2,6 +2,7 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Veraticus/clearingway/internal/fflogs"
 )
@@ -64,6 +65,7 @@ type Encounter struct {
 	Roles                 map[RoleType]*Role
 	ProgRoles             *Roles
 	The                   string
+	RequiredKillsToClear  int
 }
 
 func (e *Encounter) Init(c *ConfigEncounter) {
@@ -73,6 +75,11 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 	e.DefaultRoles = c.DefaultRoles
 	e.TotalWeaponsAvailable = c.TotalWeaponsAvailable
 	e.The = c.The
+	if c.RequiredKillsToClear == 0 {
+		e.RequiredKillsToClear = 1
+	} else {
+		e.RequiredKillsToClear = c.RequiredKillsToClear
+	}
 	e.Roles = map[RoleType]*Role{}
 
 	if e.DefaultRoles {
@@ -144,15 +151,29 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 			if !ok {
 				continue
 			}
-			cleared := ranking.Cleared()
-			if cleared {
-				rank := ranking.RanksByTime()[0]
-				return true, fmt.Sprintf("Cleared `%v` with `%v` on <t:%v:F> (%v).",
-					e.Name,
-					rank.Job.Abbreviation,
-					rank.UnixTime(),
-					rank.Report.Url(),
-				)
+
+			if ranking.TotalKills >= e.RequiredKillsToClear {
+				s := strings.Builder{}
+				var requiredWord, actualWord string
+				if e.RequiredKillsToClear == 1 {
+					requiredWord = "time"
+				} else {
+					requiredWord = "times"
+				}
+				if ranking.TotalKills == 1 {
+					actualWord = "time"
+				} else {
+					actualWord = "times"
+				}
+				s.WriteString(fmt.Sprintf("Has cleared `%v` at least *%v* %v (*%v* %v total):", e.Name, e.RequiredKillsToClear, requiredWord, ranking.TotalKills, actualWord))
+				for _, rank := range ranking.RanksByTime() {
+					s.WriteString(fmt.Sprintf("\n    With `%v` on <t:%v:F> (%v).",
+						rank.Job.Abbreviation,
+						rank.UnixTime(),
+						rank.Report.Url(),
+					))
+				}
+				return true, s.String()
 			}
 		}
 

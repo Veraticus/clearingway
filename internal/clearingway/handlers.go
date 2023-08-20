@@ -209,6 +209,9 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 
 	uncomfyRoles := []*Role{}
 	for _, r := range g.AllRoles() {
+		if r.Skip {
+			continue
+		}
 		if r.Uncomfy {
 			uncomfyRoles = append(uncomfyRoles, r)
 		}
@@ -225,7 +228,7 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 	rolesToRemove := []*Role{}
 	for _, r := range uncomfyRoles {
 		if r.DiscordRole == nil {
-			fmt.Printf("Cannot uncomfy %+v as it has not connected to a Discord role!", r)
+			fmt.Printf("Cannot uncomfy %+v as it has not connected to a Discord role!\n", r)
 			continue
 		}
 		if r.PresentInRoles(member.Roles) {
@@ -242,7 +245,7 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 
 	for _, r := range rolesToRemove {
 		r.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
-		fmt.Printf("Error removing uncomfy role: %+v\n", err)
+		fmt.Printf("Removing uncomfy role: %+v\n", err)
 	}
 
 	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Uncomfy roles:__\n⮕ Removed!\n")
@@ -281,6 +284,9 @@ func (c *Clearingway) Uncolor(s *discordgo.Session, i *discordgo.InteractionCrea
 
 	uncolorRoles := []*Role{}
 	for _, r := range g.AllRoles() {
+		if r.Skip {
+			continue
+		}
 		if r.Uncolor {
 			uncolorRoles = append(uncolorRoles, r)
 		}

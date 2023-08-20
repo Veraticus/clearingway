@@ -224,6 +224,10 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 
 	rolesToRemove := []*Role{}
 	for _, r := range uncomfyRoles {
+		if r.DiscordRole == nil {
+			fmt.Printf("Cannot uncomfy %+v as it has not connected to a Discord role!", r)
+			continue
+		}
 		if r.PresentInRoles(member.Roles) {
 			rolesToRemove = append(rolesToRemove, r)
 		}

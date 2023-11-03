@@ -533,7 +533,7 @@ guilds:
     totalWeaponsAvailable: 19
     the: "Heavenly"
     roles:
-      - name: "The Heaven's Sheep"
+      - name: "The Heavens' Sheep"
         type: "Cleared"
         color: 0xCF8035
   - ids: [1068]

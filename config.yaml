@@ -509,6 +509,7 @@ guilds:
       - name: "The Sheep"
         type: "Cleared"
         color: 0xFFFD7F
+        hoist: true
   - ids: [1061, 1048, 1042]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
@@ -518,6 +519,7 @@ guilds:
       - name: "The Ultimate Sheep"
         type: "Cleared"
         color: 0x9CBDD8
+        hoist: true
   - ids: [1062, 1050]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
@@ -527,6 +529,7 @@ guilds:
       - name: "The Perfect Sheep"
         type: "Cleared"
         color: 0xFAE9C2
+        hoist: true
   - ids: [1065]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
@@ -536,6 +539,7 @@ guilds:
       - name: "The Heavens' Sheep"
         type: "Cleared"
         color: 0xCF8035
+        hoist: true
   - ids: [1068]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
@@ -545,6 +549,7 @@ guilds:
       - name: "The Alpha Sheep"
         type: "Cleared"
         color: 0xd1e5f4
+        hoist: true
   reconfigureRoles:
   - from: "The Legend"
     color: 0x0ec0a5

@@ -486,3 +486,62 @@ guilds:
   - from: "The Penta Legend"
     to: "<Penta Legend>"
     color: 0x947a27
+- name: Golden Sheep (Ultimates)
+  roles:
+    relevantParsing: false
+    relevantFlexing: false
+    relevantRepetition: false
+    legend: true
+    ultimateFlexing: false
+    ultimateRepetition: false
+    datacenter: false
+  guildId: 1150614296942878860
+  channelId: 1168315554621296730
+  physicalDatacenters:
+  - name: "NA"
+  encounters:
+  - ids: [1060, 1047, 1039]
+    name: "The Unending Coil of Bahamut (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Legendary"
+    roles:
+      - name: "The Sheep"
+        type: "Cleared"
+        color: 0xFFFD7F
+  - ids: [1061, 1048, 1042]
+    name: "The Weapon's Refrain (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Ultimate"
+    roles:
+      - name: "The Ultimate Sheep"
+        type: "Cleared"
+        color: 0x9CBDD8
+  - ids: [1062, 1050]
+    name: "The Epic of Alexander (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 17
+    the: "Perfect"
+    roles:
+      - name: "The Perfect Sheep"
+        type: "Cleared"
+        color: 0xFAE9C2
+  - ids: [1065]
+    name: "Dragonsong's Reprise (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    the: "Heavenly"
+    roles:
+      - name: "The Heavenly Sheep"
+        type: "Cleared"
+        color: 0xCF8035
+  - ids: [1068]
+    name: "The Omega Protocol (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    the: "Alpha"
+    roles:
+      - name: "The Alpha Sheep"
+        type: "Cleared"
+        color: 0xd1e5f4

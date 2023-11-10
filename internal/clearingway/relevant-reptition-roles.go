@@ -8,7 +8,7 @@ func RelevantRepetitionRoles(encs *Encounters) *Roles {
 	roles := &Roles{Roles: []*Role{
 		{
 			Name:        "Please Do Other Content",
-			Color:       0x000000,
+			Color:       0x000001,
 			Type:        CompleteRole,
 			Description: "Cleared any relevant encounter at least 100 times.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {

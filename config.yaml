@@ -578,15 +578,19 @@ guilds:
       - to: "Aether Resident"
         from: "Aether"
         color: 0x71368a
+        hoist: true
       - to: "Crystal Resident"
         from: "Crystal"
         color: 0x206694
+        hoist: true
       - to: "Primal Resident"
         from: "Primal"
         color: 0x992d22
+        hoist: true
       - to: "Dynamis Resident"
         from: "Dynamis"
         color: 0xEAC645
+        hoist: true
   encounters:
   - ids: [1060, 1047, 1039]
     name: "The Unending Coil of Bahamut (Ultimate)"

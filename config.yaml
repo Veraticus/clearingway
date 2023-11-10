@@ -577,13 +577,13 @@ guilds:
     logicalDatacenters:
       - to: "Aether Resident"
         from: "Aether"
-        color: 0x000001
+        color: 0x71368a
       - to: "Crystal Resident"
         from: "Crystal"
-        color: 0xf9c9a9
+        color: 0x206694
       - to: "Primal Resident"
         from: "Primal"
-        color: 0xff0000
+        color: 0x992d22
       - to: "Dynamis Resident"
         from: "Dynamis"
         color: 0xEAC645

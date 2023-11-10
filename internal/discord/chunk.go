@@ -44,7 +44,7 @@ func findSplitIndex(s string, maxLength int) int {
 		return len(s)
 	}
 
-	for i := maxLength; i > maxLength-500 && i > 0; i-- {
+	for i := maxLength; i > maxLength-1000 && i > 0; i-- {
 		if s[i] == '\n' {
 			return i + 1 // Include the newline in the first part
 		}

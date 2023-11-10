@@ -561,3 +561,196 @@ guilds:
     color: 0x0ec0a5
   - from: "The Penta Legend"
     color: 0x0ec0a5
+- name: Raidingway
+  roles:
+    relevantParsing: true
+    relevantFlexing: true
+    relevantRepetition: true
+    legend: true
+    ultimateFlexing: true
+    ultimateRepetition: false
+    datacenter: false
+  guildId: 1172230157776466050
+  channelId: 1172348608671133760
+  physicalDatacenters:
+  - name: "NA"
+  encounters:
+  - ids: [1060, 1047, 1039]
+    name: "The Unending Coil of Bahamut (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Legendary"
+    roles:
+      - name: "UCoB Cleared"
+        type: "Cleared"
+        color: 0xFFFD7F
+  - ids: [1061, 1048, 1042]
+    name: "The Weapon's Refrain (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Ultimate"
+    roles:
+      - name: "UWU Cleared"
+        type: "Cleared"
+        color: 0x9CBDD8
+  - ids: [1062, 1050]
+    name: "The Epic of Alexander (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 17
+    the: "Perfect"
+    roles:
+      - name: "TEA Cleared"
+        type: "Cleared"
+        color: 0xFAE9C2
+  - ids: [1065]
+    name: "Dragonsong's Reprise (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    the: "Heavenly"
+    roles:
+      - name: "DSR Cleared"
+        type: "Cleared"
+        color: 0xCF8035
+  - ids: [1068]
+    name: "The Omega Protocol (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    the: "Alpha"
+    roles:
+      - name: "TOP Cleared"
+        type: "Cleared"
+        color: 0xd1e5f4
+  - ids: [91]
+    name: "P12S"
+    difficulty: "Savage"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    roles:
+      - name: "P12S Cleared"
+        type: "Cleared"
+        color: 0xef8633
+  - ids: [90]
+    name: "P11S"
+    difficulty: "Savage"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    roles:
+      - name: "P11S Cleared"
+        type: "Cleared"
+        color: 0x9644e5
+  - ids: [89]
+    name: "P10S"
+    difficulty: "Savage"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    roles:
+      - name: "P10S Cleared"
+        type: "Cleared"
+        color: 0x2a72f6
+  - ids: [88]
+    name: "P9S"
+    difficulty: "Savage"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    roles:
+      - name: "P9S Cleared"
+        type: "Cleared"
+        color: 0x78fa4c
+    clearedColor: 0x78fa4c
+  - ids: [1070]
+    name: "Zeromus"
+    difficulty: "Extreme"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    roles:
+      - name: "Zeromus Cleared"
+        type: "Cleared"
+        color: 0x65c97a
+    clearedColor: 0x65c97a
+  reconfigureRoles:
+  # Rename all Limbo roles so they are more accurate
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "The Unending Coil of Bahamut (Ultimate)"
+    to: "Legendary Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "The Weapon's Refrain (Ultimate)"
+    to: "Ultimate Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "The Epic of Alexander (Ultimate)"
+    to: "Perfect Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "Dragonsong's Reprise (Ultimate)"
+    to: "Heavenly Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "The Omega Protocol (Ultimate)"
+    to: "Alpha Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "The Omega Protocol (Ultimate)"
+    to: "Alpha Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "P12S"
+    to: "P12S Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "P11S"
+    to: "P11S Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "P10S"
+    to: "P10S Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "P9S"
+    to: "P9S Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "Zeromus"
+    to: "Zeromus Limbo"
+  # Rename all Complete roles so they are more accurate
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "The Unending Coil of Bahamut (Ultimate)"
+    to: "Legendary"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "The Weapon's Refrain (Ultimate)"
+    to: "Ultimate"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "The Epic of Alexander (Ultimate)"
+    to: "Perfect"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "Dragonsong's Reprise (Ultimate)"
+    to: "Heavenly"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "The Omega Protocol (Ultimate)"
+    to: "Alpha"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "P12S"
+    to: "Wise"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "P11S"
+    to: "Just"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "P10S"
+    to: "Daemonic"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "P9S"
+    to: "Lamenter"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "Zeromus"
+    to: "Nostalgic"

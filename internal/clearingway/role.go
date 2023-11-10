@@ -20,11 +20,13 @@ type ShouldApplyOpts struct {
 type RoleType string
 
 var (
-	PfRole      RoleType = "PF"
-	ReclearRole RoleType = "Reclear"
-	ParseRole   RoleType = "Parse"
-	ClearedRole RoleType = "Cleared"
-	ProgRole    RoleType = "Prog"
+	PfRole       RoleType = "PF"
+	ReclearRole  RoleType = "Reclear"
+	ParseRole    RoleType = "Parse"
+	ClearedRole  RoleType = "Cleared"
+	ProgRole     RoleType = "Prog"
+	LimboRole    RoleType = "Limbo"
+	CompleteRole RoleType = "Complete"
 )
 
 type Roles struct {
@@ -44,6 +46,7 @@ type Role struct {
 	Skip        bool
 	Mention     bool
 	Hoist       bool
+	Encounter   *Encounter
 	ShouldApply func(*ShouldApplyOpts) (bool, string)
 	DiscordRole *discordgo.Role
 }

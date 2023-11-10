@@ -136,6 +136,16 @@ func (g *Guild) Init(c *ConfigGuild) {
 		for _, configReconfigureRole := range c.ConfigReconfigureRoles {
 			for _, role := range g.AllRoles() {
 				if role.Name == configReconfigureRole.From {
+					// If additional constraints are on this reconfigureRole,
+					// make sure they match
+					if configReconfigureRole.Type != "" && string(role.Type) != configReconfigureRole.Type {
+						continue
+					}
+
+					if configReconfigureRole.EncounterName != "" && role.Encounter.Name != configReconfigureRole.EncounterName {
+						continue
+					}
+
 					if configReconfigureRole.To != "" {
 						role.Name = configReconfigureRole.To
 					}

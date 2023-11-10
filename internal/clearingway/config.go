@@ -58,9 +58,11 @@ type ConfigLogicalDatacenter struct {
 }
 
 type ConfigReconfigureRoles struct {
-	From     string `yaml:"from"`
-	To       string `yaml:"to"`
-	Color    int    `yaml:"color"`
-	Skip     bool   `yaml:"skip"`
-	DontSkip bool   `yaml:"dontSkip"`
+	Type          string `yaml:"type"`
+	EncounterName string `yaml:"encounterName"`
+	From          string `yaml:"from"`
+	To            string `yaml:"to"`
+	Color         int    `yaml:"color"`
+	Skip          bool   `yaml:"skip"`
+	DontSkip      bool   `yaml:"dontSkip"`
 }

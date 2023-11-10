@@ -2,6 +2,7 @@ package clearingway
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/Veraticus/clearingway/internal/fflogs"
@@ -191,6 +192,10 @@ func (e *Encounter) DifficultyInt() int {
 	}
 
 	return 100
+}
+
+func (e *Encounter) CompleteNumber() string {
+	return strconv.Itoa(e.TotalWeaponsAvailable)
 }
 
 func (es *Encounters) Roles() *Roles {

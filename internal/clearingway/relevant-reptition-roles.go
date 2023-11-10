@@ -8,13 +8,16 @@ func RelevantRepetitionRoles(encs *Encounters) *Roles {
 	roles := &Roles{Roles: []*Role{}}
 
 	for _, enc := range encs.Encounters {
-		localEnc := enc
 		roles.Roles = append(roles.Roles, &Role{
-			Name: "Limbo", Color: 0x808080, Uncomfy: true,
-			Description: "Cleared " + localEnc.Name + "... but only once.",
+			Name:        "Limbo",
+			Color:       0x808080,
+			Uncomfy:     true,
+			Type:        LimboRole,
+			Encounter:   enc,
+			Description: "Cleared " + enc.Name + "... but only once.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
-					if encounter.Name != localEnc.Name {
+					if encounter.Name != enc.Name {
 						continue
 					}
 					clears := 0
@@ -35,25 +38,28 @@ func RelevantRepetitionRoles(encs *Encounters) *Roles {
 					if clears == 1 {
 						return true,
 							fmt.Sprintf(
-								"Cleared " + localEnc.Name + "... but only once.\nUse `/uncomfy` if you don't want this role.",
+								"Cleared " + enc.Name + "... but only once.\nUse `/uncomfy` if you don't want this role.",
 							)
 					}
 				}
 
-				return false, "Cleared " + localEnc.Name + " more than once."
+				return false, "Cleared " + enc.Name + " more than once."
 			},
 		})
 
-		if localEnc.TotalWeaponsAvailable == 0 {
+		if enc.TotalWeaponsAvailable == 0 {
 			continue
 		}
 
 		roles.Roles = append(roles.Roles, &Role{
-			Name: "Complete", Color: 0xffde00,
-			Description: "Cleared " + localEnc.Name + " enough times to have every single weapon.",
+			Name:        "Complete",
+			Color:       0xffde00,
+			Type:        CompleteRole,
+			Encounter:   enc,
+			Description: "Cleared " + enc.Name + " at least " + enc.CompleteNumber() + " times.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
-					if encounter.Name != localEnc.Name {
+					if encounter.Name != enc.Name {
 						continue
 					}
 					clears := 0
@@ -71,15 +77,15 @@ func RelevantRepetitionRoles(encs *Encounters) *Roles {
 						clears = clears + ranking.TotalKills
 					}
 
-					if clears >= localEnc.TotalWeaponsAvailable {
+					if clears >= enc.TotalWeaponsAvailable {
 						return true,
 							fmt.Sprintf(
-								"Cleared " + localEnc.Name + " enough times to have every single weapon.",
+								"Cleared " + enc.Name + " at least " + enc.CompleteNumber() + " times.",
 							)
 					}
 				}
 
-				return false, "Has not cleared " + localEnc.Name + " enough times to have every single weapon."
+				return false, "Has not cleared " + enc.Name + " at least " + enc.CompleteNumber() + " times."
 			},
 		})
 	}

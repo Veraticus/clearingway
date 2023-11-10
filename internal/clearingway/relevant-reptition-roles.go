@@ -5,7 +5,43 @@ import (
 )
 
 func RelevantRepetitionRoles(encs *Encounters) *Roles {
-	roles := &Roles{Roles: []*Role{}}
+	roles := &Roles{Roles: []*Role{
+		{
+			Name:        "Please Do Other Content",
+			Color:       0x000000,
+			Type:        CompleteRole,
+			Description: "Cleared any relevant encounter at least 100 times.",
+			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
+				for _, encounter := range opts.Encounters.Encounters {
+					clears := 0
+
+					for _, encounterId := range encounter.Ids {
+						ranking, ok := opts.Rankings.Rankings[encounterId]
+
+						if !ok {
+							continue
+						}
+						if !ranking.Cleared() {
+							continue
+						}
+
+						clears = clears + ranking.TotalKills
+					}
+
+					if clears >= 100 {
+						return true,
+							fmt.Sprintf(
+								"Cleared `%v` at least **100** times (**%v** total).",
+								encounter.Name,
+								clears,
+							)
+					}
+				}
+
+				return false, "Did not clear any encounter at least 100 times."
+			},
+		},
+	}}
 
 	for _, enc := range encs.Encounters {
 		roles.Roles = append(roles.Roles, &Role{

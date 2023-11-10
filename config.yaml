@@ -569,7 +569,7 @@ guilds:
     legend: true
     ultimateFlexing: true
     ultimateRepetition: false
-    datacenter: false
+    datacenter: true
   guildId: 1172230157776466050
   channelId: 1172348608671133760
   physicalDatacenters:

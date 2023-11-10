@@ -574,6 +574,19 @@ guilds:
   channelId: 1172348608671133760
   physicalDatacenters:
   - name: "NA"
+    logicalDatacenters:
+      - to: "Aether Resident"
+        from: "Aether"
+        color: 0x000001
+      - to: "Crystal Resident"
+        from: "Crystal"
+        color: 0xf9c9a9
+      - to: "Primal Resident"
+        from: "Primal"
+        color: 0xff0000
+      - to: "Dynamis Resident"
+        from: "Dynamis"
+        color: 0xEAC645
   encounters:
   - ids: [1060, 1047, 1039]
     name: "The Unending Coil of Bahamut (Ultimate)"

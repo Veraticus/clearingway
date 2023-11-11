@@ -637,40 +637,49 @@ guilds:
       - name: "TOP Cleared"
         type: "Cleared"
         color: 0xd1e5f4
-  - ids: [91]
-    name: "P12S"
+  - ids: [92]
+    name: "Pallas Athena"
     difficulty: "Savage"
     defaultRoles: false
     totalWeaponsAvailable: 19
     roles:
-      - name: "P12S Cleared"
+      - name: "Pallas Athena Cleared"
+        type: "Cleared"
+        color: 0xef8633
+  - ids: [91]
+    name: "Athena"
+    difficulty: "Savage"
+    defaultRoles: false
+    totalWeaponsAvailable: 19
+    roles:
+      - name: "Athena Cleared"
         type: "Cleared"
         color: 0xef8633
   - ids: [90]
-    name: "P11S"
+    name: "Themis"
     difficulty: "Savage"
     defaultRoles: false
     totalWeaponsAvailable: 19
     roles:
-      - name: "P11S Cleared"
+      - name: "Themis Cleared"
         type: "Cleared"
         color: 0x9644e5
   - ids: [89]
-    name: "P10S"
+    name: "Pandaemonium"
     difficulty: "Savage"
     defaultRoles: false
     totalWeaponsAvailable: 19
     roles:
-      - name: "P10S Cleared"
+      - name: "Pandaemonium Cleared"
         type: "Cleared"
         color: 0x2a72f6
   - ids: [88]
-    name: "P9S"
+    name: "Kokytos"
     difficulty: "Savage"
     defaultRoles: false
     totalWeaponsAvailable: 19
     roles:
-      - name: "P9S Cleared"
+      - name: "Kokytos Cleared"
         type: "Cleared"
         color: 0x78fa4c
     clearedColor: 0x78fa4c
@@ -712,24 +721,28 @@ guilds:
     to: "Alpha Limbo"
   - from: "Limbo"
     type: "Limbo"
-    encounterName: "P12S"
-    to: "P12S Limbo"
+    encounterName: "Pallas Athena"
+    to: "Martial Limbo"
   - from: "Limbo"
     type: "Limbo"
-    encounterName: "P11S"
-    to: "P11S Limbo"
+    encounterName: "Athena"
+    to: "Wise Limbo"
   - from: "Limbo"
     type: "Limbo"
-    encounterName: "P10S"
-    to: "P10S Limbo"
+    encounterName: "Themis"
+    to: "Just Limbo"
   - from: "Limbo"
     type: "Limbo"
-    encounterName: "P9S"
-    to: "P9S Limbo"
+    encounterName: "Pandaemonium"
+    to: "Daemonic Limbo"
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "Kokytos"
+    to: "Lamentable Limbo"
   - from: "Limbo"
     type: "Limbo"
     encounterName: "Zeromus"
-    to: "Zeromus Limbo"
+    to: "Nostalgic Limbo"
   # Rename all Complete roles so they are more accurate
   - from: "Complete"
     type: "Complete"
@@ -753,19 +766,23 @@ guilds:
     to: "Alpha"
   - from: "Complete"
     type: "Complete"
-    encounterName: "P12S"
+    encounterName: "Pallas Athena"
+    to: "Martial"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "Athena"
     to: "Wise"
   - from: "Complete"
     type: "Complete"
-    encounterName: "P11S"
+    encounterName: "Themis"
     to: "Just"
   - from: "Complete"
     type: "Complete"
-    encounterName: "P10S"
+    encounterName: "Pandaemonium"
     to: "Daemonic"
   - from: "Complete"
     type: "Complete"
-    encounterName: "P9S"
+    encounterName: "Kokytos"
     to: "Lamenter"
   - from: "Complete"
     type: "Complete"

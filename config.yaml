@@ -645,7 +645,7 @@ guilds:
     roles:
       - name: "Pallas Athena Cleared"
         type: "Cleared"
-        color: 0xef8633
+        color: 0xf58cba
   - ids: [91]
     name: "Athena"
     difficulty: "Savage"

@@ -682,7 +682,6 @@ guilds:
       - name: "Kokytos Cleared"
         type: "Cleared"
         color: 0x78fa4c
-    clearedColor: 0x78fa4c
   - ids: [1070]
     name: "Zeromus"
     difficulty: "Extreme"
@@ -691,8 +690,7 @@ guilds:
     roles:
       - name: "Zeromus Cleared"
         type: "Cleared"
-        color: 0x65c97a
-    clearedColor: 0x65c97a
+        color: 0x636363
   reconfigureRoles:
   # Rename all Limbo roles so they are more accurate
   - from: "Limbo"

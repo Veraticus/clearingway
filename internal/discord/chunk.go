@@ -20,7 +20,7 @@ func (c *Chunks) Write(s string) {
 
 		if len(s) <= remainingLength {
 			current.WriteString(s)
-			return // No need to break; just return from the function
+			return
 		}
 
 		splitIndex := findSplitIndex(s, remainingLength)

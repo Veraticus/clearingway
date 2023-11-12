@@ -567,7 +567,7 @@ guilds:
     relevantFlexing: true
     relevantRepetition: true
     legend: true
-    ultimateFlexing: true
+    ultimateFlexing: false
     ultimateRepetition: false
     datacenter: true
   guildId: 1172230157776466050

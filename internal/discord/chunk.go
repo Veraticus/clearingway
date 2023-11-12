@@ -9,62 +9,47 @@ type Chunks struct {
 }
 
 func NewChunks() *Chunks {
-	return &Chunks{Chunks: []*strings.Builder{{}}}
+	return &Chunks{Chunks: make([]*strings.Builder, 0, 10)}
 }
 
 func (c *Chunks) Write(s string) {
 	for len(s) > 0 {
 		current := c.currentChunk()
-		currentLength := len(current.String())
+		currentLength := current.Len()
 		remainingLength := 1500 - currentLength
 
-		// If the current chunk can accommodate the entire string `s`
 		if len(s) <= remainingLength {
 			current.WriteString(s)
-			break
+			return // No need to break; just return from the function
 		}
 
-		// Find the best place to split the string
-		splitIndex := findSplitIndex(s, remainingLength, currentLength)
-
-		// Append the first part of the string to the current chunk
+		splitIndex := findSplitIndex(s, remainingLength)
 		current.WriteString(s[:splitIndex])
-
-		// Create a new chunk for the remaining part of the string
 		s = s[splitIndex:]
 		c.Chunks = append(c.Chunks, &strings.Builder{})
 	}
 }
 
-// findSplitIndex finds the best index to split the string.
-// It looks for a newline close to the specified max length without exceeding it.
-// If no newline is found, it returns the max length.
-func findSplitIndex(s string, maxLength, currentLength int) int {
-	minIndex := 1000 - currentLength // Adjusted based on the current length of the chunk
-	if minIndex < 0 {
-		minIndex = 0
+func findSplitIndex(s string, maxLength int) int {
+	if maxLength >= len(s) {
+		return len(s)
 	}
 
-	for i := maxLength; i > minIndex; i-- {
-		if i > 1 && s[i-1] == '\n' && s[i-2] == '\n' {
-			return i // Include the double newline in the first part
-		}
+	// Using LastIndexFunc to find the last newline before maxLength
+	newlineIndex := strings.LastIndexFunc(s[:maxLength], func(r rune) bool {
+		return r == '\n'
+	})
+
+	if newlineIndex != -1 {
+		return newlineIndex + 1 // Include the newline
 	}
 
-	for i := maxLength; i > minIndex; i-- {
-		if s[i-1] == '\n' {
-			return i // Include the newline in the first part
-		}
-	}
-
-	for i := maxLength; i > minIndex; i-- {
-		if s[i-1] == ' ' {
-			return i // Split at the space
-		}
-	}
-
-	return maxLength // No suitable split character found
+	return maxLength // No newline found
 }
+
 func (c *Chunks) currentChunk() *strings.Builder {
+	if len(c.Chunks) == 0 {
+		c.Chunks = append(c.Chunks, &strings.Builder{})
+	}
 	return c.Chunks[len(c.Chunks)-1]
 }

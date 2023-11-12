@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -22,6 +22,7 @@ jobs:
         run: make test
 
   build-and-push-image:
+    needs: [tests, build_services]
     runs-on: ubuntu-latest
     permissions:
       contents: read

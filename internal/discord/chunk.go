@@ -16,7 +16,7 @@ func (c *Chunks) Write(s string) {
 	for len(s) > 0 {
 		current := c.currentChunk()
 		currentLength := len(current.String())
-		remainingLength := 1900 - currentLength
+		remainingLength := 1500 - currentLength
 
 		// If the current chunk can accommodate the entire string `s`
 		if len(s) <= remainingLength {

@@ -55,6 +55,7 @@ type ConfigLogicalDatacenter struct {
 	From  string `yaml:"from"`
 	To    string `yaml:"to"`
 	Color int    `yaml:"color"`
+	Hoist bool   `yaml:"hoist"`
 }
 
 type ConfigReconfigureRoles struct {
@@ -65,4 +66,5 @@ type ConfigReconfigureRoles struct {
 	Color         int    `yaml:"color"`
 	Skip          bool   `yaml:"skip"`
 	DontSkip      bool   `yaml:"dontSkip"`
+	Hoist         bool   `yaml:"hoist"`
 }

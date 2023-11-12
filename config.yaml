@@ -692,6 +692,8 @@ guilds:
         type: "Cleared"
         color: 0x636363
   reconfigureRoles:
+  - from: "Please Do Other Content"
+    hoist: true
   # Rename all Limbo roles so they are more accurate
   - from: "Limbo"
     type: "Limbo"

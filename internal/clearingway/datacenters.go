@@ -75,6 +75,9 @@ func (pds *PhysicalDatacenters) Init(c []*ConfigPhysicalDatacenter) {
 				if cld.Color != 0 {
 					from.Role.Color = cld.Color
 				}
+				if cld.Hoist {
+					from.Role.Hoist = true
+				}
 			}
 		}
 

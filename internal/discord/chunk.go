@@ -25,7 +25,7 @@ func (c *Chunks) Write(s string) {
 		}
 
 		// Find the best place to split the string
-		splitIndex := findSplitIndex(s, remainingLength)
+		splitIndex := findSplitIndex(s, remainingLength, currentLength)
 
 		// Append the first part of the string to the current chunk
 		current.WriteString(s[:splitIndex])
@@ -39,38 +39,32 @@ func (c *Chunks) Write(s string) {
 // findSplitIndex finds the best index to split the string.
 // It looks for a newline close to the specified max length without exceeding it.
 // If no newline is found, it returns the max length.
-func findSplitIndex(s string, maxLength int) int {
-	// Adjust the starting index to not create chunks smaller than 1500 characters
-	minIndex := 1500
-	if maxLength < minIndex {
-		minIndex = maxLength
+func findSplitIndex(s string, maxLength, currentLength int) int {
+	minIndex := 1000 - currentLength // Adjusted based on the current length of the chunk
+	if minIndex < 0 {
+		minIndex = 0
 	}
 
-	for i := maxLength; i >= minIndex; i-- {
-		// Check for a double newline first
+	for i := maxLength; i > minIndex; i-- {
 		if i > 1 && s[i-1] == '\n' && s[i-2] == '\n' {
 			return i // Include the double newline in the first part
 		}
 	}
 
-	for i := maxLength; i >= minIndex; i-- {
-		// Check for a single newline
+	for i := maxLength; i > minIndex; i-- {
 		if s[i-1] == '\n' {
 			return i // Include the newline in the first part
 		}
 	}
 
-	for i := maxLength; i >= minIndex; i-- {
-		// Check for a space
+	for i := maxLength; i > minIndex; i-- {
 		if s[i-1] == ' ' {
 			return i // Split at the space
 		}
 	}
 
-	// No suitable split character found, split at maxLength
-	return maxLength
+	return maxLength // No suitable split character found
 }
-
 func (c *Chunks) currentChunk() *strings.Builder {
 	return c.Chunks[len(c.Chunks)-1]
 }

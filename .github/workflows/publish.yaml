@@ -9,6 +9,18 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.21.x"
+          cache: true
+      - name: tests
+        run: make test
+
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:

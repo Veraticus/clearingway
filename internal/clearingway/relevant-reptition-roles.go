@@ -45,6 +45,10 @@ func RelevantRepetitionRoles(encs *Encounters) *Roles {
 	}}
 
 	for _, enc := range encs.Encounters {
+		if enc.TotalWeaponsAvailable == 0 {
+			continue
+		}
+
 		roles.Roles = append(roles.Roles, &Role{
 			Name:        "Limbo",
 			Color:       0x808080,
@@ -83,10 +87,6 @@ func RelevantRepetitionRoles(encs *Encounters) *Roles {
 				return false, "Cleared `" + enc.Name + "` more than **once**."
 			},
 		})
-
-		if enc.TotalWeaponsAvailable == 0 {
-			continue
-		}
 
 		roles.Roles = append(roles.Roles, &Role{
 			Name:        "Complete",

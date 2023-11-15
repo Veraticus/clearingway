@@ -641,7 +641,7 @@ guilds:
     name: "Pallas Athena"
     difficulty: "Savage"
     defaultRoles: false
-    totalWeaponsAvailable: 19
+    totalWeaponsAvailable: 0
     roles:
       - name: "Pallas Athena Cleared"
         type: "Cleared"
@@ -650,7 +650,7 @@ guilds:
     name: "Athena"
     difficulty: "Savage"
     defaultRoles: false
-    totalWeaponsAvailable: 19
+    totalWeaponsAvailable: 0
     roles:
       - name: "Athena Cleared"
         type: "Cleared"
@@ -659,7 +659,7 @@ guilds:
     name: "Themis"
     difficulty: "Savage"
     defaultRoles: false
-    totalWeaponsAvailable: 19
+    totalWeaponsAvailable: 0
     roles:
       - name: "Themis Cleared"
         type: "Cleared"
@@ -668,7 +668,7 @@ guilds:
     name: "Pandaemonium"
     difficulty: "Savage"
     defaultRoles: false
-    totalWeaponsAvailable: 19
+    totalWeaponsAvailable: 0
     roles:
       - name: "Pandaemonium Cleared"
         type: "Cleared"
@@ -677,7 +677,7 @@ guilds:
     name: "Kokytos"
     difficulty: "Savage"
     defaultRoles: false
-    totalWeaponsAvailable: 19
+    totalWeaponsAvailable: 0
     roles:
       - name: "Kokytos Cleared"
         type: "Cleared"
@@ -686,15 +686,24 @@ guilds:
     name: "Zeromus"
     difficulty: "Extreme"
     defaultRoles: false
-    totalWeaponsAvailable: 19
+    totalWeaponsAvailable: 0
     roles:
       - name: "Zeromus Cleared"
         type: "Cleared"
         color: 0x636363
+  - ids: [3008]
+    name: "King Thordan"
+    difficulty: "Unreal"
+    defaultRoles: false
+    totalWeaponsAvailable: 0
+    roles:
+      - name: "King Thordan Cleared"
+        type: "Cleared"
+        color: 0x8c8989
   reconfigureRoles:
   - from: "Please Do Other Content"
     hoist: true
-  # Rename all Limbo roles so they are more accurate
+  # Rename ultimate Limbo roles so they are more accurate
   - from: "Limbo"
     type: "Limbo"
     encounterName: "The Unending Coil of Bahamut (Ultimate)"
@@ -715,35 +724,7 @@ guilds:
     type: "Limbo"
     encounterName: "The Omega Protocol (Ultimate)"
     to: "Alpha Limbo"
-  - from: "Limbo"
-    type: "Limbo"
-    encounterName: "The Omega Protocol (Ultimate)"
-    to: "Alpha Limbo"
-  - from: "Limbo"
-    type: "Limbo"
-    encounterName: "Pallas Athena"
-    to: "Martial Limbo"
-  - from: "Limbo"
-    type: "Limbo"
-    encounterName: "Athena"
-    to: "Wise Limbo"
-  - from: "Limbo"
-    type: "Limbo"
-    encounterName: "Themis"
-    to: "Just Limbo"
-  - from: "Limbo"
-    type: "Limbo"
-    encounterName: "Pandaemonium"
-    to: "Daemonic Limbo"
-  - from: "Limbo"
-    type: "Limbo"
-    encounterName: "Kokytos"
-    to: "Lamentable Limbo"
-  - from: "Limbo"
-    type: "Limbo"
-    encounterName: "Zeromus"
-    to: "Nostalgic Limbo"
-  # Rename all Complete roles so they are more accurate
+  # Rename ultimate Complete roles so they are more accurate
   - from: "Complete"
     type: "Complete"
     encounterName: "The Unending Coil of Bahamut (Ultimate)"
@@ -764,27 +745,3 @@ guilds:
     type: "Complete"
     encounterName: "The Omega Protocol (Ultimate)"
     to: "Alpha"
-  - from: "Complete"
-    type: "Complete"
-    encounterName: "Pallas Athena"
-    to: "Martial"
-  - from: "Complete"
-    type: "Complete"
-    encounterName: "Athena"
-    to: "Wise"
-  - from: "Complete"
-    type: "Complete"
-    encounterName: "Themis"
-    to: "Just"
-  - from: "Complete"
-    type: "Complete"
-    encounterName: "Pandaemonium"
-    to: "Daemonic"
-  - from: "Complete"
-    type: "Complete"
-    encounterName: "Kokytos"
-    to: "Lamenter"
-  - from: "Complete"
-    type: "Complete"
-    encounterName: "Zeromus"
-    to: "Nostalgic"

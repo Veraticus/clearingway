@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -21,16 +22,19 @@ func main() {
 	if !ok {
 		panic("You must supply a DISCORD_TOKEN to start!")
 	}
+	discordToken = strings.TrimSpace(discordToken)
 
 	fflogsClientId, ok := os.LookupEnv("FFLOGS_CLIENT_ID")
 	if !ok {
 		panic("You must supply a FFLOGS_CLIENT_ID to start!")
 	}
+	fflogsClientId = strings.TrimSpace(fflogsClientId)
 
 	fflogsClientSecret, ok := os.LookupEnv("FFLOGS_CLIENT_SECRET")
 	if !ok {
 		panic("You must supply a FFLOGS_CLIENT_SECRET to start!")
 	}
+	fflogsClientSecret = strings.TrimSpace(fflogsClientSecret)
 
 	c := &clearingway.Clearingway{
 		Config: &clearingway.Config{},

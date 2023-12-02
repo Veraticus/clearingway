@@ -5,6 +5,7 @@ import (
 
 	"github.com/Veraticus/clearingway/internal/fflogs"
 	"github.com/Veraticus/clearingway/internal/ffxiv"
+	"github.com/Veraticus/clearingway/internal/util"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -63,8 +64,21 @@ func (r *Role) Ensure(guildId string, s *discordgo.Session, existingRoles []*dis
 		}
 	}
 
+	roleParams := &discordgo.RoleParams{
+		Name:  r.Name,
+		Color: &r.Color,
+	}
+
+	if r.Hoist {
+		roleParams.Hoist = util.Bool(true)
+	}
+
+	if r.Mention {
+		roleParams.Mentionable = util.Bool(true)
+	}
+
 	if existingRole == nil {
-		newRole, err := s.GuildRoleCreate(guildId)
+		newRole, err := s.GuildRoleCreate(guildId, roleParams)
 		if err != nil {
 			return fmt.Errorf("Could not create new role for %v: %w.\n", r.Name, err)
 		}
@@ -72,15 +86,7 @@ func (r *Role) Ensure(guildId string, s *discordgo.Session, existingRoles []*dis
 	}
 
 	if existingRole.Color != r.Color || existingRole.Name != r.Name {
-		newRole, err := s.GuildRoleEdit(
-			guildId,
-			existingRole.ID,
-			r.Name,
-			r.Color,
-			r.Hoist,
-			0,
-			r.Mention,
-		)
+		newRole, err := s.GuildRoleEdit(guildId, existingRole.ID, roleParams)
 		if err != nil {
 			return fmt.Errorf("Could not ensure role %v: %w.\n", r.Name, err)
 		}

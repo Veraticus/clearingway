@@ -3,6 +3,7 @@ package clearingway
 import (
 	"fmt"
 	"regexp"
+	"time"
 
 	"github.com/Veraticus/clearingway/internal/discord"
 
@@ -40,6 +41,7 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 				fmt.Printf("Error ensuring role %+v: %+v\n", r, err)
 			}
 		}
+		time.Sleep(1 * time.Second)
 
 		fmt.Printf("Adding clear command...\n")
 		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, ClearCommand)
@@ -71,6 +73,7 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			if err != nil {
 				fmt.Printf("Could not add prog command: %v\n", err)
 			}
+			time.Sleep(1 * time.Second)
 		}
 
 		// fmt.Printf("Removing commands...\n")

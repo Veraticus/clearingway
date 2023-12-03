@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/Vivino/go-autocomplete-trie v0.0.0-20230301121706-da951497d081
-	github.com/bwmarrin/discordgo v0.27.1
+	github.com/bwmarrin/discordgo v0.27.2-0.20230922130345-1f0b57f11024
 	github.com/gocolly/colly v1.2.0
 	github.com/hasura/go-graphql-client v0.10.0
 	github.com/stretchr/testify v1.7.1

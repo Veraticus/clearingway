@@ -1,6 +1,6 @@
 # clearingway
 
-Clearingway listens to a Discord channe for the message `/clears <world> <first-name> <last-name>`.
+Clearingway listens to a Discord channel for the message `/clears <world> <first-name> <last-name>`.
 
 When it hears this message, it tries to find the relevant character in the Lodestone. If it finds them, it then parses their
 fflogs and tries to assign them a few roles:

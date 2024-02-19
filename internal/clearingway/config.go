@@ -10,6 +10,7 @@ type ConfigGuild struct {
 	ChannelId                 string                      `yaml:"channelId"`
 	ConfigPhysicalDatacenters []*ConfigPhysicalDatacenter `yaml:"physicalDatacenters"`
 	ConfigEncounters          []*ConfigEncounter          `yaml:"encounters"`
+	ConfigAchievements        []*ConfigAchievement        `yaml:"achievements"`
 	ConfigRoles               *ConfigRoles                `yaml:"roles"`
 	ConfigReconfigureRoles    []*ConfigReconfigureRoles   `yaml:"reconfigureRoles"`
 }
@@ -35,6 +36,11 @@ type ConfigEncounter struct {
 	ConfigRoles           []*ConfigRole `yaml:"roles"`
 	ConfigProg            []*ConfigRole `yaml:"prog"`
 	RequiredKillsToClear  int           `yaml:"requiredKillsToClear"`
+}
+
+type ConfigAchievement struct {
+	Title       string        `yaml:"name"`
+	ConfigRoles []*ConfigRole `yaml:"roles"`
 }
 
 type ConfigRole struct {

@@ -15,6 +15,7 @@ type Guild struct {
 	Id                  string
 	ChannelId           string
 	Encounters          *Encounters
+	Achievements        *Achievements
 	Characters          *ffxiv.Characters
 	PhysicalDatacenters *PhysicalDatacenters
 
@@ -35,6 +36,7 @@ type Guild struct {
 	UltimateFlexingRoles    *Roles
 	UltimateRepetitionRoles *Roles
 	DatacenterRoles         *Roles
+	AchievementRoles        *Roles
 }
 
 func (g *Guild) Init(c *ConfigGuild) {
@@ -42,6 +44,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 	g.Id = c.GuildId
 	g.ChannelId = c.ChannelId
 	g.Encounters = &Encounters{Encounters: []*Encounter{}}
+	g.Achievements = &Achievements{Achievements: []*Achievement{}}
 	g.Characters = &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}}
 
 	g.PhysicalDatacenters = &PhysicalDatacenters{PhysicalDatacenters: map[string]*PhysicalDatacenter{}}
@@ -52,6 +55,12 @@ func (g *Guild) Init(c *ConfigGuild) {
 		encounter := &Encounter{}
 		encounter.Init(configEncounter)
 		g.Encounters.Encounters = append(g.Encounters.Encounters, encounter)
+	}
+
+	for _, configAchievement := range c.ConfigAchievements {
+		achievement := &Achievement{}
+		achievement.Init(configAchievement)
+		g.Achievements.Achievements = append(g.Achievements.Achievements, achievement)
 	}
 
 	if c.ConfigRoles != nil && c.ConfigRoles.RelevantParsing == false {
@@ -103,6 +112,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 	}
 
 	g.EncounterRoles = g.Encounters.Roles()
+	g.AchievementRoles = g.Achievements.Roles()
 
 	if g.RelevantParsingEnabled {
 		g.RelevantParsingRoles = RelevantParsingRoles()
@@ -173,6 +183,7 @@ func (g *Guild) AllEncounters() []*Encounter {
 
 func (g *Guild) NonUltRoles() []*Role {
 	roles := g.EncounterRoles.Roles
+	roles = append(roles, g.AchievementRoles.Roles...)
 
 	if g.RelevantParsingEnabled {
 		roles = append(roles, g.RelevantParsingRoles.Roles...)

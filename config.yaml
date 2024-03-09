@@ -745,3 +745,51 @@ guilds:
     type: "Complete"
     encounterName: "The Omega Protocol (Ultimate)"
     to: "Alpha"
+- name: Deep Dungeon
+  roles:
+    relevantParsing: false
+    relevantFlexing: false
+    relevantRepetition: false
+    legend: false
+    ultimateFlexing: false
+    ultimateRepetition: false
+    datacenter: true
+  guildId: 1021602454716022845
+  channelId: 1172348608671133760
+  achievements:
+    - name: "Pal-less Palace III"
+      roles:
+        - name: "Pal-less Palace"
+          description: "Pal-less Palace III"
+          type: "Palace of the Dead"
+          color: 0x8b0000
+    - name: "The Necromancer"
+      roles:
+        - name: "The Necromancer"
+          description: "The Necromancer"
+          type: "Palace of the Dead"
+          color: 0x8b0000
+    - name: "Heaven Is a Lonely Place II"
+      roles:
+        - name: "Heaven Is a Lonely Place"
+          description: "Heaven Is a Lonely Place II"
+          type: "Heaven on High"
+          color: 0xFFD580
+    - name: "Lone Hero"
+      roles:
+        - name: "Lone Hero"
+          description: "Lone Hero"
+          type: "Heaven on High"
+          color: 0xFFD580
+    - name: "All by Eurekaself II"
+      roles:
+        - name: "All by Eurekaself"
+          description: "All by Eurekaself II"
+          type: "Eureka"
+          color: 0x739BD0
+    - name: "Once and Future King / Queen"
+      roles:
+        - name: "Once and Future King / Queen"
+          description: "Once and Future King / Queen"
+          type: "Cleared"
+          color: 0x739BD0

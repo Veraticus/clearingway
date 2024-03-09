@@ -63,6 +63,10 @@ func main() {
 			fmt.Printf("Encounter roles: %+v\n", guild.EncounterRoles.Roles)
 		}
 
+		if guild.AchievementRoles != nil {
+			fmt.Printf("Achievement roles: %+v\n", guild.AchievementRoles.Roles)
+		}
+
 		if guild.RelevantParsingRoles != nil {
 			fmt.Printf("Relevant parsing roles: %+v\n", guild.RelevantParsingRoles.Roles)
 		}

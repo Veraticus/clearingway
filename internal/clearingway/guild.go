@@ -63,52 +63,54 @@ func (g *Guild) Init(c *ConfigGuild) {
 		g.Achievements.Achievements = append(g.Achievements.Achievements, achievement)
 	}
 
-	if c.ConfigRoles != nil && c.ConfigRoles.RelevantParsing == false {
-		g.RelevantParsingEnabled = false
-	} else {
-		g.RelevantParsingEnabled = true
-	}
+	if c.ConfigRoles != nil {
+		if c.ConfigRoles.RelevantParsing == false {
+			g.RelevantParsingEnabled = false
+		} else {
+			g.RelevantParsingEnabled = true
+		}
 
-	if c.ConfigRoles != nil && c.ConfigRoles.RelevantFlexing == false {
-		g.RelevantFlexingEnabled = false
-	} else {
-		g.RelevantFlexingEnabled = true
-	}
+		if c.ConfigRoles.RelevantFlexing == false {
+			g.RelevantFlexingEnabled = false
+		} else {
+			g.RelevantFlexingEnabled = true
+		}
 
-	if c.ConfigRoles != nil && c.ConfigRoles.RelevantRepetition == false {
-		g.RelevantRepetitionEnabled = false
-	} else {
-		g.RelevantRepetitionEnabled = true
-	}
+		if c.ConfigRoles.RelevantRepetition == false {
+			g.RelevantRepetitionEnabled = false
+		} else {
+			g.RelevantRepetitionEnabled = true
+		}
 
-	if c.ConfigRoles != nil && c.ConfigRoles.Legend == false {
-		g.LegendEnabled = false
-	} else {
-		g.LegendEnabled = true
-	}
+		if c.ConfigRoles.Legend == false {
+			g.LegendEnabled = false
+		} else {
+			g.LegendEnabled = true
+		}
 
-	if c.ConfigRoles != nil && c.ConfigRoles.UltimateFlexing == false {
-		g.UltimateFlexingEnabled = false
-	} else {
-		g.UltimateFlexingEnabled = true
-	}
+		if c.ConfigRoles.UltimateFlexing == false {
+			g.UltimateFlexingEnabled = false
+		} else {
+			g.UltimateFlexingEnabled = true
+		}
 
-	if c.ConfigRoles != nil && c.ConfigRoles.UltimateRepetition == false {
-		g.UltimateRepetitionEnabled = false
-	} else {
-		g.UltimateRepetitionEnabled = true
-	}
+		if c.ConfigRoles.UltimateRepetition == false {
+			g.UltimateRepetitionEnabled = false
+		} else {
+			g.UltimateRepetitionEnabled = true
+		}
 
-	if c.ConfigRoles != nil && c.ConfigRoles.Datacenter == false {
-		g.DatacenterEnabled = false
-	} else {
-		g.DatacenterEnabled = true
-	}
+		if c.ConfigRoles.Datacenter == false {
+			g.DatacenterEnabled = false
+		} else {
+			g.DatacenterEnabled = true
+		}
 
-	if c.ConfigRoles != nil && c.ConfigRoles.SkipRemoval == true {
-		g.SkipRemoval = true
-	} else {
-		g.SkipRemoval = false
+		if c.ConfigRoles.SkipRemoval == true {
+			g.SkipRemoval = true
+		} else {
+			g.SkipRemoval = false
+		}
 	}
 
 	g.EncounterRoles = g.Encounters.Roles()

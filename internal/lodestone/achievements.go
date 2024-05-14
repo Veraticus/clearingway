@@ -37,9 +37,12 @@ func GetAchievements(c *ffxiv.Character) ([]string, error) {
 			errors = append(errors, err)
 		})
 
-		scraper.Limit(&colly.LimitRule{
+		err := scraper.Limit(&colly.LimitRule{
 			Delay: 3 * time.Second,
 		})
+		if err != nil {
+			errors = append(errors, err)
+		}
 
 		scraper.OnHTML("li.entry", func(e *colly.HTMLElement) {
 
@@ -59,7 +62,7 @@ func GetAchievements(c *ffxiv.Character) ([]string, error) {
 		})
 
 		visit_link := links[0]
-		err := scraper.Visit(visit_link)
+		err = scraper.Visit(visit_link)
 		if err != nil {
 			errors = append(errors, err)
 			return nil, buildError(errors)

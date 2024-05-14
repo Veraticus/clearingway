@@ -64,49 +64,49 @@ func (g *Guild) Init(c *ConfigGuild) {
 	}
 
 	if c.ConfigRoles != nil {
-		if c.ConfigRoles.RelevantParsing == false {
+		if !c.ConfigRoles.RelevantParsing {
 			g.RelevantParsingEnabled = false
 		} else {
 			g.RelevantParsingEnabled = true
 		}
 
-		if c.ConfigRoles.RelevantFlexing == false {
+		if !c.ConfigRoles.RelevantFlexing {
 			g.RelevantFlexingEnabled = false
 		} else {
 			g.RelevantFlexingEnabled = true
 		}
 
-		if c.ConfigRoles.RelevantRepetition == false {
+		if !c.ConfigRoles.RelevantRepetition {
 			g.RelevantRepetitionEnabled = false
 		} else {
 			g.RelevantRepetitionEnabled = true
 		}
 
-		if c.ConfigRoles.Legend == false {
+		if !c.ConfigRoles.Legend {
 			g.LegendEnabled = false
 		} else {
 			g.LegendEnabled = true
 		}
 
-		if c.ConfigRoles.UltimateFlexing == false {
+		if !c.ConfigRoles.UltimateFlexing {
 			g.UltimateFlexingEnabled = false
 		} else {
 			g.UltimateFlexingEnabled = true
 		}
 
-		if c.ConfigRoles.UltimateRepetition == false {
+		if !c.ConfigRoles.UltimateRepetition {
 			g.UltimateRepetitionEnabled = false
 		} else {
 			g.UltimateRepetitionEnabled = true
 		}
 
-		if c.ConfigRoles.Datacenter == false {
+		if !c.ConfigRoles.Datacenter {
 			g.DatacenterEnabled = false
 		} else {
 			g.DatacenterEnabled = true
 		}
 
-		if c.ConfigRoles.SkipRemoval == true {
+		if c.ConfigRoles.SkipRemoval {
 			g.SkipRemoval = true
 		} else {
 			g.SkipRemoval = false
@@ -164,10 +164,10 @@ func (g *Guild) Init(c *ConfigGuild) {
 					if configReconfigureRole.Color != 0 {
 						role.Color = configReconfigureRole.Color
 					}
-					if configReconfigureRole.Skip == true {
+					if configReconfigureRole.Skip {
 						role.Skip = true
 					}
-					if configReconfigureRole.DontSkip == true {
+					if configReconfigureRole.DontSkip {
 						role.Skip = false
 					}
 				}

@@ -177,7 +177,10 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 			}
 		}
 
-		rankings.Add(id, ranking)
+		err = rankings.Add(id, ranking)
+		if err != nil {
+			return nil, fmt.Errorf("Could not add ranking: %w", err)
+		}
 	}
 
 	return rankings, nil

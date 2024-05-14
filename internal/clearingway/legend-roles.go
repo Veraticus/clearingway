@@ -28,7 +28,7 @@ func legendRoleString(clearedEncounters *Encounters, rankings *fflogs.Rankings) 
 		}
 	}
 
-	message.Set(language.English, "Cleared the following %d Ultimate fights:\n",
+	_ = message.Set(language.English, "Cleared the following %d Ultimate fights:\n",
 		plural.Selectf(
 			1,
 			"%d",

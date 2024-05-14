@@ -23,19 +23,25 @@ func (d *Discord) Start() error {
 	return nil
 }
 
-func StartInteraction(s *discordgo.Session, i *discordgo.Interaction, message string) error {
-	err := s.InteractionRespond(i, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Content: message,
-		},
-	})
-	return err
-}
+func DMUser(s *discordgo.Session, i *discordgo.Interaction, message string) error {
+	var userId string
+	if i.Member != nil {
+		userId = i.Member.User.ID
+	}
+	if i.User != nil {
+		userId = i.User.ID
+	}
 
-func ContinueInteraction(s *discordgo.Session, i *discordgo.Interaction, message string) error {
-	_, err := s.FollowupMessageCreate(i, true, &discordgo.WebhookParams{
-		Content: message,
-	})
-	return err
+	if userId == "" {
+		return fmt.Errorf("Could not find user ID!")
+	}
+	channel, err := s.UserChannelCreate(userId)
+	if err != nil {
+		return fmt.Errorf("Could not create DM channel: %w", err)
+	}
+	_, err = s.ChannelMessageSend(channel.ID, "Pong!")
+	if err != nil {
+		return fmt.Errorf("Could not send message: %w", err)
+	}
+	return nil
 }

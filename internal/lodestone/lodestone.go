@@ -32,7 +32,7 @@ func SetCharacterLodestoneID(c *ffxiv.Character) error {
 
 	collector.OnHTML(".ldst__window .entry", func(e *colly.HTMLElement) {
 		name := e.ChildText(".entry__name")
-		if strings.ToLower(name) == strings.ToLower(c.Name()) {
+		if strings.EqualFold(name, c.Name()) {
 			linkText := e.ChildAttr(".entry__link", "href")
 			var charID int
 			n, err := fmt.Sscanf(linkText, "/lodestone/character/%d/", &charID)
@@ -60,7 +60,10 @@ func SetCharacterLodestoneID(c *ffxiv.Character) error {
 		if !spawnedChildren && currentPage == 1 && maxPages != 1 {
 			spawnedChildren = true
 			for i := 2; i <= maxPages; i++ {
-				e.Request.Visit(lodestoneUrl + searchUrl + fmt.Sprintf("&page=%d", i))
+				err = e.Request.Visit(lodestoneUrl + searchUrl + fmt.Sprintf("&page=%d", i))
+				if err != nil {
+					errors = append(errors, fmt.Errorf("Could not spawn child page: %w", err))
+				}
 			}
 		}
 	})
@@ -69,7 +72,10 @@ func SetCharacterLodestoneID(c *ffxiv.Character) error {
 		errors = append(errors, err)
 	})
 
-	collector.Visit(lodestoneUrl + searchUrl)
+	err := collector.Visit(lodestoneUrl + searchUrl)
+	if err != nil {
+		return fmt.Errorf("Could not visit Lodestone: %w", err)
+	}
 	collector.Wait()
 
 	if len(errors) != 0 {
@@ -110,7 +116,10 @@ func CharacterIsOwnedByDiscordUser(c *ffxiv.Character, discordId string) (bool, 
 		errors = append(errors, err)
 	})
 
-	collector.Visit(lodestoneUrl + fmt.Sprintf("/character/%d/", c.LodestoneID))
+	err := collector.Visit(lodestoneUrl + fmt.Sprintf("/character/%d/", c.LodestoneID))
+	if err != nil {
+		return false, fmt.Errorf("Could not visit Lodestone: %w", err)
+	}
 	collector.Wait()
 
 	if len(errors) != 0 {

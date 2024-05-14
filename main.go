@@ -120,7 +120,7 @@ func start(c *clearingway.Clearingway) {
 	}
 
 	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
 }
 
@@ -145,7 +145,7 @@ func clears(c *clearingway.Clearingway) {
 		panic(fmt.Errorf("Could not open Discord session: %f", err))
 	}
 
-	for c.Ready != true {
+	for c.Ready {
 		fmt.Printf("Waiting for Clearingway to be ready...\n")
 		time.Sleep(2 * time.Second)
 	}
@@ -208,7 +208,7 @@ func prog(c *clearingway.Clearingway) {
 		panic(fmt.Errorf("Could not open Discord session: %f", err))
 	}
 
-	for c.Ready != true {
+	for c.Ready {
 		fmt.Printf("Waiting for Clearingway to be ready...\n")
 		time.Sleep(2 * time.Second)
 	}

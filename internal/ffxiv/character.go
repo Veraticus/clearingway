@@ -47,7 +47,7 @@ func (cs *Characters) Init(world, firstName, lastName string) (*Character, error
 }
 
 func (c *Character) UpdatedRecently() bool {
-	duration := time.Now().Sub(c.LastUpdateTime)
+	duration := time.Since(c.LastUpdateTime)
 	return duration.Minutes() <= 5.0
 }
 

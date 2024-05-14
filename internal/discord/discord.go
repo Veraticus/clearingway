@@ -37,6 +37,7 @@ func StartInteraction(s *discordgo.Session, i *discordgo.Interaction, message st
 func ContinueInteraction(s *discordgo.Session, i *discordgo.Interaction, message string) error {
 	_, err := s.FollowupMessageCreate(i, true, &discordgo.WebhookParams{
 		Content: message,
+		Flags:   discordgo.MessageFlagsEphemeral,
 	})
 	return err
 }

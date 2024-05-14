@@ -33,6 +33,12 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		optionMap[opt.Name] = opt
 	}
 
+	err := discord.StartInteraction(s, i.Interaction, "Received `/clears`...")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
 	var world string
 	var firstName string
 	var lastName string
@@ -48,7 +54,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	}
 
 	if len(world) == 0 || len(firstName) == 0 || len(lastName) == 0 {
-		err := discord.DMUser(s, i.Interaction, "`/clears` command failed! Please input your world, first name, and last name.")
+		err := discord.ContinueInteraction(s, i.Interaction, "`/clears` command failed! Please input your world, first name, and last name.")
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
@@ -61,7 +67,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	lastName = title.String(lastName)
 
 	if !ffxiv.IsWorld(world) {
-		err := discord.DMUser(s, i.Interaction,
+		err := discord.ContinueInteraction(s, i.Interaction,
 			fmt.Sprintf("`%s` is not a valid world! Make sure you spelled your world name properly.", world),
 		)
 		if err != nil {
@@ -70,7 +76,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		return
 	}
 
-	err := discord.DMUser(s, i.Interaction,
+	err = discord.ContinueInteraction(s, i.Interaction,
 		fmt.Sprintf("Finding `%s %s (%s)` in the Lodestone...", firstName, lastName, world),
 	)
 	if err != nil {
@@ -80,7 +86,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 
 	char, err := g.Characters.Init(world, firstName, lastName)
 	if err != nil {
-		err := discord.DMUser(s, i.Interaction, err.Error())
+		err := discord.ContinueInteraction(s, i.Interaction, err.Error())
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
@@ -89,7 +95,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 
 	err = c.Fflogs.SetCharacterLodestoneID(char)
 	if err != nil {
-		err := discord.DMUser(s, i.Interaction,
+		err := discord.ContinueInteraction(s, i.Interaction,
 			fmt.Sprintf(
 				"Error finding this character's Lodestone ID from FF Logs: %v\nTo make lookups faster in the future, please link your character in FF Logs to the Lodestone here: https://www.fflogs.com/lodestone/import",
 				err,
@@ -100,7 +106,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		}
 		err = lodestone.SetCharacterLodestoneID(char)
 		if err != nil {
-			err := discord.DMUser(s, i.Interaction,
+			err := discord.ContinueInteraction(s, i.Interaction,
 				fmt.Sprintf(
 					"Error finding this character's Lodestone ID in the Lodestone: %v\nIf your character name is short or very common this can frequently fail. Please link your character in FF Logs to the Lodestone here: https://www.fflogs.com/lodestone/import",
 					err,
@@ -112,7 +118,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		}
 	}
 
-	err = discord.DMUser(s, i.Interaction,
+	err = discord.ContinueInteraction(s, i.Interaction,
 		fmt.Sprintf("Verifying ownership of `%s (%s)`...", char.Name(), char.World),
 	)
 	if err != nil {
@@ -122,14 +128,14 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	discordId := i.Member.User.ID
 	isOwner, err := lodestone.CharacterIsOwnedByDiscordUser(char, discordId)
 	if err != nil {
-		err = discord.DMUser(s, i.Interaction, err.Error())
+		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
 		return
 	}
 	if !isOwner {
-		err = discord.DMUser(s, i.Interaction,
+		err = discord.ContinueInteraction(s, i.Interaction,
 			fmt.Sprintf(
 				"I could not verify your ownership of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile and then run `/clears` again:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
 				char.Name(),
@@ -143,7 +149,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		return
 	}
 
-	err = discord.DMUser(s, i.Interaction,
+	err = discord.ContinueInteraction(s, i.Interaction,
 		fmt.Sprintf("Analyzing logs for `%s (%s)`...", char.Name(), char.World),
 	)
 	if err != nil {
@@ -151,7 +157,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	}
 
 	if char.UpdatedRecently() {
-		err = discord.DMUser(s, i.Interaction,
+		err = discord.ContinueInteraction(s, i.Interaction,
 			fmt.Sprintf("Finished analysis for `%s (%s)`.", char.Name(), char.World),
 		)
 		if err != nil {
@@ -162,7 +168,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 
 	roleTexts, err := c.UpdateClearsForCharacterInGuild(char, i.Member.User.ID, g)
 	if err != nil {
-		err = discord.DMUser(s, i.Interaction,
+		err = discord.ContinueInteraction(s, i.Interaction,
 			fmt.Sprintf("Could not analyze clears for `%s (%s)`: %s", char.Name(), char.World, err),
 		)
 		if err != nil {
@@ -179,7 +185,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 	}
 
 	for _, c := range chunks.Chunks {
-		err = discord.DMUser(s, i.Interaction, "_ _\n"+c.String())
+		err = discord.ContinueInteraction(s, i.Interaction, "_ _\n"+c.String())
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}

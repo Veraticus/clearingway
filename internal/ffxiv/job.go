@@ -35,6 +35,7 @@ var Jobs = map[string]*Job{
 	"Rogue":       {FullName: "Rogue", Abbreviation: "ROG"},
 	"Thaumaturge": {FullName: "Thaumaturge", Abbreviation: "THM"},
 	"Archer":      {FullName: "Archer", Abbreviation: "ARC"},
+	"Any":         {FullName: "Any", Abbreviation: "ANY"},
 }
 
 func (j *Job) IsHealer() bool {

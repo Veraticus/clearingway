@@ -195,7 +195,7 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
 	}
 
-	err := discord.DMUser(s, i.Interaction, "Uncomfying you...")
+	err := discord.StartInteraction(s, i.Interaction, "Uncomfying you...")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 		return
@@ -203,7 +203,7 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 
 	member, err := c.Discord.Session.GuildMember(g.Id, i.Member.User.ID)
 	if err != nil {
-		err = discord.DMUser(s, i.Interaction, err.Error())
+		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
@@ -221,7 +221,7 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 	}
 
 	if len(uncomfyRoles) == 0 {
-		err = discord.DMUser(s, i.Interaction, "Uncomfy roles are not present in this Discord!")
+		err = discord.ContinueInteraction(s, i.Interaction, "Uncomfy roles are not present in this Discord!")
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
@@ -239,7 +239,7 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 		}
 	}
 	if len(rolesToRemove) == 0 {
-		err = discord.DMUser(s, i.Interaction, "You do not have any uncomfy roles!")
+		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any uncomfy roles!")
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
@@ -254,7 +254,7 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 		fmt.Printf("Removing uncomfy role: %+v\n", err)
 	}
 
-	err = discord.DMUser(s, i.Interaction, "_ _\n__Uncomfy roles:__\n⮕ Removed!\n")
+	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Uncomfy roles:__\n⮕ Removed!\n")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 	}
@@ -272,7 +272,7 @@ func (c *Clearingway) Uncolor(s *discordgo.Session, i *discordgo.InteractionCrea
 		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
 	}
 
-	err := discord.DMUser(s, i.Interaction, "Uncoloring you...")
+	err := discord.ContinueInteraction(s, i.Interaction, "Uncoloring you...")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 		return
@@ -280,7 +280,7 @@ func (c *Clearingway) Uncolor(s *discordgo.Session, i *discordgo.InteractionCrea
 
 	member, err := c.Discord.Session.GuildMember(g.Id, i.Member.User.ID)
 	if err != nil {
-		err = discord.DMUser(s, i.Interaction, err.Error())
+		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
@@ -298,7 +298,7 @@ func (c *Clearingway) Uncolor(s *discordgo.Session, i *discordgo.InteractionCrea
 	}
 
 	if len(uncolorRoles) == 0 {
-		err = discord.DMUser(s, i.Interaction, "Parsing roles are not present in this Discord!")
+		err = discord.ContinueInteraction(s, i.Interaction, "Parsing roles are not present in this Discord!")
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
@@ -312,7 +312,7 @@ func (c *Clearingway) Uncolor(s *discordgo.Session, i *discordgo.InteractionCrea
 		}
 	}
 	if len(rolesToRemove) == 0 {
-		err = discord.DMUser(s, i.Interaction, "You do not have any parsing roles!")
+		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any parsing roles!")
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
@@ -327,7 +327,7 @@ func (c *Clearingway) Uncolor(s *discordgo.Session, i *discordgo.InteractionCrea
 		fmt.Printf("Removing parsing role: %+v\n", err)
 	}
 
-	err = discord.DMUser(s, i.Interaction, "_ _\n__Parsing roles:__\n⮕ Removed!\n")
+	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Parsing roles:__\n⮕ Removed!\n")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 	}
@@ -362,8 +362,13 @@ func (c *Clearingway) Roles(s *discordgo.Session, i *discordgo.InteractionCreate
 		chunks.Write(fmt.Sprintf("__**%s**__\n⮕ %s\n\n", r.Name, r.Description))
 	}
 
-	for _, c := range chunks.Chunks {
-		err := discord.DMUser(s, i.Interaction, c.String())
+	for n, c := range chunks.Chunks {
+		var err error
+		if n == 0 {
+			err = discord.StartInteraction(s, i.Interaction, c.String())
+		} else {
+			err = discord.ContinueInteraction(s, i.Interaction, c.String())
+		}
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 			return

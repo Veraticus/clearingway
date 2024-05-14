@@ -113,11 +113,15 @@ func main() {
 
 func start(c *clearingway.Clearingway) {
 	c.Discord.Session.AddHandler(c.DiscordReady)
-	c.Discord.Session.AddHandler(c.InteractionCreate)
 	err := c.Discord.Session.Open()
 	if err != nil {
 		panic(fmt.Errorf("Could not open Discord session: %f", err))
 	}
+	for !c.Ready {
+		fmt.Printf("Waiting for Clearingway to be ready...\n")
+		time.Sleep(2 * time.Second)
+	}
+	c.Discord.Session.AddHandler(c.InteractionCreate)
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)

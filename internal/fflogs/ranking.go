@@ -61,7 +61,7 @@ func (rs *Rankings) Add(id int, r *Ranking) error {
 			}
 			j, ok := ffxiv.Jobs[rank.Spec]
 			if !ok {
-				return fmt.Errorf("Could not find job %s", rank.Spec)
+				return fmt.Errorf("Could not find job %s for rank %+v", rank.Spec, rank)
 			}
 			rank.Job = j
 		}
@@ -98,7 +98,7 @@ func (rs *Rankings) Add(id int, r *Ranking) error {
 			}
 			j, ok := ffxiv.Jobs[newRank.Spec]
 			if !ok {
-				return fmt.Errorf("Could not find job %s", newRank.Spec)
+				return fmt.Errorf("Could not find job %s for rank %+v", newRank.Spec, newRank)
 			}
 			newRank.Job = j
 			rs.Rankings[id].Ranks = append(rs.Rankings[id].Ranks, newRank)

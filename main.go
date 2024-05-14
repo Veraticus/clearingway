@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/signal"
 	"strings"
@@ -44,7 +43,7 @@ func main() {
 		},
 	}
 
-	config, err := ioutil.ReadFile("./config.yaml")
+	config, err := os.ReadFile("./config.yaml")
 	if err != nil {
 		panic(fmt.Errorf("Could not read config.yaml: %w", err))
 	}

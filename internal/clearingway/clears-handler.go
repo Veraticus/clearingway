@@ -272,24 +272,23 @@ func (c *Clearingway) UpdateClearsForCharacterInGuild(
 		}
 	}
 
-	// Add achievement roles
-	fmt.Printf("Scraping completed achievements...\n")
-	clearedAchievements, err := getAchievements(char)
-	if err != nil {
-		fmt.Printf("Please check to make sure your achievements page is not private.")
-	} else {
-		for _, role := range guild.AchievementRoles.Roles {
-			for _, clearedAchievement := range clearedAchievements {
-				if clearedAchievement == role.Description {
-					message := fmt.Sprintf("Cleared achievement %s", clearedAchievement)
-					text = append(text, fmt.Sprintf("__Adding role: **%s**__\n-> %s\n", role.Name, message))
-					rolesToApply = append(rolesToApply, &pendingRole{role: role, message: message})
-				}
-			}
-		}
-	}
+	// Add achievement roles when we have a performant way to do it
+	// fmt.Printf("Scraping completed achievements...\n")
+	// clearedAchievements, err := lodestone.GetAchievements(char)
+	// if err != nil {
+	// 	fmt.Printf("Please check to make sure your achievements page is not private.")
+	// } else {
+	// 	for _, role := range guild.AchievementRoles.Roles {
+	// 		for _, clearedAchievement := range clearedAchievements {
+	// 			if clearedAchievement == role.Description {
+	// 				message := fmt.Sprintf("Cleared achievement %s", clearedAchievement)
+	// 				text = append(text, fmt.Sprintf("__Adding role: **%s**__\n-> %s\n", role.Name, message))
+	// 				rolesToApply = append(rolesToApply, &pendingRole{role: role, message: message})
+	// 			}
+	// 		}
+	// 	}
+	// }
 	fmt.Printf("Scraping completed.\n")
-
 
 	for _, pendingRole := range rolesToApply {
 		role := pendingRole.role

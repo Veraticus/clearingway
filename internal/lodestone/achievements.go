@@ -22,7 +22,7 @@ func isInList(found_link string, link_list []string) bool {
 	return false
 }
 
-func getAchievements(c *ffxiv.Character) ([]string, error) {
+func GetAchievements(c *ffxiv.Character) ([]string, error) {
 	achievements := []string{}
 	visited := []string{}
 	links := []string{}

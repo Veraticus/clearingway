@@ -39,7 +39,7 @@ func DMUser(s *discordgo.Session, i *discordgo.Interaction, message string) erro
 	if err != nil {
 		return fmt.Errorf("Could not create DM channel: %w", err)
 	}
-	_, err = s.ChannelMessageSend(channel.ID, "Pong!")
+	_, err = s.ChannelMessageSend(channel.ID, message)
 	if err != nil {
 		return fmt.Errorf("Could not send message: %w", err)
 	}

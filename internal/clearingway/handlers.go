@@ -272,7 +272,7 @@ func (c *Clearingway) Uncolor(s *discordgo.Session, i *discordgo.InteractionCrea
 		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
 	}
 
-	err := discord.ContinueInteraction(s, i.Interaction, "Uncoloring you...")
+	err := discord.StartInteraction(s, i.Interaction, "Uncoloring you...")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 		return

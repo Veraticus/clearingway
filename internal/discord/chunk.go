@@ -44,7 +44,16 @@ func findSplitIndex(s string, maxLength int) int {
 		return newlineIndex + 1 // Include the newline
 	}
 
-	return maxLength // No newline found
+	// If no newline, find the last space before maxLength
+	spaceIndex := strings.LastIndexFunc(s[:maxLength], func(r rune) bool {
+		return r == ' '
+	})
+
+	if spaceIndex != -1 {
+		return spaceIndex + 1 // Include the space
+	}
+
+	return maxLength // No newline or space found
 }
 
 func (c *Chunks) currentChunk() *strings.Builder {

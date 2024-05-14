@@ -13,8 +13,6 @@ github.com/antchfx/xpath v1.2.3/go.mod h1:i54GszH55fYfBmoZXapTHN8T8tkcHfRgLyVwwq
 github.com/antchfx/xpath v1.2.4/go.mod h1:i54GszH55fYfBmoZXapTHN8T8tkcHfRgLyVwwqzXNcs=
 github.com/antchfx/xpath v1.2.5 h1:hqZ+wtQ+KIOV/S3bGZcIhpgYC26um2bZYP2KVGcR7VY=
 github.com/antchfx/xpath v1.2.5/go.mod h1:i54GszH55fYfBmoZXapTHN8T8tkcHfRgLyVwwqzXNcs=
-github.com/bwmarrin/discordgo v0.27.2-0.20230922130345-1f0b57f11024 h1:fHuF+yROO5s6nrVaHu1HXjBmdqA1EtrrqrV/0PnfMr0=
-github.com/bwmarrin/discordgo v0.27.2-0.20230922130345-1f0b57f11024/go.mod h1:NJZpH+1AfhIcyQsPeuBKsUtYrRnjkyu0kIVMCHkZtRY=
 github.com/bwmarrin/discordgo v0.28.2-0.20240514123316-2c9c884e4fae h1:UKAqEOOHC/76erfyJ00Rrf9neTKRSVOxk9Ps87hxIeY=
 github.com/bwmarrin/discordgo v0.28.2-0.20240514123316-2c9c884e4fae/go.mod h1:NJZpH+1AfhIcyQsPeuBKsUtYrRnjkyu0kIVMCHkZtRY=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

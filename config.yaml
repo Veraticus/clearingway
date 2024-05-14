@@ -561,7 +561,7 @@ guilds:
     color: 0x0ec0a5
   - from: "The Penta Legend"
     color: 0x0ec0a5
-- name: Raidingway
+- name: NAUR
   roles:
     relevantParsing: true
     relevantFlexing: true
@@ -637,69 +637,6 @@ guilds:
       - name: "TOP Cleared"
         type: "Cleared"
         color: 0xd1e5f4
-  - ids: [92]
-    name: "Pallas Athena"
-    difficulty: "Savage"
-    defaultRoles: false
-    totalWeaponsAvailable: 0
-    roles:
-      - name: "Pallas Athena Cleared"
-        type: "Cleared"
-        color: 0xf58cba
-  - ids: [91]
-    name: "Athena"
-    difficulty: "Savage"
-    defaultRoles: false
-    totalWeaponsAvailable: 0
-    roles:
-      - name: "Athena Cleared"
-        type: "Cleared"
-        color: 0xef8633
-  - ids: [90]
-    name: "Themis"
-    difficulty: "Savage"
-    defaultRoles: false
-    totalWeaponsAvailable: 0
-    roles:
-      - name: "Themis Cleared"
-        type: "Cleared"
-        color: 0x9644e5
-  - ids: [89]
-    name: "Pandaemonium"
-    difficulty: "Savage"
-    defaultRoles: false
-    totalWeaponsAvailable: 0
-    roles:
-      - name: "Pandaemonium Cleared"
-        type: "Cleared"
-        color: 0x2a72f6
-  - ids: [88]
-    name: "Kokytos"
-    difficulty: "Savage"
-    defaultRoles: false
-    totalWeaponsAvailable: 0
-    roles:
-      - name: "Kokytos Cleared"
-        type: "Cleared"
-        color: 0x78fa4c
-  - ids: [1070]
-    name: "Zeromus"
-    difficulty: "Extreme"
-    defaultRoles: false
-    totalWeaponsAvailable: 0
-    roles:
-      - name: "Zeromus Cleared"
-        type: "Cleared"
-        color: 0x636363
-  - ids: [3008]
-    name: "King Thordan"
-    difficulty: "Unreal"
-    defaultRoles: false
-    totalWeaponsAvailable: 0
-    roles:
-      - name: "King Thordan Cleared"
-        type: "Cleared"
-        color: 0x8c8989
   reconfigureRoles:
   - from: "Please Do Other Content"
     hoist: true

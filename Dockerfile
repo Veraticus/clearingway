@@ -1,9 +1,9 @@
-FROM golang:1.21.4 AS builder
+FROM golang:1.22.1 AS builder
 WORKDIR /src
 COPY . /src
 RUN make build
 
-FROM alpine:3.18.4
+FROM alpine:3.19.1
 WORKDIR /clearingway
 COPY --from=builder /src/clearingway .
 COPY --from=builder /src/config.yaml .

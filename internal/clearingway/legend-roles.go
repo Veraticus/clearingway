@@ -63,7 +63,7 @@ func legendRoleString(clearedEncounters *Encounters, rankings *fflogs.Rankings) 
 func LegendRoles() *Roles {
 	return &Roles{Roles: []*Role{
 		{
-			Name: "The Legend", Color: 0x3498db,
+			Name: "The Legend", Color: 0x2a72f6,
 			Description: "Cleared exactly one ultimate.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
@@ -76,7 +76,7 @@ func LegendRoles() *Roles {
 			},
 		},
 		{
-			Name: "The Double Legend", Color: 0x3498db,
+			Name: "The Double Legend", Color: 0x9644e5,
 			Description: "Cleared exactly two ultimates.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
@@ -89,7 +89,7 @@ func LegendRoles() *Roles {
 			},
 		},
 		{
-			Name: "The Triple Legend", Color: 0x3498db,
+			Name: "The Triple Legend", Color: 0xef8633,
 			Description: "Cleared exactly three ultimates.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
@@ -102,7 +102,7 @@ func LegendRoles() *Roles {
 			},
 		},
 		{
-			Name: "The Quad Legend", Color: 0x3498db,
+			Name: "The Quad Legend", Color: 0xd06fa4,
 			Description: "Cleared exactly four ultimates.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
@@ -115,7 +115,7 @@ func LegendRoles() *Roles {
 			},
 		},
 		{
-			Name: "The Penta Legend", Color: 0x3498db,
+			Name: "The Penta Legend", Color: 0xe1cc8a,
 			Description: "Cleared exactly five ultimates.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)

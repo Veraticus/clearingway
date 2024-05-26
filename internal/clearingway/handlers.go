@@ -79,7 +79,7 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		fmt.Printf("Adding removeall command...\n")
 		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RemoveCommand)
 		if err != nil {
-			fmt.Printf("Could not add remove command: %v\n", err)
+			fmt.Printf("Could not add removeall command: %v\n", err)
 		}
 
 		// fmt.Printf("Removing commands...\n")

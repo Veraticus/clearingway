@@ -443,7 +443,7 @@ func (c *Clearingway) RemoveAll(s *discordgo.Session, i *discordgo.InteractionCr
 		}
 	}
 	if len(rolesToRemove) == 0 {
-		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any Clearingway-related roles!")
+		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any Clearingway related roles!")
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)
 		}
@@ -455,7 +455,7 @@ func (c *Clearingway) RemoveAll(s *discordgo.Session, i *discordgo.InteractionCr
 		if err != nil {
 			fmt.Printf("Error removing role: %+v\n", err)
 		}
-		fmt.Printf("Removing role: %+v\n", r.Name)
+		fmt.Printf("Removing role: %+v\n", err)
 	}
 
 	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Clearingway-related roles:__\n⮕ Removed!\n")

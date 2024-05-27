@@ -61,6 +61,12 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			fmt.Printf("Could not add uncolor command: %v\n", err)
 		}
 
+		fmt.Printf("Adding removeall command...\n")
+		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RemoveCommand)
+		if err != nil {
+			fmt.Printf("Could not add removeall command: %v\n", err)
+		}
+
 		fmt.Printf("Adding roles command...\n")
 		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RolesCommand)
 		if err != nil {
@@ -74,12 +80,6 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 				fmt.Printf("Could not add prog command: %v\n", err)
 			}
 			time.Sleep(1 * time.Second)
-		}
-
-		fmt.Printf("Adding removeall command...\n")
-		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RemoveCommand)
-		if err != nil {
-			fmt.Printf("Could not add removeall command: %v\n", err)
 		}
 
 		// fmt.Printf("Removing commands...\n")
@@ -132,6 +132,11 @@ var UncolorCommand = &discordgo.ApplicationCommand{
 	Description: "Use this command to remove parsing roles if you don't want them.",
 }
 
+var RemoveCommand = &discordgo.ApplicationCommand{
+	Name:        "removeall",
+	Description: "Use this command to remove all Clearingway-related roles if you don't want them.",
+}
+
 var RolesCommand = &discordgo.ApplicationCommand{
 	Name:        "roles",
 	Description: "See what roles Clearingway has set up and how to get them.",
@@ -167,11 +172,6 @@ var ProgCommand = &discordgo.ApplicationCommand{
 			Required:    true,
 		},
 	},
-}
-
-var RemoveCommand = &discordgo.ApplicationCommand{
-	Name:        "removeall",
-	Description: "Use this command to remove all Clearingway-related roles if you don't want them.",
 }
 
 func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {

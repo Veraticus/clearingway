@@ -416,6 +416,8 @@ func (c *Clearingway) RemoveAll(s *discordgo.Session, i *discordgo.InteractionCr
 		return
 	}
 
+	// Get a list of all Clearingway-related roles configured for the current guild, excludes roles with the Skip flag
+	// List is used to check which roles to remove from the user
 	clearingwayRoles := []*Role{}
 	for _, r := range g.AllRoles() {
 		if r.Skip {

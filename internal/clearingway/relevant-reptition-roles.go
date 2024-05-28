@@ -6,7 +6,6 @@ import (
 
 func RelevantRepetitionRoles(encs *Encounters) *Roles {
 	roles := &Roles{Roles: []*Role{
-		// Changed "Please Do Other Content" inital color - Claire
 		{
 			Name:        "Please Do Other Content",
 			Color:       0xcf142b,

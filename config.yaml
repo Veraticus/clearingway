@@ -592,7 +592,6 @@ guilds:
         color: 0xEAC645
         hoist: true
   encounters:
-  # Changed initial cleared role colors
   - ids: [1060, 1047, 1039]
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false

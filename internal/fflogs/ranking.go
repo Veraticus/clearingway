@@ -21,10 +21,11 @@ const (
 )
 
 type Ranking struct {
-	Error      string  `json:"error"`
-	TotalKills int     `json:"totalKills"`
-	Metric     Metric  `json:"metric"`
-	Ranks      []*Rank `json:"ranks"`
+	Error       string  `json:"error"`
+	TotalKills  int     `json:"totalKills"`
+	Metric      Metric  `json:"metric"`
+	Ranks       []*Rank `json:"ranks"`
+	Nonstandard bool
 }
 
 type Rank struct {

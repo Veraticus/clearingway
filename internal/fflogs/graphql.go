@@ -89,7 +89,7 @@ func (f *Fflogs) SetCharacterLodestoneID(char *ffxiv.Character) error {
 	return fmt.Errorf("Lodestone ID not found on fflogs!")
 }
 
-var returnedRankingsRegexp = regexp.MustCompile(`(\D+)Z(\d+)`)
+var returnedRankingsRegexp = regexp.MustCompile(`(\D+)Z(\d+)P(\D+)`)
 
 func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ffxiv.Character) (*Rankings, error) {
 	query := strings.Builder{}
@@ -105,7 +105,7 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 		for _, id := range rankingToGet.IDs {
 			query.WriteString(
 				fmt.Sprintf(
-					"rdpsZ%d:encounterRankings(encounterID: %d, difficulty: %d, metric: rdps) ",
+					"rdpsZ%dPstandard:encounterRankings(encounterID: %d, difficulty: %d, metric: rdps) ",
 					id,
 					id,
 					rankingToGet.Difficulty,
@@ -113,12 +113,29 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 			)
 			query.WriteString(
 				fmt.Sprintf(
-					"hpsZ%d:encounterRankings(encounterID: %d, difficulty: %d, metric: hps) ",
+					"hpsZ%dPstandard:encounterRankings(encounterID: %d, difficulty: %d, metric: hps) ",
 					id,
 					id,
 					rankingToGet.Difficulty,
 				),
 			)
+			query.WriteString(
+				fmt.Sprintf(
+					"rdpsZ%dPnonstandard:encounterRankings(encounterID: %d, difficulty: %d, metric: rdps, partition: -2) ",
+					id,
+					id,
+					rankingToGet.Difficulty,
+				),
+			)
+			query.WriteString(
+				fmt.Sprintf(
+					"hpsZ%dPnonstandard:encounterRankings(encounterID: %d, difficulty: %d, metric: hps, partition: -2) ",
+					id,
+					id,
+					rankingToGet.Difficulty,
+				),
+			)
+
 		}
 	}
 	query.WriteString("}}}")
@@ -158,12 +175,16 @@ func (f *Fflogs) GetRankingsForCharacter(rankingsToGet []*RankingToGet, char *ff
 
 		metric := match[1]
 		idString := match[2]
+		partition := match[3]
 		id, err := strconv.Atoi(idString)
 		if err != nil {
 			return nil, fmt.Errorf("Could not convert id %v from string to int: %v\n", idString, err)
 		}
 
 		ranking := &Ranking{Metric: Metric(metric)}
+		if partition == "nonstandard" {
+			ranking.Nonstandard = true
+		}
 		err = json.Unmarshal(*rawRanking, ranking)
 		if err != nil {
 			return nil, fmt.Errorf("Could not unmarshal JSON: %w", err)

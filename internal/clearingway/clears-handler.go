@@ -295,7 +295,7 @@ func (c *Clearingway) UpdateClearsForCharacterInGuild(
 			if !role.PresentInRoles(member.Roles) {
 				err := role.AddToCharacter(guild.Id, discordUserId, c.Discord.Session)
 				if err != nil {
-					return nil, fmt.Errorf("Error adding Discord role: %v", err)
+					return nil, fmt.Errorf("Error adding Discord role +%v: %w", role, err)
 				}
 				text = append(text, fmt.Sprintf("__Adding role: **%s**__\n⮕ %s\n", role.Name, pendingRole.message))
 			}
@@ -309,7 +309,7 @@ func (c *Clearingway) UpdateClearsForCharacterInGuild(
 				if role.PresentInRoles(member.Roles) {
 					err := role.RemoveFromCharacter(guild.Id, discordUserId, c.Discord.Session)
 					if err != nil {
-						return nil, fmt.Errorf("Error removing Discord role: %v", err)
+						return nil, fmt.Errorf("Error adding Discord role +%v: %w", role, err)
 					}
 					text = append(text, fmt.Sprintf("__Removing role: **%s**__\n⮕ %s\n", role.Name, pendingRole.message))
 				}

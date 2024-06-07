@@ -1,0 +1,12 @@
+services:
+  postgres_local:
+    container_name: postgres_db
+    build:
+      context: .
+      dockerfile: ./docker/Postgres.Dockerfile
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=S3cret
+      - POSTGRES_USER=test_user
+      - POSTGRES_DB=clearingway

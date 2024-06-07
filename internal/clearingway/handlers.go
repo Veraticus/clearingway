@@ -61,6 +61,12 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			fmt.Printf("Could not add uncolor command: %v\n", err)
 		}
 
+		fmt.Printf("Adding removeall command...\n")
+		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RemoveCommand)
+		if err != nil {
+			fmt.Printf("Could not add removeall command: %v\n", err)
+		}
+
 		fmt.Printf("Adding roles command...\n")
 		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RolesCommand)
 		if err != nil {
@@ -126,6 +132,11 @@ var UncolorCommand = &discordgo.ApplicationCommand{
 	Description: "Use this command to remove parsing roles if you don't want them.",
 }
 
+var RemoveCommand = &discordgo.ApplicationCommand{
+	Name:        "removeall",
+	Description: "Use this command to remove all Clearingway-related roles if you don't want them.",
+}
+
 var RolesCommand = &discordgo.ApplicationCommand{
 	Name:        "roles",
 	Description: "See what roles Clearingway has set up and how to get them.",
@@ -177,6 +188,8 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.Roles(s, i)
 		case "prog":
 			c.Prog(s, i)
+		case "removeall":
+			c.RemoveAll(s, i)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)
@@ -373,6 +386,83 @@ func (c *Clearingway) Roles(s *discordgo.Session, i *discordgo.InteractionCreate
 			fmt.Printf("Error sending Discord message: %v\n", err)
 			return
 		}
+	}
+}
+
+func (c *Clearingway) RemoveAll(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	// Ignore messages not on the correct channel
+	if i.ChannelID != g.ChannelId {
+		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+	}
+
+	err := discord.StartInteraction(s, i.Interaction, "Removing all Clearingway related roles...")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
+	member, err := c.Discord.Session.GuildMember(g.Id, i.Member.User.ID)
+	if err != nil {
+		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	// Get a list of all Clearingway-related roles configured for the current guild, excludes roles with the Skip flag
+	// List is used to check which roles to remove from the user
+	clearingwayRoles := []*Role{}
+	for _, r := range g.AllRoles() {
+		if r.Skip {
+			continue
+		}
+		clearingwayRoles = append(clearingwayRoles, r)
+	}
+
+	if len(clearingwayRoles) == 0 {
+		err = discord.ContinueInteraction(s, i.Interaction, "No Clearingway related roles are present in this Discord!")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	rolesToRemove := []*Role{}
+	for _, r := range clearingwayRoles {
+		if r.DiscordRole == nil {
+			fmt.Printf("Cannot remove %+v as it has not connected to a Discord role!\n", r)
+			continue
+		}
+		if r.PresentInRoles(member.Roles) {
+			rolesToRemove = append(rolesToRemove, r)
+		}
+	}
+	if len(rolesToRemove) == 0 {
+		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any Clearingway-related roles!")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	for _, r := range rolesToRemove {
+		err = r.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+		if err != nil {
+			fmt.Printf("Error removing role: %+v\n", err)
+		}
+		fmt.Printf("Removing role: %+v\n", r.Name)
+	}
+
+	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Clearingway-related roles:__\n⮕ Removed!\n")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
 	}
 }
 

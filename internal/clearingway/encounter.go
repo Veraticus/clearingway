@@ -12,7 +12,7 @@ var UltimateEncounters = &Encounters{
 	Encounters: []*Encounter{
 		{
 			Name:                  "The Unending Coil of Bahamut (Ultimate)",
-			Ids:                   []int{1060, 1047, 1039},
+			Ids:                   []int{1060, 1047, 1039, 1073},
 			Difficulty:            "Ultimate",
 			DefaultRoles:          false,
 			TotalWeaponsAvailable: 15,
@@ -20,7 +20,7 @@ var UltimateEncounters = &Encounters{
 		},
 		{
 			Name:                  "The Weapon's Refrain (Ultimate)",
-			Ids:                   []int{1061, 1048, 1042},
+			Ids:                   []int{1061, 1048, 1042, 1074},
 			Difficulty:            "Ultimate",
 			DefaultRoles:          false,
 			TotalWeaponsAvailable: 15,
@@ -28,7 +28,7 @@ var UltimateEncounters = &Encounters{
 		},
 		{
 			Name:                  "The Epic of Alexander (Ultimate)",
-			Ids:                   []int{1062, 1050},
+			Ids:                   []int{1062, 1050, 1075},
 			Difficulty:            "Ultimate",
 			DefaultRoles:          false,
 			TotalWeaponsAvailable: 17,
@@ -36,7 +36,7 @@ var UltimateEncounters = &Encounters{
 		},
 		{
 			Name:                  "Dragonsong's Reprise (Ultimate)",
-			Ids:                   []int{1065},
+			Ids:                   []int{1065, 1076},
 			Difficulty:            "Ultimate",
 			DefaultRoles:          false,
 			TotalWeaponsAvailable: 19,
@@ -44,7 +44,7 @@ var UltimateEncounters = &Encounters{
 		},
 		{
 			Name:                  "The Omega Protocol (Ultimate)",
-			Ids:                   []int{1068},
+			Ids:                   []int{1068, 1077},
 			Difficulty:            "Ultimate",
 			DefaultRoles:          false,
 			TotalWeaponsAvailable: 19,

@@ -208,7 +208,7 @@ func (c *Clearingway) UpdateClearsForCharacterInGuild(
 
 	fmt.Printf("Found the following relevant rankings for %s (%s)...\n", char.Name(), char.World)
 	for _, e := range guild.Encounters.Encounters {
-		fmt.Printf("%s:\n", e.Name)
+		fmt.Printf("%s (%d):\n", e.Name, len(e.Ranks(rankings)))
 		for _, r := range e.Ranks(rankings) {
 			fmt.Printf("  %+v\n", r)
 		}
@@ -216,7 +216,7 @@ func (c *Clearingway) UpdateClearsForCharacterInGuild(
 
 	fmt.Printf("Found the following ultimate rankings for %s (%s)...\n", char.Name(), char.World)
 	for _, e := range UltimateEncounters.Encounters {
-		fmt.Printf("%s:\n", e.Name)
+		fmt.Printf("%s (%d):\n", e.Name, len(e.Ranks(rankings)))
 		for _, r := range e.Ranks(rankings) {
 			fmt.Printf("  %+v\n", r)
 		}

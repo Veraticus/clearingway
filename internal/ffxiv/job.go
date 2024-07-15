@@ -35,6 +35,8 @@ var Jobs = map[string]*Job{
 	"Rogue":       {FullName: "Rogue", Abbreviation: "ROG"},
 	"Thaumaturge": {FullName: "Thaumaturge", Abbreviation: "THM"},
 	"Archer":      {FullName: "Archer", Abbreviation: "ARC"},
+	"Pictomancer": {FullName: "Pictomancer", Abbreviation: "PCT"},
+	"Viper":       {FullName: "Viper", Abbreviation: "VPR"},
 	"Any":         {FullName: "Any", Abbreviation: "ANY"},
 }
 

@@ -60,7 +60,7 @@ guilds:
   physicalDatacenters:
   - name: "NA"
   encounters:
-  - ids: [1065]
+  - ids: [1065, 1076]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 19
@@ -115,7 +115,7 @@ guilds:
   physicalDatacenters:
   - name: "NA"
   encounters:
-  - ids: [1060, 1047, 1039]
+  - ids: [1060, 1047, 1039, 1073]
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 15
@@ -124,7 +124,7 @@ guilds:
       - name: "UCoB Cleared"
         type: "Cleared"
         color: 0xFFFD7F
-  - ids: [1061, 1048, 1042]
+  - ids: [1061, 1048, 1042, 1074]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 15
@@ -133,7 +133,7 @@ guilds:
       - name: "UWU Cleared"
         type: "Cleared"
         color: 0x9CBDD8
-  - ids: [1062, 1050]
+  - ids: [1062, 1050, 1075]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 17
@@ -142,7 +142,7 @@ guilds:
       - name: "TEA Cleared"
         type: "Cleared"
         color: 0xFAE9C2
-  - ids: [1065]
+  - ids: [1065, 1076]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 19
@@ -151,7 +151,7 @@ guilds:
       - name: "DSR Cleared"
         type: "Cleared"
         color: 0xCF8035
-  - ids: [1068]
+  - ids: [1068, 1077]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 19
@@ -174,7 +174,7 @@ guilds:
   physicalDatacenters:
   - name: "NA"
   encounters:
-  - ids: [1060, 1047, 1039]
+  - ids: [1060, 1047, 1039, 1073]
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 15
@@ -183,7 +183,7 @@ guilds:
       - name: "i killed ucob"
         type: "Cleared"
         color: 0xb89c00
-  - ids: [1061, 1048, 1042]
+  - ids: [1061, 1048, 1042, 1074]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 15
@@ -192,7 +192,7 @@ guilds:
       - name: "i killed uwu"
         type: "Cleared"
         color: 0x23f3f7
-  - ids: [1062, 1050]
+  - ids: [1062, 1050, 1075]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 17
@@ -201,7 +201,7 @@ guilds:
       - name: "i killed tea"
         type: "Cleared"
         color: 0xf5cbff
-  - ids: [1065]
+  - ids: [1065, 1076]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 19
@@ -241,28 +241,28 @@ guilds:
         from: "Dynamis"
         color: 0xEAC645
   encounters:
-  - ids: [1060, 1047, 1039]
+  - ids: [1060, 1047, 1039, 1073]
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false
     roles:
       - name: "Cleared Ucob"
         type: "Cleared"
         color: 0xEAC645
-  - ids: [1061, 1048, 1042]
+  - ids: [1061, 1048, 1042, 1074]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
     roles:
       - name: "Cleared UwU"
         type: "Cleared"
         color: 0x3bbdf5
-  - ids: [1062, 1050]
+  - ids: [1062, 1050, 1075]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
     roles:
       - name: "Cleared TEA"
         type: "Cleared"
         color: 0x65C97A
-  - ids: [1065]
+  - ids: [1065, 1076]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
     roles:
@@ -284,35 +284,35 @@ guilds:
   physicalDatacenters:
   - name: "NA"
   encounters:
-  - ids: [1060, 1047, 1039]
+  - ids: [1060, 1047, 1039, 1073]
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false
     roles:
       - name: "cleared ucob"
         type: "Cleared"
         color: 0xf8ff00
-  - ids: [1061, 1048, 1042]
+  - ids: [1061, 1048, 1042, 1074]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
     roles:
       - name: "cleared uwu"
         type: "Cleared"
         color: 0x30d2fb
-  - ids: [1062, 1050]
+  - ids: [1062, 1050, 1075]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
     roles:
       - name: "cleared tea"
         type: "Cleared"
         color: 0x2daf55
-  - ids: [1065]
+  - ids: [1065, 1076]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
     roles:
       - name: "cleared dru"
         type: "Cleared"
         color: 0xe67cba
-  - ids: [1068]
+  - ids: [1068, 1077]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
     roles:
@@ -365,7 +365,7 @@ guilds:
   physicalDatacenters:
   - name: "NA"
   encounters:
-  - ids: [1068]
+  - ids: [1068, 1077]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 19
@@ -500,7 +500,7 @@ guilds:
   physicalDatacenters:
   - name: "NA"
   encounters:
-  - ids: [1060, 1047, 1039]
+  - ids: [1060, 1047, 1039, 1073]
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 15
@@ -510,7 +510,7 @@ guilds:
         type: "Cleared"
         color: 0xFFFD7F
         hoist: true
-  - ids: [1061, 1048, 1042]
+  - ids: [1061, 1048, 1042, 1074]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 15
@@ -520,7 +520,7 @@ guilds:
         type: "Cleared"
         color: 0x9CBDD8
         hoist: true
-  - ids: [1062, 1050]
+  - ids: [1062, 1050, 1075]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 17
@@ -530,7 +530,7 @@ guilds:
         type: "Cleared"
         color: 0xFAE9C2
         hoist: true
-  - ids: [1065]
+  - ids: [1065, 1076]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 19
@@ -540,7 +540,7 @@ guilds:
         type: "Cleared"
         color: 0xCF8035
         hoist: true
-  - ids: [1068]
+  - ids: [1068, 1077]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 19
@@ -573,7 +573,7 @@ guilds:
   guildId: 1172230157776466050
   channelId: 1172348608671133760
   encounters:
-  - ids: [1060, 1047, 1039]
+  - ids: [1060, 1047, 1039, 1073]
     name: "The Unending Coil of Bahamut (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 15
@@ -582,7 +582,7 @@ guilds:
       - name: "UCoB Cleared"
         type: "Cleared"
         color: 0xfdfd96
-  - ids: [1061, 1048, 1042]
+  - ids: [1061, 1048, 1042, 1074]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 15
@@ -591,7 +591,7 @@ guilds:
       - name: "UWU Cleared"
         type: "Cleared"
         color: 0x97cae3
-  - ids: [1062, 1050]
+  - ids: [1062, 1050, 1075]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 17
@@ -600,7 +600,7 @@ guilds:
       - name: "TEA Cleared"
         type: "Cleared"
         color: 0xfae9c2
-  - ids: [1065]
+  - ids: [1065, 1076]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 19
@@ -609,7 +609,7 @@ guilds:
       - name: "DSR Cleared"
         type: "Cleared"
         color: 0xc9843f
-  - ids: [1068]
+  - ids: [1068, 1077]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 19

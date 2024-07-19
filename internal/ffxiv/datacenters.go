@@ -70,9 +70,13 @@ var NA = &PhysicalDatacenter{
 			Name:  "Dynamis",
 			Color: 0xEAC645,
 			Worlds: map[string]*World{
+				"Cuchulainn":    {Name: "Cuchulainn"},
+				"Golen":         {Name: "Golem"},
 				"Halicarnassus": {Name: "Halicarnassus"},
+				"Kraken":        {Name: "Kraken"},
 				"Maduin":        {Name: "Maduin"},
 				"Marilith":      {Name: "Marilith"},
+				"Rafflesia":     {Name: "Rafflesia"},
 				"Seraph":        {Name: "Seraph"},
 			},
 		},

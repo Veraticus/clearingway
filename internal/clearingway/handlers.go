@@ -197,7 +197,7 @@ var NameColorCommand = &discordgo.ApplicationCommand{
 					Value: "The Unending Coil of Bahamut (Ultimate)",
 				},
 				{
-					Name: "UwU",
+					Name: "UWU",
 					Value: "The Weapon's Refrain (Ultimate)",
 				},
 				{

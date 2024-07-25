@@ -28,6 +28,7 @@ var (
 	ProgRole     RoleType = "Prog"
 	LimboRole    RoleType = "Limbo"
 	CompleteRole RoleType = "Complete"
+	ColorRole    RoleType = "Name Color"
 )
 
 type Roles struct {

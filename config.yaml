@@ -584,7 +584,7 @@ guilds:
       - name: "UCoB Cleared"
         type: "Cleared"
         color: 0xfdfd96
-      - name: "Reclear UCoB"
+      - name: "UCoB Reclear"
         type: "Reclear"
         color: 0xfdfd96
       - name: "The Legend's Color"
@@ -599,7 +599,7 @@ guilds:
       - name: "UWU Cleared"
         type: "Cleared"
         color: 0x97cae3
-      - name: "Reclear UWU"
+      - name: "UWU Reclear"
         type: "Reclear"
         color: 0x97cae3
       - name: "The Ultimate Color"
@@ -614,7 +614,7 @@ guilds:
       - name: "TEA Cleared"
         type: "Cleared"
         color: 0xfae9c2
-      - name: "Reclear TEA"
+      - name: "TEA Reclear"
         type: "Reclear"
         color: 0xfae9c2
       - name: "The Perfect Color"
@@ -629,7 +629,7 @@ guilds:
       - name: "DSR Cleared"
         type: "Cleared"
         color: 0xc9843f
-      - name: "Reclear DSR"
+      - name: "DSR Reclear"
         type: "Reclear"
         color: 0xc9843f
       - name: "The Heavens' Color"
@@ -644,7 +644,7 @@ guilds:
       - name: "TOP Cleared"
         type: "Cleared"
         color: 0x6534c6
-      - name: "Reclear TOP"
+      - name: "TOP Reclear"
         type: "Reclear"
         color: 0x6534c6
       - name: "The Alpha Color"

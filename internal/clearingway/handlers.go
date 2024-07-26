@@ -212,6 +212,7 @@ var ReclearCommand = &discordgo.ApplicationCommand{
 					Name: "TOP",
 					Value: "The Omega Protocol (Ultimate)",
 				},
+				// TODO: implement when FRU goes live
 				/*
 				{
 					Name: "FRU",
@@ -527,6 +528,7 @@ func (c *Clearingway) RequestReclear(s *discordgo.Session, i *discordgo.Interact
 	// Ignore messages not on the correct channel
 	if i.ChannelID != g.ChannelId {
 		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+		return
 	}
 
 	err := discord.StartInteraction(s, i.Interaction, "Checking for respective clear role...")

@@ -25,6 +25,10 @@ type Ranking struct {
 	TotalKills  int     `json:"totalKills"`
 	Metric      Metric  `json:"metric"`
 	Ranks       []*Rank `json:"ranks"`
+	
+	// odd partitions are standard comp, even partitions are nonstandard
+	// if a nonstandard response returns an odd partition,
+	// it's a copy of the standard counterpart
 	Partition   int     `json:"partition"`
 	Nonstandard bool
 }
@@ -50,10 +54,7 @@ type Report struct {
 }
 
 func (rs *Rankings) Add(id int, r *Ranking) error {
-	// odd partitions are standard comp, even partitions are nonstandard
-	// if a nonstandard response returns an odd partition,
-	// it's a copy of the standard counterpart
-	// in this case, skip any nonstandard responses that is a copy
+	// skip any nonstandard responses that is a copy of standard
 	if ((r.Partition % 2 == 0) != r.Nonstandard) {
 		return nil
 	}

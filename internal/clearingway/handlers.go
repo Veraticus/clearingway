@@ -241,7 +241,7 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		case "removeall":
 			c.RemoveAll(s, i)
 		case "namecolor":
-			c.RequestColor(s, i)
+			c.ToggleColor(s, i)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)
@@ -518,7 +518,7 @@ func (c *Clearingway) RemoveAll(s *discordgo.Session, i *discordgo.InteractionCr
 	}
 }
 
-func (c *Clearingway) RequestColor(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func (c *Clearingway) ToggleColor(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	g, ok := c.Guilds.Guilds[i.GuildID]
 	if !ok {
 		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)

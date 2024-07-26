@@ -528,6 +528,11 @@ func (c *Clearingway) RequestReclear(s *discordgo.Session, i *discordgo.Interact
 	// Ignore messages not on the correct channel
 	if i.ChannelID != g.ChannelId {
 		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+		
+		err := discord.StartInteraction(s, i.Interaction, "Command was not used in the correct channel.")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
 		return
 	}
 

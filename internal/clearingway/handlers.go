@@ -576,22 +576,15 @@ func (c *Clearingway) RequestColor(s *discordgo.Session, i *discordgo.Interactio
 		// remove existing color role
 		tempstr := ""
 		if roleToRemove != nil {
-			fmt.Printf("Removing role: %+v\n", roleToRemove.Name)
-			err = roleToRemove.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+			err = removeRoleHelper(s, i.Interaction, roleToRemove)
 			if err != nil {
-				fmt.Printf("Error removing role: %+v\n", err)
 				return
 			}
 			tempstr += fmt.Sprintf("Successfully removed role: <@&%v>", roleToRemove.DiscordRole.ID)
 		}
 		// add role if requested role is not the same as color role
 		if requestedColorRole != roleToRemove {
-			fmt.Printf("Adding role: %+v\n", requestedColorRole.Name)
-			err = requestedColorRole.AddToCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
-			if err != nil {
-				fmt.Printf("Error adding role: %+v\n", err)
-				return
-			}
+			err = addRoleHelper(s, i.Interaction, requestedColorRole)
 			tempstr += fmt.Sprintf("\nSuccessfully added role: <@&%v>", requestedColorRole.DiscordRole.ID)
 		}
 		discord.ContinueInteraction(s, i.Interaction, tempstr)
@@ -599,10 +592,8 @@ func (c *Clearingway) RequestColor(s *discordgo.Session, i *discordgo.Interactio
 		// remove the requested color role if it's the same
 		// edge case where someone has clears removed and doesn't want the color 
 		if requestedColorRole == roleToRemove {
-			fmt.Printf("Removing role: %+v\n", roleToRemove.Name)
-			err = roleToRemove.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+			err = removeRoleHelper(s, i.Interaction, roleToRemove)
 			if err != nil {
-				fmt.Printf("Error removing role: %+v\n", err)
 				return
 			}
 			tempstr := fmt.Sprintf("Successfully removed role: <@&%v>", roleToRemove.DiscordRole.ID)
@@ -617,6 +608,26 @@ func (c *Clearingway) RequestColor(s *discordgo.Session, i *discordgo.Interactio
 		}
 	}
 
+}
+
+func removeRoleHelper(s *discordgo.Session, i *discordgo.Interaction, roleToRemove *Role) error {
+	fmt.Printf("Removing role: %+v\n", roleToRemove.Name)
+	err := roleToRemove.RemoveFromCharacter(i.GuildID, i.Member.User.ID, s)
+	if err != nil {
+		fmt.Printf("Error removing role: %+v\n", err)
+		return err
+	}
+	return nil
+}
+
+func addRoleHelper(s *discordgo.Session, i *discordgo.Interaction, roleToAdd *Role) error {
+	fmt.Printf("Adding role: %+v\n", roleToAdd.Name)
+	err := roleToAdd.AddToCharacter(i.GuildID, i.Member.User.ID, s)
+	if err != nil {
+		fmt.Printf("Error adding role: %+v\n", err)
+		return err
+	}
+	return nil
 }
 
 func (c *Clearingway) Autocomplete(s *discordgo.Session, i *discordgo.InteractionCreate) {

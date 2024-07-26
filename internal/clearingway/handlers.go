@@ -212,6 +212,7 @@ var NameColorCommand = &discordgo.ApplicationCommand{
 					Name: "TOP",
 					Value: "The Omega Protocol (Ultimate)",
 				},
+				// TODO: implement when FRU goes live
 				/*
 				{
 					Name: "FRU",

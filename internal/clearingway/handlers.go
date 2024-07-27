@@ -57,6 +57,14 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			commandList = append(commandList, ProgCommand)
 		}
 
+		if guild.ReclearsEnabled {
+			commandList = append(commandList, ReclearCommand)
+		}
+
+		if guild.NameColorsEnabled {
+			commandList = append(commandList, NameColorCommand)
+		}
+
 		addedCommands, err := s.ApplicationCommandBulkOverwrite(event.User.ID, discordGuild.ID, commandList)
 		fmt.Printf("List of successfully created commands:\n")
 		for _, command := range addedCommands {
@@ -66,22 +74,6 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			fmt.Printf("Could not add some commands: %v\n", err)
 		}
 		
-		if guild.ReclearsEnabled {
-			fmt.Printf("Adding reclears command...\n")
-			_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, ReclearCommand)
-			if err != nil {
-				fmt.Printf("Could not add reclears command: %v\n", err)
-			}	
-		}
-
-		if guild.NameColorsEnabled {
-			fmt.Printf("Adding namecolor command...\n")
-			_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, NameColorCommand)
-			if err != nil {
-				fmt.Printf("Could not add namecolor command: %v\n", err)
-			}	
-		}
-
 		// fmt.Printf("Removing commands...\n")
 		// cmd, err := s.ApplicationCommandCreate(event.User.ID, guild.ID, verifyCommand)
 		// if err != nil {

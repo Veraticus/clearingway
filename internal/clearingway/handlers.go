@@ -81,6 +81,14 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			}
 			time.Sleep(1 * time.Second)
 		}
+		
+		if guild.ReclearsEnabled {
+			fmt.Printf("Adding reclears command...\n")
+			_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, ReclearCommand)
+			if err != nil {
+				fmt.Printf("Could not add reclears command: %v\n", err)
+			}	
+		}
 
 		// fmt.Printf("Removing commands...\n")
 		// cmd, err := s.ApplicationCommandCreate(event.User.ID, guild.ID, verifyCommand)
@@ -174,6 +182,48 @@ var ProgCommand = &discordgo.ApplicationCommand{
 	},
 }
 
+var ReclearCommand = &discordgo.ApplicationCommand{
+	Name:	"reclears",
+	Description: "Assign or remove reclear roles",
+	Options: []*discordgo.ApplicationCommandOption{
+		{
+			Type: discordgo.ApplicationCommandOptionString,
+			Name: "ultimate",
+			Description: "The ultimate you want to reclear",
+			Required: true,
+			Choices: []*discordgo.ApplicationCommandOptionChoice{
+				{
+					Name: "UCoB",
+					Value: "The Unending Coil of Bahamut (Ultimate)",
+				},
+				{
+					Name: "UWU",
+					Value: "The Weapon's Refrain (Ultimate)",
+				},
+				{
+					Name: "TEA",
+					Value: "The Epic of Alexander (Ultimate)",
+				},
+				{
+					Name: "DSR",
+					Value: "Dragonsong's Reprise (Ultimate)",
+				},
+				{
+					Name: "TOP",
+					Value: "The Omega Protocol (Ultimate)",
+				},
+				// TODO: implement when FRU goes live
+				/*
+				{
+					Name: "FRU",
+					Value: "Futures Rewritten (Ultimate)",
+				},
+				*/
+			},
+		},
+	},
+}
+
 func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	switch i.Type {
 	case discordgo.InteractionApplicationCommand:
@@ -190,6 +240,8 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.Prog(s, i)
 		case "removeall":
 			c.RemoveAll(s, i)
+		case "reclears":
+			c.ToggleReclear(s, i)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)
@@ -463,6 +515,85 @@ func (c *Clearingway) RemoveAll(s *discordgo.Session, i *discordgo.InteractionCr
 	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Clearingway-related roles:__\n⮕ Removed!\n")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
+	}
+}
+
+func (c *Clearingway) ToggleReclear(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	// Ignore messages not on the correct channel
+	if i.ChannelID != g.ChannelId {
+		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+		
+		err := discord.StartInteraction(s, i.Interaction, "Command was not used in the correct channel.")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	err := discord.StartInteraction(s, i.Interaction, "Checking for respective clear role...")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
+	ultimate := i.ApplicationCommandData().Options[0].StringValue()
+	encounter := g.Encounters.ForName(ultimate)
+	reclearRole := encounter.Roles[ReclearRole]
+	clearedRole := encounter.Roles[ClearedRole]
+
+	var rolePresent = false
+	var clearPresent = false
+	for _, r := range i.Member.Roles {
+		if r == reclearRole.DiscordRole.ID {
+			rolePresent = true
+			continue
+		}
+		if r == clearedRole.DiscordRole.ID {
+			clearPresent = true
+			continue
+		}
+	}
+
+	// Remove role no matter what
+	// Add role only if cleared role is present
+	if rolePresent {
+		fmt.Printf("Removing role: %+v\n", reclearRole.Name)
+		err = reclearRole.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+		if err != nil {
+			fmt.Printf("Error removing role: %+v\n", err)
+			return
+		}
+		tempstr := fmt.Sprintf("Successfully removed role: <@&%v>", reclearRole.DiscordRole.ID)
+		err = discord.ContinueInteraction(s, i.Interaction, tempstr)
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+	} else {
+		if clearPresent {
+			fmt.Printf("Adding role: %+v\n", reclearRole.Name)
+			err = reclearRole.AddToCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+			if err != nil {
+				fmt.Printf("Error adding role: %+v\n", err)
+				return
+			}
+			tempstr := fmt.Sprintf("Successfully added role: <@&%v>", reclearRole.DiscordRole.ID)
+			err = discord.ContinueInteraction(s, i.Interaction, tempstr)
+			if err != nil {
+				fmt.Printf("Error sending Discord message: %v\n", err)
+			}
+		} else {
+			tempstr := fmt.Sprintf("You do not have the required role: <@&%v>", clearedRole.DiscordRole.ID)
+			err = discord.ContinueInteraction(s, i.Interaction, tempstr)
+			if err != nil {
+				fmt.Printf("Error sending Discord message: %v\n", err)
+			}
+		}
 	}
 }
 

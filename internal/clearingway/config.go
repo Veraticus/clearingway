@@ -24,6 +24,7 @@ type ConfigRoles struct {
 	UltimateRepetition bool `yaml:"ultimateRepetition"`
 	Datacenter         bool `yaml:"datacenter"`
 	SkipRemoval        bool `yaml:"skipRemoval"`
+	NameColor          bool `yaml:"nameColor"`
 	Reclear            bool `yaml:"reclear"`
 }
 

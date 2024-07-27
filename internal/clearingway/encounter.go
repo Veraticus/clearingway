@@ -143,6 +143,8 @@ func (e *Encounter) Init(c *ConfigEncounter) {
 			role.Description = "Wants to parse " + e.Name + "."
 		case ClearedRole:
 			role.Description = "Cleared " + e.Name + "."
+		case ColorRole:
+			role.Description = "Likes " + e.Name + "'s color."
 		}
 	}
 

@@ -57,6 +57,14 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			commandList = append(commandList, ProgCommand)
 		}
 
+		if guild.ReclearsEnabled {
+			commandList = append(commandList, ReclearCommand)
+		}
+
+		if guild.NameColorsEnabled {
+			commandList = append(commandList, NameColorCommand)
+		}
+
 		addedCommands, err := s.ApplicationCommandBulkOverwrite(event.User.ID, discordGuild.ID, commandList)
 		fmt.Printf("List of successfully created commands:\n")
 		for _, command := range addedCommands {
@@ -66,14 +74,6 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			fmt.Printf("Could not add some commands: %v\n", err)
 		}
 		
-		if guild.ReclearsEnabled {
-			fmt.Printf("Adding reclears command...\n")
-			_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, ReclearCommand)
-			if err != nil {
-				fmt.Printf("Could not add reclears command: %v\n", err)
-			}	
-		}
-
 		// fmt.Printf("Removing commands...\n")
 		// cmd, err := s.ApplicationCommandCreate(event.User.ID, guild.ID, verifyCommand)
 		// if err != nil {
@@ -208,6 +208,48 @@ var ReclearCommand = &discordgo.ApplicationCommand{
 	},
 }
 
+var NameColorCommand = &discordgo.ApplicationCommand{
+	Name:	"namecolor",
+	Description: "Assign or remove name color roles",
+	Options: []*discordgo.ApplicationCommandOption{
+		{
+			Type: discordgo.ApplicationCommandOptionString,
+			Name: "ultimate",
+			Description: "The ultimate that corresponds to the color you want",
+			Required: true,
+			Choices: []*discordgo.ApplicationCommandOptionChoice{
+				{
+					Name: "UCoB",
+					Value: "The Unending Coil of Bahamut (Ultimate)",
+				},
+				{
+					Name: "UWU",
+					Value: "The Weapon's Refrain (Ultimate)",
+				},
+				{
+					Name: "TEA",
+					Value: "The Epic of Alexander (Ultimate)",
+				},
+				{
+					Name: "DSR",
+					Value: "Dragonsong's Reprise (Ultimate)",
+				},
+				{
+					Name: "TOP",
+					Value: "The Omega Protocol (Ultimate)",
+				},
+				// TODO: implement when FRU goes live
+				/*
+				{
+					Name: "FRU",
+					Value: "Futures Rewritten (Ultimate)",
+				},
+				*/
+			},
+		},
+	},
+}
+
 func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	switch i.Type {
 	case discordgo.InteractionApplicationCommand:
@@ -224,6 +266,8 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.Prog(s, i)
 		case "removeall":
 			c.RemoveAll(s, i)
+		case "namecolor":
+			c.ToggleColor(s, i)
 		case "reclears":
 			c.ToggleReclear(s, i)
 		}
@@ -579,6 +623,123 @@ func (c *Clearingway) ToggleReclear(s *discordgo.Session, i *discordgo.Interacti
 			}
 		}
 	}
+}
+
+
+func (c *Clearingway) ToggleColor(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	// Ignore messages not on the correct channel
+	if i.ChannelID != g.ChannelId {
+		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+		err := discord.StartInteraction(s, i.Interaction, "Command was not used in the correct channel.")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	err := discord.StartInteraction(s, i.Interaction, "Checking for respective clear role...")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
+	wantedUltimate := i.ApplicationCommandData().Options[0].StringValue()
+
+	// Get all possible roles and the encounter while we're at it
+	var colorRoles []*Role
+	var wantedEncounter *Encounter
+	for _, e := range UltimateEncounters.Encounters {
+		encounter := g.Encounters.ForName(e.Name)
+		colorRoles = append(colorRoles, encounter.Roles[ColorRole])
+		if e.Name == wantedUltimate {
+			wantedEncounter = encounter
+		}
+	}
+	
+	requestedColorRole := wantedEncounter.Roles[ColorRole]
+	clearedRole := wantedEncounter.Roles[ClearedRole]
+	
+	var roleToRemove *Role
+	var cleared = false
+	for _, memberRole := range i.Member.Roles {
+		if roleToRemove == nil {
+			for _, colorRole := range colorRoles {
+				if colorRole.DiscordRole.ID == memberRole {
+					roleToRemove = colorRole
+					break
+				}
+			}
+		}
+		if (!cleared) && (memberRole == clearedRole.DiscordRole.ID) {
+			cleared = true
+		}
+	}
+
+	if cleared {
+		// remove existing color role
+		tempstr := ""
+		if roleToRemove != nil {
+			err = removeRoleHelper(s, i.Interaction, roleToRemove)
+			if err != nil {
+				return
+			}
+			tempstr += fmt.Sprintf("Successfully removed role: <@&%v>", roleToRemove.DiscordRole.ID)
+		}
+		// add role if requested role is not the same as color role
+		if requestedColorRole != roleToRemove {
+			err = addRoleHelper(s, i.Interaction, requestedColorRole)
+			if err != nil {
+				return
+			}
+			tempstr += fmt.Sprintf("\nSuccessfully added role: <@&%v>", requestedColorRole.DiscordRole.ID)
+		}
+		discord.ContinueInteraction(s, i.Interaction, tempstr)
+	} else {
+		// remove the requested color role if it's the same
+		// edge case where someone has clears removed and doesn't want the color 
+		if requestedColorRole == roleToRemove {
+			err = removeRoleHelper(s, i.Interaction, roleToRemove)
+			if err != nil {
+				return
+			}
+			tempstr := fmt.Sprintf("Successfully removed role: <@&%v>", roleToRemove.DiscordRole.ID)
+			discord.ContinueInteraction(s, i.Interaction, tempstr)
+		} else {
+			// user doesn't meet the requirements
+			tempstr := fmt.Sprintf("You do not have the required role: <@&%v>", clearedRole.DiscordRole.ID)
+			err = discord.ContinueInteraction(s, i.Interaction, tempstr)
+			if err != nil {
+				fmt.Printf("Error sending Discord message: %v\n", err)
+			}
+		}
+	}
+
+}
+
+func removeRoleHelper(s *discordgo.Session, i *discordgo.Interaction, roleToRemove *Role) error {
+	fmt.Printf("Removing role: %+v\n", roleToRemove.Name)
+	err := roleToRemove.RemoveFromCharacter(i.GuildID, i.Member.User.ID, s)
+	if err != nil {
+		fmt.Printf("Error removing role: %+v\n", err)
+		return err
+	}
+	return nil
+}
+
+func addRoleHelper(s *discordgo.Session, i *discordgo.Interaction, roleToAdd *Role) error {
+	fmt.Printf("Adding role: %+v\n", roleToAdd.Name)
+	err := roleToAdd.AddToCharacter(i.GuildID, i.Member.User.ID, s)
+	if err != nil {
+		fmt.Printf("Error adding role: %+v\n", err)
+		return err
+	}
+	return nil
 }
 
 func (c *Clearingway) Autocomplete(s *discordgo.Session, i *discordgo.InteractionCreate) {

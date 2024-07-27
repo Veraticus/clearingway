@@ -26,6 +26,7 @@ type Guild struct {
 	UltimateFlexingEnabled    bool
 	UltimateRepetitionEnabled bool
 	DatacenterEnabled         bool
+	NameColorsEnabled         bool
 	ReclearsEnabled	          bool
 	SkipRemoval               bool
 
@@ -107,6 +108,12 @@ func (g *Guild) Init(c *ConfigGuild) {
 			g.DatacenterEnabled = true
 		}
 
+		if c.ConfigRoles.NameColor {
+			g.NameColorsEnabled = true
+		} else {
+			g.NameColorsEnabled = false
+		}
+		
 		if c.ConfigRoles.Reclear {
 			g.ReclearsEnabled = true
 		} else {

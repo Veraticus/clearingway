@@ -43,43 +43,27 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		}
 		time.Sleep(1 * time.Second)
 
-		fmt.Printf("Adding clear command...\n")
-		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, ClearCommand)
-		if err != nil {
-			fmt.Printf("Could not add clears command: %v\n", err)
-		}
+		fmt.Printf("Adding commands...")
 
-		fmt.Printf("Adding uncomfy command...\n")
-		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, UncomfyCommand)
-		if err != nil {
-			fmt.Printf("Could not add uncomfy command: %v\n", err)
-		}
-
-		fmt.Printf("Adding uncolor command...\n")
-		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, UncolorCommand)
-		if err != nil {
-			fmt.Printf("Could not add uncolor command: %v\n", err)
-		}
-
-		fmt.Printf("Adding removeall command...\n")
-		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RemoveCommand)
-		if err != nil {
-			fmt.Printf("Could not add removeall command: %v\n", err)
-		}
-
-		fmt.Printf("Adding roles command...\n")
-		_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, RolesCommand)
-		if err != nil {
-			fmt.Printf("Could not add roles command: %v\n", err)
+		commandList := []*discordgo.ApplicationCommand {
+			ClearCommand,
+			UncomfyCommand,
+			UncolorCommand,
+			RemoveCommand,
+			RolesCommand,
 		}
 
 		if guild.IsProgEnabled() {
-			fmt.Printf("Adding prog command...\n")
-			_, err = s.ApplicationCommandCreate(event.User.ID, discordGuild.ID, ProgCommand)
-			if err != nil {
-				fmt.Printf("Could not add prog command: %v\n", err)
-			}
-			time.Sleep(1 * time.Second)
+			commandList = append(commandList, ProgCommand)
+		}
+
+		addedCommands, err := s.ApplicationCommandBulkOverwrite(event.User.ID, discordGuild.ID, commandList)
+		fmt.Printf("List of successfully created commands:\n")
+		for _, command := range addedCommands {
+			fmt.Printf("\t%v\n", command.Name)
+		}
+		if err != nil {
+			fmt.Printf("Could not add some commands: %v\n", err)
 		}
 		
 		if guild.ReclearsEnabled {

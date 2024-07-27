@@ -570,6 +570,8 @@ guilds:
     ultimateFlexing: false
     ultimateRepetition: false
     datacenter: true
+    reclear: true
+    nameColor: true
   guildId: 1172230157776466050
   channelId: 1172348608671133760
   encounters:
@@ -582,6 +584,12 @@ guilds:
       - name: "UCoB Cleared"
         type: "Cleared"
         color: 0xfdfd96
+      - name: "UCoB Reclear"
+        type: "Reclear"
+        color: 0xfdfd96
+      - name: "The Legend's Color"
+        type: "Name Color"
+        color: 0xfdfd96
   - ids: [1061, 1048, 1042, 1074]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
@@ -590,6 +598,12 @@ guilds:
     roles:
       - name: "UWU Cleared"
         type: "Cleared"
+        color: 0x97cae3
+      - name: "UWU Reclear"
+        type: "Reclear"
+        color: 0x97cae3
+      - name: "The Ultimate Color"
+        type: "Name Color"
         color: 0x97cae3
   - ids: [1062, 1050, 1075]
     name: "The Epic of Alexander (Ultimate)"
@@ -600,6 +614,12 @@ guilds:
       - name: "TEA Cleared"
         type: "Cleared"
         color: 0xfae9c2
+      - name: "TEA Reclear"
+        type: "Reclear"
+        color: 0xfae9c2
+      - name: "The Perfect Color"
+        type: "Name Color"
+        color: 0xfae9c2
   - ids: [1065, 1076]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
@@ -608,6 +628,12 @@ guilds:
     roles:
       - name: "DSR Cleared"
         type: "Cleared"
+        color: 0xc9843f
+      - name: "DSR Reclear"
+        type: "Reclear"
+        color: 0xc9843f
+      - name: "The Heavens' Color"
+        type: "Name Color"
         color: 0xc9843f
   - ids: [1068, 1077]
     name: "The Omega Protocol (Ultimate)"
@@ -618,6 +644,28 @@ guilds:
       - name: "TOP Cleared"
         type: "Cleared"
         color: 0x6534c6
+      - name: "TOP Reclear"
+        type: "Reclear"
+        color: 0x6534c6
+      - name: "The Alpha Color"
+        type: "Name Color"
+        color: 0x6534c6
+  # TODO: implement when FRU goes live
+  # - ids: []
+  #   name: "Futures Rewritten (Ultimate)"
+  #   defaultRoles: false
+  #   totalWeaponsAvailable: 21
+  #   the: "Roommate"
+  #   roles:
+  #     - name: "FRU Cleared"
+  #       type: "Cleared"
+  #       color: 0xc9843f
+  #     - name: "Reclear FRU"
+  #       type: "Reclear"
+  #       color: 0x0000FF
+  #     - name: "The Lesbians' Color"
+  #       type: "Name Color"
+  #       color: 0xD52D00
   reconfigureRoles:
   - from: "Please Do Other Content"
     hoist: true

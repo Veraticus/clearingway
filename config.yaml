@@ -650,6 +650,7 @@ guilds:
       - name: "The Alpha Color"
         type: "Name Color"
         color: 0x6534c6
+  # TODO: implement when FRU goes live
   # - ids: []
   #   name: "Futures Rewritten (Ultimate)"
   #   defaultRoles: false

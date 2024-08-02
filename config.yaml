@@ -586,7 +586,7 @@ guilds:
         color: 0xfdfd96
       - name: "UCoB Reclear"
         type: "Reclear"
-        color: 0xfdfd96
+        color: 0xf15ebe
       - name: "The Legend's Color"
         type: "Name Color"
         color: 0xfdfd96
@@ -601,7 +601,7 @@ guilds:
         color: 0x97cae3
       - name: "UWU Reclear"
         type: "Reclear"
-        color: 0x97cae3
+        color: 0xf15ebe
       - name: "The Ultimate Color"
         type: "Name Color"
         color: 0x97cae3
@@ -616,7 +616,7 @@ guilds:
         color: 0xfae9c2
       - name: "TEA Reclear"
         type: "Reclear"
-        color: 0xfae9c2
+        color: 0xf15ebe
       - name: "The Perfect Color"
         type: "Name Color"
         color: 0xfae9c2
@@ -631,7 +631,7 @@ guilds:
         color: 0xc9843f
       - name: "DSR Reclear"
         type: "Reclear"
-        color: 0xc9843f
+        color: 0xf15ebe
       - name: "The Heavens' Color"
         type: "Name Color"
         color: 0xc9843f
@@ -646,7 +646,7 @@ guilds:
         color: 0x6534c6
       - name: "TOP Reclear"
         type: "Reclear"
-        color: 0x6534c6
+        color: 0xf15ebe
       - name: "The Alpha Color"
         type: "Name Color"
         color: 0x6534c6
@@ -662,7 +662,7 @@ guilds:
   #       color: 0xc9843f
   #     - name: "Reclear FRU"
   #       type: "Reclear"
-  #       color: 0x0000FF
+  #       color: 0xf15ebe
   #     - name: "The Lesbians' Color"
   #       type: "Name Color"
   #       color: 0xD52D00

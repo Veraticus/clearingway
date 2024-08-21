@@ -53,6 +53,10 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		lastName = option.StringValue()
 	}
 
+	c.ClearsHelper(s, i, g, world, firstName, lastName)
+}
+
+func (c *Clearingway) ClearsHelper(s *discordgo.Session, i *discordgo.InteractionCreate, g *Guild, world string, firstName string, lastName string) {
 	if len(world) == 0 || len(firstName) == 0 || len(lastName) == 0 {
 		err := discord.ContinueInteraction(s, i.Interaction, "`/clears` command failed! Please input your world, first name, and last name.")
 		if err != nil {
@@ -76,7 +80,7 @@ func (c *Clearingway) Clears(s *discordgo.Session, i *discordgo.InteractionCreat
 		return
 	}
 
-	err = discord.ContinueInteraction(s, i.Interaction,
+	err := discord.ContinueInteraction(s, i.Interaction,
 		fmt.Sprintf("Finding `%s %s (%s)` in the Lodestone...", firstName, lastName, world),
 	)
 	if err != nil {

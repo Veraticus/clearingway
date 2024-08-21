@@ -65,6 +65,10 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			commandList = append(commandList, NameColorCommand)
 		}
 
+		if guild.MenuEnabled {
+			commandList = append(commandList, MenuCommand)
+		}
+
 		addedCommands, err := s.ApplicationCommandBulkOverwrite(event.User.ID, discordGuild.ID, commandList)
 		fmt.Printf("List of successfully created commands:\n")
 		for _, command := range addedCommands {
@@ -86,6 +90,14 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 	}
 	fmt.Printf("Clearingway ready!\n")
 	c.Ready = true
+}
+
+var adminPermission int64 = discordgo.PermissionAdministrator
+
+var MenuCommand = &discordgo.ApplicationCommand{
+	Name:        "menu",
+	Description: "Send the roles menu to the current channel.",
+	DefaultMemberPermissions: &adminPermission,
 }
 
 var ClearCommand = &discordgo.ApplicationCommand{
@@ -270,9 +282,14 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.ToggleColor(s, i)
 		case "reclears":
 			c.ToggleReclear(s, i)
+		case "menu":
+			c.ComponentsHandler(s, i, createOption)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)
+	case discordgo.InteractionMessageComponent:
+		customID := i.MessageComponentData().CustomID
+		c.ComponentsHandler(s, i, customID)
 	}
 }
 

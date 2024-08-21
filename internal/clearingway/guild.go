@@ -3,7 +3,9 @@ package clearingway
 import (
 	"fmt"
 
+	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/Veraticus/clearingway/internal/ffxiv"
+	"github.com/bwmarrin/discordgo"
 )
 
 type Guilds struct {
@@ -28,6 +30,7 @@ type Guild struct {
 	DatacenterEnabled         bool
 	NameColorsEnabled         bool
 	ReclearsEnabled	          bool
+	MenuEnabled               bool
 	SkipRemoval               bool
 
 	EncounterRoles          *Roles
@@ -39,6 +42,8 @@ type Guild struct {
 	UltimateRepetitionRoles *Roles
 	DatacenterRoles         *Roles
 	AchievementRoles        *Roles
+
+	ComponentsHandlers map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate)
 }
 
 func (g *Guild) Init(c *ConfigGuild) {
@@ -120,6 +125,12 @@ func (g *Guild) Init(c *ConfigGuild) {
 			g.ReclearsEnabled = false
 		}
 
+		if c.ConfigRoles.Menu {
+			g.MenuEnabled = true
+		} else {
+			g.MenuEnabled = false
+		}
+
 		if c.ConfigRoles.SkipRemoval {
 			g.SkipRemoval = true
 		} else {
@@ -156,6 +167,10 @@ func (g *Guild) Init(c *ConfigGuild) {
 
 	if g.DatacenterEnabled {
 		g.DatacenterRoles = g.PhysicalDatacenters.AllRoles()
+	}
+
+	if g.MenuEnabled {
+		g.InitDiscordMenu()
 	}
 
 	if len(c.ConfigReconfigureRoles) != 0 {
@@ -245,4 +260,116 @@ func (g *Guild) IsProgEnabled() bool {
 	}
 
 	return false
+}
+
+// EncountersOfRoleType returns a list of encounters with the specified role type
+// To be used in the implementation of the UI menu and possibly the original commands
+// for easier lookup
+func (g *Guild) EncountersOfRoleType(roleType RoleType) []*Encounter {
+	encounters := []*Encounter{}
+	for _, encounter := range g.Encounters.Encounters {
+		if _, ok := encounter.Roles[roleType]; ok {
+			encounters = append(encounters, encounter)
+		}
+	}
+
+	return encounters
+}
+
+func (g *Guild) InitDiscordMenu() {
+	g.ComponentsHandlers = make(map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate))
+
+	menuButtons := []discordgo.MessageComponent{}
+	menuDescription := "Use the buttons below to set up your roles!"
+
+	// Verify Clears
+	menuButtons = append(menuButtons, &discordgo.Button{
+		Label: "Verify Clears",
+		Style: discordgo.SuccessButton,
+		Disabled: false,
+		CustomID: verifyOption,
+	})
+	menuDescription += "\n- Verify Clears - Have Clearingway verify your clears for this server"
+	g.ComponentsHandlers[verifyOption] = nil  // placeholder
+
+	// Reclear/C4X Roles
+	if (g.ReclearsEnabled) {
+		menuButtons = append(menuButtons, &discordgo.Button{
+			Label: "Reclears/C4Xs",
+			Style: discordgo.PrimaryButton,
+			Disabled: false,
+			CustomID: reclearOption,
+		})
+		menuDescription += "\n- Reclear/C4X Roles - Add reclear/C4X roles to yourself to be pinged by reclear parties"
+		g.ComponentsHandlers[reclearOption] = nil  // placeholder
+
+	}
+	
+	// Prog Roles
+	// TODO: Implement prog roles
+	/*
+	if (g.ProgEnabled) {
+		menuButtons = append(menuButtons, &discordgo.Button{
+			Label: "Prog",
+			Style: discordgo.PrimaryButton,
+			Disabled: false,
+			CustomID: progOption,
+		})
+		menuDescription += "\n- Prog Roles - Add prog roles to yourself to be pinged by prog parties"
+		g.ComponentsHandlers[progOption] = nil  // placeholder
+	}
+	*/
+	
+	// Name Colors
+	if (g.NameColorsEnabled) {
+		menuButtons = append(menuButtons, &discordgo.Button{
+			Label: "Name Color",
+			Style: discordgo.PrimaryButton,
+			Disabled: false,
+			CustomID: colorOption,
+		})
+		menuDescription += "\n- Name Color - Make your name the same color as your favourite ultimate"
+		g.ComponentsHandlers[colorOption] = nil  // placeholder
+	}
+	
+	// Remove Roles
+	menuButtons = append(menuButtons, &discordgo.Button{
+		Label: "Remove Roles",
+		Style: discordgo.DangerButton,
+		Disabled: false,
+		CustomID: removeOption,
+	})
+	menuDescription += "\n- Remove Roles - Remove some/all Clearingway related roles from yourself"
+	g.ComponentsHandlers[removeOption] = nil  // placeholder
+
+	menuMessage := &discordgo.MessageSend{
+		Embeds: []*discordgo.MessageEmbed{
+			{
+				Title: "Welcome to " + g.Name,
+				Description: menuDescription,
+			},
+		},
+		Components: []discordgo.MessageComponent{
+			discordgo.ActionsRow{
+				Components: menuButtons,
+			},
+		},
+	}
+
+	// create a function that sends the menuMessage generated above
+	// specific to each guild
+	g.ComponentsHandlers[createOption] = func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		_, err := s.ChannelMessageSendComplex(i.ChannelID, menuMessage)
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+			return
+		}
+
+		err = discord.StartInteraction(s, i.Interaction, "Sent menu message.")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+			return
+		}
+	}
+
 }

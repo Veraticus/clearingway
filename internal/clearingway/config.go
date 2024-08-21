@@ -26,6 +26,7 @@ type ConfigRoles struct {
 	SkipRemoval        bool `yaml:"skipRemoval"`
 	NameColor          bool `yaml:"nameColor"`
 	Reclear            bool `yaml:"reclear"`
+	Menu               bool `yaml:"menu"`
 }
 
 type ConfigEncounter struct {

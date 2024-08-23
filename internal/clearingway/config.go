@@ -13,6 +13,7 @@ type ConfigGuild struct {
 	ConfigAchievements        []*ConfigAchievement        `yaml:"achievements"`
 	ConfigRoles               *ConfigRoles                `yaml:"roles"`
 	ConfigReconfigureRoles    []*ConfigReconfigureRoles   `yaml:"reconfigureRoles"`
+	ConfigMenus               []*ConfigMenu               `yaml:"menu"`
 }
 
 type ConfigRoles struct {
@@ -76,4 +77,17 @@ type ConfigReconfigureRoles struct {
 	Skip          bool   `yaml:"skip"`
 	DontSkip      bool   `yaml:"dontSkip"`
 	Hoist         bool   `yaml:"hoist"`
+}
+
+type ConfigMenu struct {
+	Name         string        `yaml:"name"`
+	Type         string        `yaml:"type"`
+	Blurb        string        `yaml:"blurb"`
+	Title        string        `yaml:"title"`
+	Description  string        `yaml:"description"`
+	ImageUrl     string        `yaml:"imageUrl"`
+	ConfigRoles  []*ConfigRole `yaml:"roles"`
+	RoleType     []string      `yaml:"roleType"`
+	MultiSelect  bool          `yaml:"multiSelect"`
+	RequireClear bool          `yaml:"requireClear"`
 }

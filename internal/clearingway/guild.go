@@ -20,6 +20,7 @@ type Guild struct {
 	Achievements        *Achievements
 	Characters          *ffxiv.Characters
 	PhysicalDatacenters *PhysicalDatacenters
+	Menus               *Menus
 
 	RelevantParsingEnabled    bool
 	RelevantFlexingEnabled    bool
@@ -42,6 +43,7 @@ type Guild struct {
 	UltimateRepetitionRoles *Roles
 	DatacenterRoles         *Roles
 	AchievementRoles        *Roles
+	MenuRoles               *Roles
 
 	ComponentsHandlers map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate)
 }
@@ -53,7 +55,10 @@ func (g *Guild) Init(c *ConfigGuild) {
 	g.Encounters = &Encounters{Encounters: []*Encounter{}}
 	g.Achievements = &Achievements{Achievements: []*Achievement{}}
 	g.Characters = &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}}
-
+	g.Menus = &Menus{}
+	g.Menus.Defaults = make(map[string]*Menu)
+	g.DefaultMenus()
+	
 	g.PhysicalDatacenters = &PhysicalDatacenters{PhysicalDatacenters: map[string]*PhysicalDatacenter{}}
 	fmt.Printf("Datacenters are %+v\n", c.ConfigPhysicalDatacenters)
 	g.PhysicalDatacenters.Init(c.ConfigPhysicalDatacenters)
@@ -68,6 +73,16 @@ func (g *Guild) Init(c *ConfigGuild) {
 		achievement := &Achievement{}
 		achievement.Init(configAchievement)
 		g.Achievements.Achievements = append(g.Achievements.Achievements, achievement)
+	}
+
+	for _, configMenu := range c.ConfigMenus {
+		menu := &Menu{}
+		menu.Init(configMenu)
+		if menu.Type == MenuTypeDefault {
+			g.Menus.Defaults[menu.Name] = menu
+		} else {
+			g.Menus.Menus = append(g.Menus.Menus, menu)
+		}
 	}
 
 	if c.ConfigRoles != nil {
@@ -171,6 +186,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 
 	if g.MenuEnabled {
 		g.InitDiscordMenu()
+		g.MenuRoles = g.Menus.Roles()
 	}
 
 	if len(c.ConfigReconfigureRoles) != 0 {
@@ -228,6 +244,9 @@ func (g *Guild) NonUltRoles() []*Role {
 	if g.DatacenterEnabled {
 		roles = append(roles, g.DatacenterRoles.Roles...)
 	}
+	if g.MenuEnabled {
+		roles = append(roles, g.MenuRoles.Roles...)
+	}
 
 	return roles
 }
@@ -262,91 +281,37 @@ func (g *Guild) IsProgEnabled() bool {
 	return false
 }
 
-// EncountersOfRoleType returns a list of encounters with the specified role type
-// To be used in the implementation of the UI menu and possibly the original commands
-// for easier lookup
-func (g *Guild) EncountersOfRoleType(roleType RoleType) []*Encounter {
-	encounters := []*Encounter{}
-	for _, encounter := range g.Encounters.Encounters {
-		if _, ok := encounter.Roles[roleType]; ok {
-			encounters = append(encounters, encounter)
-		}
-	}
-
-	return encounters
-}
-
 func (g *Guild) InitDiscordMenu() {
 	g.ComponentsHandlers = make(map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate))
 
 	menuButtons := []discordgo.MessageComponent{}
-	menuDescription := "Use the buttons below to set up your roles!"
 
 	// Verify Clears
+	dataMenuVerify := g.Menus.Defaults[MenuVerify]
 	menuButtons = append(menuButtons, &discordgo.Button{
-		Label: "Verify Clears",
+		Label: dataMenuVerify.Title,
 		Style: discordgo.SuccessButton,
 		Disabled: false,
-		CustomID: verifyOption,
+		CustomID: MenuVerify,
 	})
-	menuDescription += "\n- Verify Clears - Have Clearingway verify your clears for this server"
-	g.ComponentsHandlers[verifyOption] = nil  // placeholder
+	g.ComponentsHandlers[MenuVerify] = nil  // placeholder
 
-	// Reclear/C4X Roles
-	if (g.ReclearsEnabled) {
-		menuButtons = append(menuButtons, &discordgo.Button{
-			Label: "Reclears/C4Xs",
-			Style: discordgo.PrimaryButton,
-			Disabled: false,
-			CustomID: reclearOption,
-		})
-		menuDescription += "\n- Reclear/C4X Roles - Add reclear/C4X roles to yourself to be pinged by reclear parties"
-		g.ComponentsHandlers[reclearOption] = nil  // placeholder
-
-	}
-	
-	// Prog Roles
-	// TODO: Implement prog roles
-	/*
-	if (g.ProgEnabled) {
-		menuButtons = append(menuButtons, &discordgo.Button{
-			Label: "Prog",
-			Style: discordgo.PrimaryButton,
-			Disabled: false,
-			CustomID: progOption,
-		})
-		menuDescription += "\n- Prog Roles - Add prog roles to yourself to be pinged by prog parties"
-		g.ComponentsHandlers[progOption] = nil  // placeholder
-	}
-	*/
-	
-	// Name Colors
-	if (g.NameColorsEnabled) {
-		menuButtons = append(menuButtons, &discordgo.Button{
-			Label: "Name Color",
-			Style: discordgo.PrimaryButton,
-			Disabled: false,
-			CustomID: colorOption,
-		})
-		menuDescription += "\n- Name Color - Make your name the same color as your favourite ultimate"
-		g.ComponentsHandlers[colorOption] = nil  // placeholder
-	}
-	
 	// Remove Roles
+	dataMenuRemove := g.Menus.Defaults[MenuRemove]
 	menuButtons = append(menuButtons, &discordgo.Button{
-		Label: "Remove Roles",
+		Label: dataMenuRemove.Title,
 		Style: discordgo.DangerButton,
 		Disabled: false,
-		CustomID: removeOption,
+		CustomID: MenuRemove,
 	})
-	menuDescription += "\n- Remove Roles - Remove some/all Clearingway related roles from yourself"
-	g.ComponentsHandlers[removeOption] = nil  // placeholder
+	g.ComponentsHandlers[MenuRemove] = nil  // placeholder
 
+	dataMenuMain := g.Menus.Defaults[MenuMain]
 	menuMessage := &discordgo.MessageSend{
 		Embeds: []*discordgo.MessageEmbed{
 			{
-				Title: "Welcome to " + g.Name,
-				Description: menuDescription,
+				Title: dataMenuMain.Title,
+				Description: dataMenuMain.Description,
 			},
 		},
 		Components: []discordgo.MessageComponent{
@@ -358,7 +323,7 @@ func (g *Guild) InitDiscordMenu() {
 
 	// create a function that sends the menuMessage generated above
 	// specific to each guild
-	g.ComponentsHandlers[createOption] = func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g.ComponentsHandlers[MenuMain] = func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		_, err := s.ChannelMessageSendComplex(i.ChannelID, menuMessage)
 		if err != nil {
 			fmt.Printf("Error sending Discord message: %v\n", err)

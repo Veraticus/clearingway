@@ -283,7 +283,7 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		case "reclears":
 			c.ToggleReclear(s, i)
 		case "menu":
-			c.ComponentsHandler(s, i, createOption)
+			c.ComponentsHandler(s, i, MenuMain)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)

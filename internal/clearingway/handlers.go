@@ -42,6 +42,15 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 				fmt.Printf("Error ensuring role %+v: %+v\n", r, err)
 			}
 		}
+
+		for _, menu := range guild.Menus.Menus {
+			if menu.Type == MenuTypeEncounter {
+				additionalData := menu.AdditionalData.(*MenuTypeEncounterData)
+				menuMessageFunction := menu.MenuEncounter(guild.Encounters, additionalData.RoleType)
+				guild.ComponentsHandlers[menu.Name] = menuMessageFunction
+			}
+		}
+
 		time.Sleep(1 * time.Second)
 
 		fmt.Printf("Adding commands...")

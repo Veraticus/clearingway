@@ -287,6 +287,18 @@ func (g *Guild) InitDiscordMenu() {
 		CustomID: strings.Join(customIDslice, " "),
 	})
 
+	// Add yaml configured menus
+	for _, menu := range(g.Menus.Menus) {
+		menuButtons = append(menuButtons, &discordgo.Button{
+			Label: menu.Title,
+			Style: discordgo.PrimaryButton,
+			Disabled: false,
+			CustomID: menu.Name,
+		})
+
+		g.ComponentsHandlers[menu.Name + "process"] = menu.ProcessMenuEncounter()
+	}
+
 	// Remove Roles
 	dataMenuRemove := g.Menus.Menus[string(MenuRemove)]
 	customIDslice = []string{string(MenuRemove), string(CommandMenu)}

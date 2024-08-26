@@ -29,7 +29,7 @@ type Menus struct {
 
 type Menu struct {
 	Name           string  // internal name e.g "menuReclear"
-	Type           MenuType
+	Type           MenuType  // type of menu to differentiate AdditionalData types
 	Title          string  // title to show in embed
 	Description    string  // optional description to show in embed
 	ImageURL       string  // optional image URL

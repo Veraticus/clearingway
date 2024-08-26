@@ -8,9 +8,9 @@ import (
 
 // guaranteed UI elements
 const(
-	MenuMain    string = "menucreate"
-	MenuVerify  string = "menuverify"
-	MenuRemove  string = "menuremove"
+	MenuMain    string = "menuCreate"
+	MenuVerify  string = "menuVerify"
+	MenuRemove  string = "menuRemove"
 )
 
 // menu types
@@ -28,7 +28,7 @@ type Menus struct {
 }
 
 type Menu struct {
-	Name           string  // internal name e.g "menureclear"
+	Name           string  // internal name e.g "menuReclear"
 	Type           MenuType
 	Blurb          string
 	Title          string  // title to show in embed

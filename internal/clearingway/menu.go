@@ -30,7 +30,6 @@ type Menus struct {
 type Menu struct {
 	Name           string  // internal name e.g "menuReclear"
 	Type           MenuType
-	Blurb          string
 	Title          string  // title to show in embed
 	Description    string  // optional description to show in embed
 	ImageURL       string  // optional image URL
@@ -61,7 +60,6 @@ func (MenuTypeEncounterData) Type() MenuType {
 func (m *Menu) Init(c *ConfigMenu) {
 	m.Name = c.Name
 	m.Type = MenuType(c.Type)
-	m.Blurb = c.Blurb
 	m.Title = c.Title
 
 	if len(c.Description) != 0 {

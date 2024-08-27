@@ -43,7 +43,7 @@ type Guild struct {
 	UltimateRepetitionRoles *Roles
 	DatacenterRoles         *Roles
 	AchievementRoles        *Roles
-	MenuRoles               *Roles
+	MenuRoles               *Roles  // to ensure any additional roles added as part of menu config
 
 	ComponentsHandlers map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate)
 }

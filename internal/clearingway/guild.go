@@ -293,7 +293,7 @@ func (g *Guild) InitDiscordMenu() {
 		Disabled: false,
 		CustomID: MenuVerify,
 	})
-	g.ComponentsHandlers[MenuVerify] = nil  // placeholder
+	//g.ComponentsHandlers[MenuVerify] = nil  // placeholder
 
 	// Remove Roles
 	dataMenuRemove := g.Menus.Defaults[MenuRemove]
@@ -303,7 +303,7 @@ func (g *Guild) InitDiscordMenu() {
 		Disabled: false,
 		CustomID: MenuRemove,
 	})
-	g.ComponentsHandlers[MenuRemove] = nil  // placeholder
+	//g.ComponentsHandlers[MenuRemove] = nil  // placeholder
 
 	dataMenuMain := g.Menus.Defaults[MenuMain]
 	menuMessage := &discordgo.MessageSend{

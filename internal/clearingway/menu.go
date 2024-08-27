@@ -161,7 +161,12 @@ func GenerateMainMenuFunc(menuMessage *discordgo.MessageSend) func(s *discordgo.
 // ComponentsHandler is function that executes the respective guild specific functions
 func (c *Clearingway) ComponentsHandler(s *discordgo.Session, i *discordgo.InteractionCreate, customID string){
 	if g, ok := c.Guilds.Guilds[i.GuildID]; ok {
-		g.ComponentsHandlers[customID](s, i)
+		if f, ok := g.ComponentsHandlers[customID]; ok {
+			f(s, i)
+		} else {
+			fmt.Printf("Invalid Custom ID received: %v\n", customID)
+			return
+		}
 	} else {
 		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
 		return

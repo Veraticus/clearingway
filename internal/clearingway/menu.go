@@ -3,6 +3,7 @@ package clearingway
 import (
 	"fmt"
 
+	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -136,6 +137,24 @@ func (g *Guild) DefaultMenus() {
 		Type: MenuTypeDefault,
 		Title: "Remove Roles",
 		Description: "Use the buttons below to remove Clearingway related roles!",
+	}
+}
+
+// GenerateMainMenuFunc returns a guild-specific function that responds
+// with the main menu of the guild set up according to the config file
+func GenerateMainMenuFunc(menuMessage *discordgo.MessageSend) func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	return func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		_, err := s.ChannelMessageSendComplex(i.ChannelID, menuMessage)
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+			return
+		}
+
+		err = discord.StartInteraction(s, i.Interaction, "Sent menu message.")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+			return
+		}
 	}
 }
 

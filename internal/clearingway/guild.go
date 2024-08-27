@@ -3,7 +3,6 @@ package clearingway
 import (
 	"fmt"
 
-	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/Veraticus/clearingway/internal/ffxiv"
 	"github.com/bwmarrin/discordgo"
 )
@@ -323,18 +322,5 @@ func (g *Guild) InitDiscordMenu() {
 
 	// create a function that sends the menuMessage generated above
 	// specific to each guild
-	g.ComponentsHandlers[MenuMain] = func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		_, err := s.ChannelMessageSendComplex(i.ChannelID, menuMessage)
-		if err != nil {
-			fmt.Printf("Error sending Discord message: %v\n", err)
-			return
-		}
-
-		err = discord.StartInteraction(s, i.Interaction, "Sent menu message.")
-		if err != nil {
-			fmt.Printf("Error sending Discord message: %v\n", err)
-			return
-		}
-	}
-
+	g.ComponentsHandlers[MenuMain] = GenerateMainMenuFunc(menuMessage)
 }

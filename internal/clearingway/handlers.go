@@ -320,7 +320,6 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 				fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
 				return
 			}
-
 			switch CommandType(command[1]) {
 			case CommandMenu:
 				// send_encounter_menu(command[2])

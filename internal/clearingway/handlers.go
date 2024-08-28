@@ -44,10 +44,9 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		}
 
 		for _, menu := range guild.Menus.Menus {
-			if menu.Type == MenuTypeEncounter {
-				additionalData := menu.AdditionalData.(*MenuTypeEncounterData)
-				menuMessageFunction := menu.MenuEncounter(guild.Encounters, additionalData.RoleType)
-				guild.ComponentsHandlers[menu.Name] = menuMessageFunction
+			if menu.Type == MenuEncounter {
+				additionalData := menu.AdditionalData.(*MenuEncounterData)
+				menu.MenuEncounterInit(guild.Encounters, additionalData.RoleType)
 			}
 		}
 

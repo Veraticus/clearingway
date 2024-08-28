@@ -2,6 +2,7 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Veraticus/clearingway/internal/ffxiv"
 	"github.com/bwmarrin/discordgo"
@@ -43,8 +44,6 @@ type Guild struct {
 	DatacenterRoles         *Roles
 	AchievementRoles        *Roles
 	MenuRoles               *Roles  // to ensure any additional roles added as part of menu config
-
-	ComponentsHandlers map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate)
 }
 
 func (g *Guild) Init(c *ConfigGuild) {
@@ -54,8 +53,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 	g.Encounters = &Encounters{Encounters: []*Encounter{}}
 	g.Achievements = &Achievements{Achievements: []*Achievement{}}
 	g.Characters = &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}}
-	g.Menus = &Menus{}
-	g.Menus.Defaults = make(map[string]*Menu)
+	g.Menus = &Menus{Menus: map[string]*Menu{}}
 	g.DefaultMenus()
 	
 	g.PhysicalDatacenters = &PhysicalDatacenters{PhysicalDatacenters: map[string]*PhysicalDatacenter{}}
@@ -77,11 +75,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 	for _, configMenu := range c.ConfigMenus {
 		menu := &Menu{}
 		menu.Init(configMenu)
-		if menu.Type == MenuTypeDefault {
-			g.Menus.Defaults[menu.Name] = menu
-		} else {
-			g.Menus.Menus = append(g.Menus.Menus, menu)
-		}
+		g.Menus.Menus[menu.Name] = menu
 	}
 
 	if c.ConfigRoles != nil {
@@ -281,31 +275,29 @@ func (g *Guild) IsProgEnabled() bool {
 }
 
 func (g *Guild) InitDiscordMenu() {
-	g.ComponentsHandlers = make(map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate))
-
 	menuButtons := []discordgo.MessageComponent{}
 
 	// Verify Clears
-	dataMenuVerify := g.Menus.Defaults[MenuVerify]
+	dataMenuVerify := g.Menus.Menus[string(MenuVerify)]
+	customIDslice := []string{string(MenuVerify), string(CommandMenu)}
 	menuButtons = append(menuButtons, &discordgo.Button{
 		Label: dataMenuVerify.Title,
 		Style: discordgo.SuccessButton,
 		Disabled: false,
-		CustomID: MenuVerify,
+		CustomID: strings.Join(customIDslice, " "),
 	})
-	//g.ComponentsHandlers[MenuVerify] = nil  // placeholder
 
 	// Remove Roles
-	dataMenuRemove := g.Menus.Defaults[MenuRemove]
+	dataMenuRemove := g.Menus.Menus[string(MenuRemove)]
+	customIDslice = []string{string(MenuRemove), string(CommandMenu)}
 	menuButtons = append(menuButtons, &discordgo.Button{
 		Label: dataMenuRemove.Title,
 		Style: discordgo.DangerButton,
 		Disabled: false,
-		CustomID: MenuRemove,
+		CustomID: strings.Join(customIDslice, " "),
 	})
-	//g.ComponentsHandlers[MenuRemove] = nil  // placeholder
 
-	dataMenuMain := g.Menus.Defaults[MenuMain]
+	dataMenuMain := g.Menus.Menus[string(MenuMain)]
 	menuMessage := &discordgo.MessageSend{
 		Embeds: []*discordgo.MessageEmbed{
 			{
@@ -319,8 +311,5 @@ func (g *Guild) InitDiscordMenu() {
 			},
 		},
 	}
-
-	// create a function that sends the menuMessage generated above
-	// specific to each guild
-	g.ComponentsHandlers[MenuMain] = GenerateMainMenuFunc(menuMessage)
+	dataMenuMain.AdditionalData = &MenuStaticData{Message: menuMessage}
 }

@@ -3,6 +3,7 @@ package clearingway
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/Veraticus/clearingway/internal/discord"
@@ -283,13 +284,40 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		case "reclears":
 			c.ToggleReclear(s, i)
 		case "menu":
-			c.ComponentsHandler(s, i, MenuMain)
+			c.SendStaticMenu(s, i, string(MenuMain))
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)
 	case discordgo.InteractionMessageComponent:
 		customID := i.MessageComponentData().CustomID
-		c.ComponentsHandler(s, i, customID)
+		command := strings.Split(customID, " ")
+		switch MenuType(command[0]) {
+		case MenuVerify:
+			switch CommandType(command[1]) {
+			case CommandMenu:
+				// send_modal()
+			case CommandSub1:
+				// Clears()
+			}
+		case MenuRemove:
+			switch CommandType(command[1]) {
+			case CommandMenu:
+				// send_menu()
+			case CommandSub1:
+				// Uncomfy()
+			case CommandSub2:
+				// Uncolor()
+			case CommandSub3:
+				// RemoveAll()
+			}
+		case MenuEncounter:
+			switch CommandType(command[1]) {
+			case CommandMenu:
+				// send_encounter_menu(command[2])
+			case CommandSub1:
+				// process_roles(command[2])
+			}
+		}
 	}
 }
 

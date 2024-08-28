@@ -7,55 +7,54 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// guaranteed UI elements
+// types of UI elements
+type MenuType string
 const(
-	MenuMain    string = "menuCreate"
-	MenuVerify  string = "menuVerify"
-	MenuRemove  string = "menuRemove"
+	MenuMain      MenuType = "menuCreate"
+	MenuVerify    MenuType = "menuVerify"
+	MenuRemove    MenuType = "menuRemove"
+	MenuEncounter MenuType = "menuEncounter"
 )
 
-// menu types
-// currently only default/guaranteed menus, dropdown menu based on encounters
-type MenuType string
-const (
-	MenuTypeDefault   MenuType = "default"
-	MenuTypeEncounter MenuType = "encounter"
+type CommandType string
+const(
+	CommandMenu CommandType = "menu"
+	CommandSub1 CommandType = "sub1"
+	CommandSub2 CommandType = "sub2"
+	CommandSub3 CommandType = "sub3"
 )
 
 // struct to hold data for all different menu components
 type Menus struct {
-	Defaults map[string]*Menu
-	Menus    []*Menu
+	Menus    map[string]*Menu
 }
 
 type Menu struct {
-	Name           string  // internal name e.g "menuReclear"
+	Name           string  // internal name to uniquely identify menus
 	Type           MenuType  // type of menu to differentiate AdditionalData types
 	Title          string  // title to show in embed
 	Description    string  // optional description to show in embed
 	ImageURL       string  // optional image URL
-	AdditionalData MenuComponent  // additional data depending on MenuType
+	AdditionalData MenuAdditionalData  // additional data depending on MenuType
 }
 
-type MenuComponent interface{
-	Type() MenuType
-}
+type MenuAdditionalData interface{}
 
 type MenuRoleHelper struct {
 	Role         *Role
 	Prerequisite *Role
 }
 
-type MenuTypeEncounterData struct {
+type MenuStaticData struct {
+	Message *discordgo.MessageSend
+}
+
+type MenuEncounterData struct {
 	Roles        map[string]*MenuRoleHelper
 	ExtraRoles   []*Role
 	RoleType     []RoleType
 	MultiSelect  bool
 	RequireClear bool
-}
-
-func (MenuTypeEncounterData) Type() MenuType {
-	return MenuTypeEncounter
 }
 
 func (m *Menu) Init(c *ConfigMenu) {
@@ -72,11 +71,9 @@ func (m *Menu) Init(c *ConfigMenu) {
 	}
 
 	switch m.Type {
-	case MenuTypeDefault:
-	case MenuTypeEncounter:
-		m.Type = MenuTypeEncounter
-		m.AdditionalData = &MenuTypeEncounterData{}
-		data := m.AdditionalData.(*MenuTypeEncounterData)
+	case MenuEncounter:
+		m.AdditionalData = &MenuEncounterData{}
+		data := m.AdditionalData.(*MenuEncounterData)
 
 		if len(c.RoleType) != 0 {
 			for _, roleType := range c.RoleType {
@@ -119,56 +116,47 @@ func (m *Menu) Init(c *ConfigMenu) {
 }
 
 func (g *Guild) DefaultMenus() {
-	g.Menus.Defaults[MenuMain] = &Menu{
-		Name: MenuMain,
-		Type: MenuTypeDefault,
+	g.Menus.Menus[string(MenuMain)] = &Menu{
+		Name: string(MenuMain),
+		Type: MenuMain,
 		Title: "Welcome to " + g.Name,
 		Description: "Use the buttons below to assign roles!",
 	}
 
-	g.Menus.Defaults[MenuVerify] = &Menu{
-		Name: MenuVerify,
-		Type: MenuTypeDefault,
+	g.Menus.Menus[string(MenuVerify)] = &Menu{
+		Name: string(MenuVerify),
+		Type: MenuVerify,
 		Title: "Verify Character",
 	}
 
-	g.Menus.Defaults[MenuRemove] = &Menu{
-		Name: MenuRemove,
-		Type: MenuTypeDefault,
+	g.Menus.Menus[string(MenuRemove)] = &Menu{
+		Name: string(MenuRemove),
+		Type: MenuRemove,
 		Title: "Remove Roles",
 		Description: "Use the buttons below to remove Clearingway related roles!",
 	}
 }
 
-// GenerateMainMenuFunc returns a guild-specific function that responds
-// with the main menu of the guild set up according to the config file
-func GenerateMainMenuFunc(menuMessage *discordgo.MessageSend) func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	return func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		_, err := s.ChannelMessageSendComplex(i.ChannelID, menuMessage)
-		if err != nil {
-			fmt.Printf("Error sending Discord message: %v\n", err)
-			return
-		}
-
-		err = discord.StartInteraction(s, i.Interaction, "Sent menu message.")
-		if err != nil {
-			fmt.Printf("Error sending Discord message: %v\n", err)
-			return
-		}
-	}
-}
-
-// ComponentsHandler is function that executes the respective guild specific functions
-func (c *Clearingway) ComponentsHandler(s *discordgo.Session, i *discordgo.InteractionCreate, customID string){
-	if g, ok := c.Guilds.Guilds[i.GuildID]; ok {
-		if f, ok := g.ComponentsHandlers[customID]; ok {
-			f(s, i)
-		} else {
-			fmt.Printf("Invalid Custom ID received: %v\n", customID)
-			return
-		}
-	} else {
+func (c *Clearingway) SendStaticMenu(s * discordgo.Session, i *discordgo.InteractionCreate, menuName string) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
 		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	menu := g.Menus.Menus[menuName]
+	additionalData := menu.AdditionalData.(*MenuStaticData)
+	menuMessage := additionalData.Message
+
+	_, err := s.ChannelMessageSendComplex(i.ChannelID, menuMessage)
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
+	err = discord.StartInteraction(s, i.Interaction, "Sent menu message.")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
 		return
 	}
 }
@@ -179,8 +167,8 @@ func (ms *Menus) Roles() *Roles {
 	roles := &Roles{Roles: []*Role{}}
 
 	for _, menu := range ms.Menus {
-		if menu.Type == MenuTypeEncounter {
-			roles.Roles = append(roles.Roles, menu.AdditionalData.(*MenuTypeEncounterData).ExtraRoles...)
+		if menu.Type == MenuEncounter {
+			roles.Roles = append(roles.Roles, menu.AdditionalData.(*MenuEncounterData).ExtraRoles...)
 		}
 	}
 

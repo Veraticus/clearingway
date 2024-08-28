@@ -2,6 +2,7 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/bwmarrin/discordgo"
@@ -113,6 +114,58 @@ func (m *Menu) Init(c *ConfigMenu) {
 			data.ExtraRoles = append(data.ExtraRoles, role)
 		}
 	}
+}
+
+// Creates the menu component of MenuRemove
+func (m *Menu) MenuRemoveInit() {
+	type removeButton struct {
+		name        string
+		commandType CommandType
+	}
+
+	removeButtons := []discordgo.MessageComponent{}
+	removeButtonsList := []removeButton{
+		{name: "Uncomfy", commandType: CommandRemoveComfy},
+		{name: "Uncolor", commandType: CommandRemoveColor},
+		{name: "Remove All", commandType: CommandRemoveAll},
+	}
+
+	for _, button := range removeButtonsList {
+		customIDslice := []string{string(MenuRemove), string(button.commandType)}
+		removeButtons = append(removeButtons, discordgo.Button{
+			Label:    button.name,
+			Style:    discordgo.DangerButton,
+			Disabled: false,
+			CustomID: strings.Join(customIDslice, " "),
+		})
+	}
+
+	message := &discordgo.InteractionResponseData{
+		Flags: discordgo.MessageFlagsEphemeral,
+		Embeds: []*discordgo.MessageEmbed{
+			{
+				Title:       m.Title,
+				Description: m.Description,
+			},
+		},
+		Components: []discordgo.MessageComponent{
+			discordgo.ActionsRow{
+				Components: removeButtons,
+			},
+		},
+	}
+
+	if len(m.ImageURL) > 0 {
+		message.Embeds[0].Image = &discordgo.MessageEmbedImage{URL: m.ImageURL}
+	}
+
+	m.AdditionalData = &MenuAdditionalData{
+		MessageEphemeral: &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: message,
+		},
+	}
+
 }
 
 func (g *Guild) DefaultMenus() {

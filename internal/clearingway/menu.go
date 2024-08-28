@@ -2,6 +2,7 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Veraticus/clearingway/internal/discord"
 	"github.com/bwmarrin/discordgo"
@@ -193,14 +194,14 @@ func (ms *Menus) Roles() *Roles {
 	return roles
 }
 
-
-// MenuClearsModal sends the user a modal that asks for their character's
+// MenuVerifySendModal sends the user a modal that asks for their character's
 // first name, last name, and world to verify their clears
-func MenuClearsModal(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func MenuVerifySendModal(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	customID := []string{string(MenuVerify), string(CommandClearsModal)}
 	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseModal,
 		Data: &discordgo.InteractionResponseData{
-			CustomID: "verify_clears_" + i.Interaction.Member.User.ID,
+			CustomID: strings.Join(customID, " "),
 			Title:    "Verify your clears",
 			Components: []discordgo.MessageComponent{
 				discordgo.ActionsRow{
@@ -208,7 +209,7 @@ func MenuClearsModal(s *discordgo.Session, i *discordgo.InteractionCreate) {
 						discordgo.TextInput{
 							CustomID:    "firstName",
 							Style:       discordgo.TextInputShort,
-							Label: "Character first name",
+							Label:       "Character first name",
 							Placeholder: "First name",
 							Required:    true,
 							MaxLength:   15,
@@ -217,11 +218,11 @@ func MenuClearsModal(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					},
 				},
 				discordgo.ActionsRow{
-					Components: []discordgo.MessageComponent{	
+					Components: []discordgo.MessageComponent{
 						discordgo.TextInput{
 							CustomID:    "lastName",
 							Style:       discordgo.TextInputShort,
-							Label: "Character last name",
+							Label:       "Character last name",
 							Placeholder: "Last name",
 							Required:    true,
 							MaxLength:   15,
@@ -234,7 +235,7 @@ func MenuClearsModal(s *discordgo.Session, i *discordgo.InteractionCreate) {
 						discordgo.TextInput{
 							CustomID:    "world",
 							Style:       discordgo.TextInputShort,
-							Label: "Character world",
+							Label:       "Character world",
 							Placeholder: "World",
 							Required:    true,
 							MaxLength:   20,
@@ -251,8 +252,8 @@ func MenuClearsModal(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 }
 
-// MenuClearsHandler takes the submitted data from the modal above and processes the character
-func (c *Clearingway) MenuClearsHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
+// MenuVerifyProcess takes the submitted data from the modal above and processes the character
+func (c *Clearingway) MenuVerifyProcess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	g, ok := c.Guilds.Guilds[i.GuildID]
 	if !ok {
 		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)

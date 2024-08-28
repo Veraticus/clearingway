@@ -291,6 +291,11 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 	case discordgo.InteractionMessageComponent:
 		customID := i.MessageComponentData().CustomID
 		command := strings.Split(customID, " ")
+		if ok := len(command) > 1; !ok {
+			fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
+			return
+		}
+
 		switch MenuType(command[0]) {
 		case MenuVerify:
 			switch CommandType(command[1]) {
@@ -311,6 +316,11 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 				// RemoveAll()
 			}
 		case MenuEncounter:
+			if ok := len(command) > 2; !ok {
+				fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
+				return
+			}
+			
 			switch CommandType(command[1]) {
 			case CommandMenu:
 				// send_encounter_menu(command[2])

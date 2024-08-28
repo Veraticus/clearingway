@@ -311,5 +311,5 @@ func (g *Guild) InitDiscordMenu() {
 			},
 		},
 	}
-	dataMenuMain.AdditionalData = &MenuStaticData{Message: menuMessage}
+	dataMenuMain.AdditionalData = &MenuMainData{Message: menuMessage}
 }

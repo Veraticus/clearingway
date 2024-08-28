@@ -10,7 +10,7 @@ import (
 // types of UI elements
 type MenuType string
 const(
-	MenuMain      MenuType = "menuCreate"
+	MenuMain      MenuType = "menuMain"
 	MenuVerify    MenuType = "menuVerify"
 	MenuRemove    MenuType = "menuRemove"
 	MenuEncounter MenuType = "menuEncounter"
@@ -45,8 +45,12 @@ type MenuRoleHelper struct {
 	Prerequisite *Role
 }
 
-type MenuStaticData struct {
+type MenuMainData struct {
 	Message *discordgo.MessageSend
+}
+
+type MenuStaticData struct {
+	Message *discordgo.InteractionResponse
 }
 
 type MenuEncounterData struct {
@@ -137,7 +141,32 @@ func (g *Guild) DefaultMenus() {
 	}
 }
 
-func (c *Clearingway) SendStaticMenu(s * discordgo.Session, i *discordgo.InteractionCreate, menuName string) {
+// Sends the main menu as an standalone message in the channel it is called in
+func (c *Clearingway) MenuMainSend(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	menu := g.Menus.Menus[string(MenuMain)]
+	additionalData := menu.AdditionalData.(*MenuMainData)
+
+	_, err := s.ChannelMessageSendComplex(i.ChannelID, additionalData.Message)
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
+	err = discord.StartInteraction(s, i.Interaction, "Sent menu message.")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+}
+
+// Creates an response to an interaction with a static menu 
+func (c *Clearingway) MenuStaticRespond(s *discordgo.Session, i *discordgo.InteractionCreate, menuName string) {
 	g, ok := c.Guilds.Guilds[i.GuildID]
 	if !ok {
 		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
@@ -146,15 +175,8 @@ func (c *Clearingway) SendStaticMenu(s * discordgo.Session, i *discordgo.Interac
 
 	menu := g.Menus.Menus[menuName]
 	additionalData := menu.AdditionalData.(*MenuStaticData)
-	menuMessage := additionalData.Message
-
-	_, err := s.ChannelMessageSendComplex(i.ChannelID, menuMessage)
-	if err != nil {
-		fmt.Printf("Error sending Discord message: %v\n", err)
-		return
-	}
-
-	err = discord.StartInteraction(s, i.Interaction, "Sent menu message.")
+	
+	err := s.InteractionRespond(i.Interaction, additionalData.Message)
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 		return

@@ -316,5 +316,5 @@ func (g *Guild) InitDiscordMenu() {
 		menuMessage.Embeds[0].Image = &discordgo.MessageEmbedImage{URL: dataMenuMain.ImageURL}
 	}
 
-	dataMenuMain.AdditionalData = &MenuMainData{Message: menuMessage}
+	dataMenuMain.AdditionalData = &MenuAdditionalData{MessageMainMenu: menuMessage}
 }

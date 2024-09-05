@@ -35,25 +35,17 @@ type Menu struct {
 	Title          string  // title to show in embed
 	Description    string  // optional description to show in embed
 	ImageURL       string  // optional image URL
-	AdditionalData MenuAdditionalData  // additional data depending on MenuType
+	AdditionalData *MenuAdditionalData  // additional data depending on MenuType
 }
-
-type MenuAdditionalData interface{}
 
 type MenuRoleHelper struct {
 	Role         *Role
 	Prerequisite *Role
 }
 
-type MenuMainData struct {
-	Message *discordgo.MessageSend
-}
-
-type MenuStaticData struct {
-	Message *discordgo.InteractionResponse
-}
-
-type MenuEncounterData struct {
+type MenuAdditionalData struct {
+	MessageMainMenu *discordgo.MessageSend
+	MessageEphemeral *discordgo.InteractionResponse
 	Roles        map[string]*MenuRoleHelper
 	ExtraRoles   []*Role
 	RoleType     []RoleType
@@ -76,8 +68,8 @@ func (m *Menu) Init(c *ConfigMenu) {
 
 	switch m.Type {
 	case MenuEncounter:
-		m.AdditionalData = &MenuEncounterData{}
-		data := m.AdditionalData.(*MenuEncounterData)
+		m.AdditionalData = &MenuAdditionalData{}
+		data := m.AdditionalData
 
 		if len(c.RoleType) != 0 {
 			for _, roleType := range c.RoleType {
@@ -150,9 +142,9 @@ func (c *Clearingway) MenuMainSend(s *discordgo.Session, i *discordgo.Interactio
 	}
 
 	menu := g.Menus.Menus[string(MenuMain)]
-	additionalData := menu.AdditionalData.(*MenuMainData)
+	additionalData := menu.AdditionalData
 
-	_, err := s.ChannelMessageSendComplex(i.ChannelID, additionalData.Message)
+	_, err := s.ChannelMessageSendComplex(i.ChannelID, additionalData.MessageMainMenu)
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 		return
@@ -174,9 +166,9 @@ func (c *Clearingway) MenuStaticRespond(s *discordgo.Session, i *discordgo.Inter
 	}
 
 	menu := g.Menus.Menus[menuName]
-	additionalData := menu.AdditionalData.(*MenuStaticData)
+	additionalData := menu.AdditionalData
 	
-	err := s.InteractionRespond(i.Interaction, additionalData.Message)
+	err := s.InteractionRespond(i.Interaction, additionalData.MessageEphemeral)
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 		return
@@ -190,7 +182,7 @@ func (ms *Menus) Roles() *Roles {
 
 	for _, menu := range ms.Menus {
 		if menu.Type == MenuEncounter {
-			roles.Roles = append(roles.Roles, menu.AdditionalData.(*MenuEncounterData).ExtraRoles...)
+			roles.Roles = append(roles.Roles, menu.AdditionalData.ExtraRoles...)
 		}
 	}
 

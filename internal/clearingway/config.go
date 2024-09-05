@@ -82,7 +82,6 @@ type ConfigReconfigureRoles struct {
 type ConfigMenu struct {
 	Name         string        `yaml:"name"`
 	Type         string        `yaml:"type"`
-	Blurb        string        `yaml:"blurb"`
 	Title        string        `yaml:"title"`
 	Description  string        `yaml:"description"`
 	ImageUrl     string        `yaml:"imageUrl"`

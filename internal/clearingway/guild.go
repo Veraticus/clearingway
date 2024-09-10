@@ -30,7 +30,7 @@ type Guild struct {
 	UltimateRepetitionEnabled bool
 	DatacenterEnabled         bool
 	NameColorsEnabled         bool
-	ReclearsEnabled	          bool
+	ReclearsEnabled           bool
 	MenuEnabled               bool
 	SkipRemoval               bool
 
@@ -43,7 +43,7 @@ type Guild struct {
 	UltimateRepetitionRoles *Roles
 	DatacenterRoles         *Roles
 	AchievementRoles        *Roles
-	MenuRoles               *Roles  // to ensure any additional roles added as part of menu config
+	MenuRoles               *Roles // to ensure any additional roles added as part of menu config
 }
 
 func (g *Guild) Init(c *ConfigGuild) {
@@ -55,7 +55,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 	g.Characters = &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}}
 	g.Menus = &Menus{Menus: map[string]*Menu{}}
 	g.DefaultMenus()
-	
+
 	g.PhysicalDatacenters = &PhysicalDatacenters{PhysicalDatacenters: map[string]*PhysicalDatacenter{}}
 	fmt.Printf("Datacenters are %+v\n", c.ConfigPhysicalDatacenters)
 	g.PhysicalDatacenters.Init(c.ConfigPhysicalDatacenters)
@@ -126,7 +126,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 		} else {
 			g.NameColorsEnabled = false
 		}
-		
+
 		if c.ConfigRoles.Reclear {
 			g.ReclearsEnabled = true
 		} else {
@@ -281,8 +281,8 @@ func (g *Guild) InitDiscordMenu() {
 	dataMenuVerify := g.Menus.Menus[string(MenuVerify)]
 	customIDslice := []string{string(MenuVerify), string(CommandMenu)}
 	menuButtons = append(menuButtons, &discordgo.Button{
-		Label: dataMenuVerify.Title,
-		Style: discordgo.SuccessButton,
+		Label:    dataMenuVerify.Title,
+		Style:    discordgo.SuccessButton,
 		Disabled: false,
 		CustomID: strings.Join(customIDslice, " "),
 	})
@@ -291,8 +291,8 @@ func (g *Guild) InitDiscordMenu() {
 	dataMenuRemove := g.Menus.Menus[string(MenuRemove)]
 	customIDslice = []string{string(MenuRemove), string(CommandMenu)}
 	menuButtons = append(menuButtons, &discordgo.Button{
-		Label: dataMenuRemove.Title,
-		Style: discordgo.DangerButton,
+		Label:    dataMenuRemove.Title,
+		Style:    discordgo.DangerButton,
 		Disabled: false,
 		CustomID: strings.Join(customIDslice, " "),
 	})
@@ -301,7 +301,7 @@ func (g *Guild) InitDiscordMenu() {
 	menuMessage := &discordgo.MessageSend{
 		Embeds: []*discordgo.MessageEmbed{
 			{
-				Title: dataMenuMain.Title,
+				Title:       dataMenuMain.Title,
 				Description: dataMenuMain.Description,
 			},
 		},

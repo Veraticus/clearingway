@@ -1,7 +1,5 @@
 package fflogs
 
-import ()
-
 func Init(clientId, clientSecret string) *Fflogs {
 	f := &Fflogs{
 		clientId:     clientId,

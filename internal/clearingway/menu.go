@@ -9,7 +9,8 @@ import (
 
 // types of UI elements
 type MenuType string
-const(
+
+const (
 	MenuMain      MenuType = "menuMain"
 	MenuVerify    MenuType = "menuVerify"
 	MenuRemove    MenuType = "menuRemove"
@@ -17,7 +18,8 @@ const(
 )
 
 type CommandType string
-const(
+
+const (
 	CommandMenu CommandType = "menu"
 	CommandSub1 CommandType = "sub1"
 	CommandSub2 CommandType = "sub2"
@@ -26,16 +28,16 @@ const(
 
 // struct to hold data for all different menu components
 type Menus struct {
-	Menus    map[string]*Menu
+	Menus map[string]*Menu
 }
 
 type Menu struct {
-	Name           string  // internal name to uniquely identify menus
-	Type           MenuType  // type of menu to differentiate AdditionalData types
-	Title          string  // title to show in embed
-	Description    string  // optional description to show in embed
-	ImageURL       string  // optional image URL
-	AdditionalData *MenuAdditionalData  // additional data depending on MenuType
+	Name           string              // internal name to uniquely identify menus
+	Type           MenuType            // type of menu to differentiate AdditionalData types
+	Title          string              // title to show in embed
+	Description    string              // optional description to show in embed
+	ImageURL       string              // optional image URL
+	AdditionalData *MenuAdditionalData // additional data depending on MenuType
 }
 
 type MenuRoleHelper struct {
@@ -44,13 +46,13 @@ type MenuRoleHelper struct {
 }
 
 type MenuAdditionalData struct {
-	MessageMainMenu *discordgo.MessageSend
+	MessageMainMenu  *discordgo.MessageSend
 	MessageEphemeral *discordgo.InteractionResponse
-	Roles        map[string]*MenuRoleHelper
-	ExtraRoles   []*Role
-	RoleType     []RoleType
-	MultiSelect  bool
-	RequireClear bool
+	Roles            map[string]*MenuRoleHelper
+	ExtraRoles       []*Role
+	RoleType         []RoleType
+	MultiSelect      bool
+	RequireClear     bool
 }
 
 func (m *Menu) Init(c *ConfigMenu) {
@@ -113,22 +115,22 @@ func (m *Menu) Init(c *ConfigMenu) {
 
 func (g *Guild) DefaultMenus() {
 	g.Menus.Menus[string(MenuMain)] = &Menu{
-		Name: string(MenuMain),
-		Type: MenuMain,
-		Title: "Welcome to " + g.Name,
+		Name:        string(MenuMain),
+		Type:        MenuMain,
+		Title:       "Welcome to " + g.Name,
 		Description: "Use the buttons below to assign roles!",
 	}
 
 	g.Menus.Menus[string(MenuVerify)] = &Menu{
-		Name: string(MenuVerify),
-		Type: MenuVerify,
+		Name:  string(MenuVerify),
+		Type:  MenuVerify,
 		Title: "Verify Character",
 	}
 
 	g.Menus.Menus[string(MenuRemove)] = &Menu{
-		Name: string(MenuRemove),
-		Type: MenuRemove,
-		Title: "Remove Roles",
+		Name:        string(MenuRemove),
+		Type:        MenuRemove,
+		Title:       "Remove Roles",
 		Description: "Use the buttons below to remove Clearingway related roles!",
 	}
 }
@@ -157,7 +159,7 @@ func (c *Clearingway) MenuMainSend(s *discordgo.Session, i *discordgo.Interactio
 	}
 }
 
-// Creates an response to an interaction with a static menu 
+// Creates an response to an interaction with a static menu
 func (c *Clearingway) MenuStaticRespond(s *discordgo.Session, i *discordgo.InteractionCreate, menuName string) {
 	g, ok := c.Guilds.Guilds[i.GuildID]
 	if !ok {
@@ -167,7 +169,7 @@ func (c *Clearingway) MenuStaticRespond(s *discordgo.Session, i *discordgo.Inter
 
 	menu := g.Menus.Menus[menuName]
 	additionalData := menu.AdditionalData
-	
+
 	err := s.InteractionRespond(i.Interaction, additionalData.MessageEphemeral)
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)

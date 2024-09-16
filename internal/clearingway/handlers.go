@@ -301,18 +301,18 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			switch CommandType(command[1]) {
 			case CommandMenu:
 				// send_modal()
-			case CommandSub1:
+			case CommandClearsModal:
 				// Clears()
 			}
 		case MenuRemove:
 			switch CommandType(command[1]) {
 			case CommandMenu:
 				// send_menu()
-			case CommandSub1:
+			case CommandRemoveComfy:
 				// Uncomfy()
-			case CommandSub2:
+			case CommandRemoveColor:
 				// Uncolor()
-			case CommandSub3:
+			case CommandRemoveAll:
 				// RemoveAll()
 			}
 		case MenuEncounter:
@@ -324,7 +324,7 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			switch CommandType(command[1]) {
 			case CommandMenu:
 				// send_encounter_menu(command[2])
-			case CommandSub1:
+			case CommandEncounterProcess:
 				// process_roles(command[2])
 			}
 		}

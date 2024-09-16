@@ -20,10 +20,12 @@ const (
 type CommandType string
 
 const (
-	CommandMenu CommandType = "menu"
-	CommandSub1 CommandType = "sub1"
-	CommandSub2 CommandType = "sub2"
-	CommandSub3 CommandType = "sub3"
+	CommandMenu             CommandType = "menu"
+	CommandClearsModal      CommandType = "clearsModal"
+	CommandRemoveComfy      CommandType = "removeComfy"
+	CommandRemoveColor      CommandType = "removeColor"
+	CommandRemoveAll        CommandType = "removeAll"
+	CommandEncounterProcess CommandType = "encounterProcess"
 )
 
 // struct to hold data for all different menu components

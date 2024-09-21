@@ -211,10 +211,10 @@ var ReclearCommand = &discordgo.ApplicationCommand{
 				},
 				// TODO: implement when FRU goes live
 				/*
-					{
-						Name: "FRU",
-						Value: "Futures Rewritten (Ultimate)",
-					},
+				{
+					Name: "FRU",
+					Value: "Futures Rewritten (Ultimate)",
+				},
 				*/
 			},
 		},
@@ -253,10 +253,10 @@ var NameColorCommand = &discordgo.ApplicationCommand{
 				},
 				// TODO: implement when FRU goes live
 				/*
-					{
-						Name: "FRU",
-						Value: "Futures Rewritten (Ultimate)",
-					},
+				{
+					Name: "FRU",
+					Value: "Futures Rewritten (Ultimate)",
+				},
 				*/
 			},
 		},

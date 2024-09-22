@@ -1,9 +1,9 @@
 package clearingway
 
 type Achievement struct {
-	Title 	 	string `yaml:"name"`
-	Type 	 	string
-	Roles 		map[RoleType]*Role
+	Title string `yaml:"name"`
+	Type  string
+	Roles map[RoleType]*Role
 }
 
 type Achievements struct {

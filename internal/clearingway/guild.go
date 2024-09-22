@@ -2,8 +2,10 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Veraticus/clearingway/internal/ffxiv"
+	"github.com/bwmarrin/discordgo"
 )
 
 type Guilds struct {
@@ -18,6 +20,7 @@ type Guild struct {
 	Achievements        *Achievements
 	Characters          *ffxiv.Characters
 	PhysicalDatacenters *PhysicalDatacenters
+	Menus               *Menus
 
 	RelevantParsingEnabled    bool
 	RelevantFlexingEnabled    bool
@@ -27,7 +30,8 @@ type Guild struct {
 	UltimateRepetitionEnabled bool
 	DatacenterEnabled         bool
 	NameColorsEnabled         bool
-	ReclearsEnabled	          bool
+	ReclearsEnabled           bool
+	MenuEnabled               bool
 	SkipRemoval               bool
 
 	EncounterRoles          *Roles
@@ -39,6 +43,7 @@ type Guild struct {
 	UltimateRepetitionRoles *Roles
 	DatacenterRoles         *Roles
 	AchievementRoles        *Roles
+	MenuRoles               *Roles // to ensure any additional roles added as part of menu config
 }
 
 func (g *Guild) Init(c *ConfigGuild) {
@@ -48,6 +53,8 @@ func (g *Guild) Init(c *ConfigGuild) {
 	g.Encounters = &Encounters{Encounters: []*Encounter{}}
 	g.Achievements = &Achievements{Achievements: []*Achievement{}}
 	g.Characters = &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}}
+	g.Menus = &Menus{Menus: map[string]*Menu{}}
+	g.DefaultMenus()
 
 	g.PhysicalDatacenters = &PhysicalDatacenters{PhysicalDatacenters: map[string]*PhysicalDatacenter{}}
 	fmt.Printf("Datacenters are %+v\n", c.ConfigPhysicalDatacenters)
@@ -63,6 +70,12 @@ func (g *Guild) Init(c *ConfigGuild) {
 		achievement := &Achievement{}
 		achievement.Init(configAchievement)
 		g.Achievements.Achievements = append(g.Achievements.Achievements, achievement)
+	}
+
+	for _, configMenu := range c.ConfigMenus {
+		menu := &Menu{}
+		menu.Init(configMenu)
+		g.Menus.Menus[menu.Name] = menu
 	}
 
 	if c.ConfigRoles != nil {
@@ -113,11 +126,17 @@ func (g *Guild) Init(c *ConfigGuild) {
 		} else {
 			g.NameColorsEnabled = false
 		}
-		
+
 		if c.ConfigRoles.Reclear {
 			g.ReclearsEnabled = true
 		} else {
 			g.ReclearsEnabled = false
+		}
+
+		if c.ConfigRoles.Menu {
+			g.MenuEnabled = true
+		} else {
+			g.MenuEnabled = false
 		}
 
 		if c.ConfigRoles.SkipRemoval {
@@ -156,6 +175,11 @@ func (g *Guild) Init(c *ConfigGuild) {
 
 	if g.DatacenterEnabled {
 		g.DatacenterRoles = g.PhysicalDatacenters.AllRoles()
+	}
+
+	if g.MenuEnabled {
+		g.InitDiscordMenu()
+		g.MenuRoles = g.Menus.Roles()
 	}
 
 	if len(c.ConfigReconfigureRoles) != 0 {
@@ -213,6 +237,9 @@ func (g *Guild) NonUltRoles() []*Role {
 	if g.DatacenterEnabled {
 		roles = append(roles, g.DatacenterRoles.Roles...)
 	}
+	if g.MenuEnabled {
+		roles = append(roles, g.MenuRoles.Roles...)
+	}
 
 	return roles
 }
@@ -245,4 +272,49 @@ func (g *Guild) IsProgEnabled() bool {
 	}
 
 	return false
+}
+
+func (g *Guild) InitDiscordMenu() {
+	menuButtons := []discordgo.MessageComponent{}
+
+	// Verify Clears
+	dataMenuVerify := g.Menus.Menus[string(MenuVerify)]
+	customIDslice := []string{string(MenuVerify), string(CommandMenu)}
+	menuButtons = append(menuButtons, &discordgo.Button{
+		Label:    dataMenuVerify.Title,
+		Style:    discordgo.SuccessButton,
+		Disabled: false,
+		CustomID: strings.Join(customIDslice, " "),
+	})
+
+	// Remove Roles
+	dataMenuRemove := g.Menus.Menus[string(MenuRemove)]
+	customIDslice = []string{string(MenuRemove), string(CommandMenu)}
+	menuButtons = append(menuButtons, &discordgo.Button{
+		Label:    dataMenuRemove.Title,
+		Style:    discordgo.DangerButton,
+		Disabled: false,
+		CustomID: strings.Join(customIDslice, " "),
+	})
+
+	dataMenuMain := g.Menus.Menus[string(MenuMain)]
+	menuMessage := &discordgo.MessageSend{
+		Embeds: []*discordgo.MessageEmbed{
+			{
+				Title:       dataMenuMain.Title,
+				Description: dataMenuMain.Description,
+			},
+		},
+		Components: []discordgo.MessageComponent{
+			discordgo.ActionsRow{
+				Components: menuButtons,
+			},
+		},
+	}
+
+	if len(dataMenuMain.ImageURL) > 0 {
+		menuMessage.Embeds[0].Image = &discordgo.MessageEmbedImage{URL: dataMenuMain.ImageURL}
+	}
+
+	dataMenuMain.AdditionalData = &MenuAdditionalData{MessageMainMenu: menuMessage}
 }

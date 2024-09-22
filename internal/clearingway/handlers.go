@@ -3,6 +3,7 @@ package clearingway
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/Veraticus/clearingway/internal/discord"
@@ -45,7 +46,7 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 
 		fmt.Printf("Adding commands...")
 
-		commandList := []*discordgo.ApplicationCommand {
+		commandList := []*discordgo.ApplicationCommand{
 			ClearCommand,
 			UncomfyCommand,
 			UncolorCommand,
@@ -65,6 +66,10 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			commandList = append(commandList, NameColorCommand)
 		}
 
+		if guild.MenuEnabled {
+			commandList = append(commandList, MenuCommand)
+		}
+
 		addedCommands, err := s.ApplicationCommandBulkOverwrite(event.User.ID, discordGuild.ID, commandList)
 		fmt.Printf("List of successfully created commands:\n")
 		for _, command := range addedCommands {
@@ -73,7 +78,7 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 		if err != nil {
 			fmt.Printf("Could not add some commands: %v\n", err)
 		}
-		
+
 		// fmt.Printf("Removing commands...\n")
 		// cmd, err := s.ApplicationCommandCreate(event.User.ID, guild.ID, verifyCommand)
 		// if err != nil {
@@ -86,6 +91,14 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 	}
 	fmt.Printf("Clearingway ready!\n")
 	c.Ready = true
+}
+
+var adminPermission int64 = discordgo.PermissionAdministrator
+
+var MenuCommand = &discordgo.ApplicationCommand{
+	Name:                     "menu",
+	Description:              "Send the roles menu to the current channel.",
+	DefaultMemberPermissions: &adminPermission,
 }
 
 var ClearCommand = &discordgo.ApplicationCommand{
@@ -167,33 +180,33 @@ var ProgCommand = &discordgo.ApplicationCommand{
 }
 
 var ReclearCommand = &discordgo.ApplicationCommand{
-	Name:	"reclears",
+	Name:        "reclears",
 	Description: "Assign or remove reclear roles",
 	Options: []*discordgo.ApplicationCommandOption{
 		{
-			Type: discordgo.ApplicationCommandOptionString,
-			Name: "ultimate",
+			Type:        discordgo.ApplicationCommandOptionString,
+			Name:        "ultimate",
 			Description: "The ultimate you want to reclear",
-			Required: true,
+			Required:    true,
 			Choices: []*discordgo.ApplicationCommandOptionChoice{
 				{
-					Name: "UCoB",
+					Name:  "UCoB",
 					Value: "The Unending Coil of Bahamut (Ultimate)",
 				},
 				{
-					Name: "UWU",
+					Name:  "UWU",
 					Value: "The Weapon's Refrain (Ultimate)",
 				},
 				{
-					Name: "TEA",
+					Name:  "TEA",
 					Value: "The Epic of Alexander (Ultimate)",
 				},
 				{
-					Name: "DSR",
+					Name:  "DSR",
 					Value: "Dragonsong's Reprise (Ultimate)",
 				},
 				{
-					Name: "TOP",
+					Name:  "TOP",
 					Value: "The Omega Protocol (Ultimate)",
 				},
 				// TODO: implement when FRU goes live
@@ -209,33 +222,33 @@ var ReclearCommand = &discordgo.ApplicationCommand{
 }
 
 var NameColorCommand = &discordgo.ApplicationCommand{
-	Name:	"namecolor",
+	Name:        "namecolor",
 	Description: "Assign or remove name color roles",
 	Options: []*discordgo.ApplicationCommandOption{
 		{
-			Type: discordgo.ApplicationCommandOptionString,
-			Name: "ultimate",
+			Type:        discordgo.ApplicationCommandOptionString,
+			Name:        "ultimate",
 			Description: "The ultimate that corresponds to the color you want",
-			Required: true,
+			Required:    true,
 			Choices: []*discordgo.ApplicationCommandOptionChoice{
 				{
-					Name: "UCoB",
+					Name:  "UCoB",
 					Value: "The Unending Coil of Bahamut (Ultimate)",
 				},
 				{
-					Name: "UWU",
+					Name:  "UWU",
 					Value: "The Weapon's Refrain (Ultimate)",
 				},
 				{
-					Name: "TEA",
+					Name:  "TEA",
 					Value: "The Epic of Alexander (Ultimate)",
 				},
 				{
-					Name: "DSR",
+					Name:  "DSR",
 					Value: "Dragonsong's Reprise (Ultimate)",
 				},
 				{
-					Name: "TOP",
+					Name:  "TOP",
 					Value: "The Omega Protocol (Ultimate)",
 				},
 				// TODO: implement when FRU goes live
@@ -270,9 +283,51 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.ToggleColor(s, i)
 		case "reclears":
 			c.ToggleReclear(s, i)
+		case "menu":
+			c.MenuMainSend(s, i)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
 		c.Autocomplete(s, i)
+	case discordgo.InteractionMessageComponent:
+		customID := i.MessageComponentData().CustomID
+		command := strings.Split(customID, " ")
+		if ok := len(command) > 1; !ok {
+			fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
+			return
+		}
+
+		switch MenuType(command[0]) {
+		case MenuVerify:
+			switch CommandType(command[1]) {
+			case CommandMenu:
+				// send_modal()
+			case CommandClearsModal:
+				// Clears()
+			}
+		case MenuRemove:
+			switch CommandType(command[1]) {
+			case CommandMenu:
+				// send_menu()
+			case CommandRemoveComfy:
+				// Uncomfy()
+			case CommandRemoveColor:
+				// Uncolor()
+			case CommandRemoveAll:
+				// RemoveAll()
+			}
+		case MenuEncounter:
+			if ok := len(command) > 2; !ok {
+				fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
+				return
+			}
+
+			switch CommandType(command[1]) {
+			case CommandMenu:
+				// send_encounter_menu(command[2])
+			case CommandEncounterProcess:
+				// process_roles(command[2])
+			}
+		}
 	}
 }
 
@@ -614,14 +669,13 @@ func (c *Clearingway) ToggleReclear(s *discordgo.Session, i *discordgo.Interacti
 	}
 }
 
-
 func (c *Clearingway) ToggleColor(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	g, ok := c.Guilds.Guilds[i.GuildID]
 	if !ok {
 		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
 		return
 	}
-	
+
 	err := discord.StartInteraction(s, i.Interaction, "Checking for respective clear role...")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
@@ -640,10 +694,10 @@ func (c *Clearingway) ToggleColor(s *discordgo.Session, i *discordgo.Interaction
 			wantedEncounter = encounter
 		}
 	}
-	
+
 	requestedColorRole := wantedEncounter.Roles[ColorRole]
 	clearedRole := wantedEncounter.Roles[ClearedRole]
-	
+
 	var roleToRemove *Role
 	var cleared = false
 	for _, memberRole := range i.Member.Roles {
@@ -681,7 +735,7 @@ func (c *Clearingway) ToggleColor(s *discordgo.Session, i *discordgo.Interaction
 		discord.ContinueInteraction(s, i.Interaction, tempstr)
 	} else {
 		// remove the requested color role if it's the same
-		// edge case where someone has clears removed and doesn't want the color 
+		// edge case where someone has clears removed and doesn't want the color
 		if requestedColorRole == roleToRemove {
 			err = removeRoleHelper(s, i.Interaction, roleToRemove)
 			if err != nil {

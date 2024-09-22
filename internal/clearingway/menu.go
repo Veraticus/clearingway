@@ -49,13 +49,14 @@ type MenuRoleHelper struct {
 }
 
 type MenuAdditionalData struct {
-	MessageMainMenu  *discordgo.MessageSend
-	MessageEphemeral *discordgo.InteractionResponse
-	Roles            map[string]*MenuRoleHelper
-	ExtraRoles       []*Role
-	RoleType         []RoleType
-	MultiSelect      bool
-	RequireClear     bool
+	MessageMainMenu   *discordgo.MessageSend
+	MessageEphemeral  *discordgo.InteractionResponse
+	EncounterDropdown []discordgo.SelectMenuOption
+	Roles             map[string]*MenuRoleHelper
+	ExtraRoles        []*Role
+	RoleType          []RoleType
+	MultiSelect       bool
+	RequireClear      bool
 }
 
 func (m *Menu) Init(c *ConfigMenu) {
@@ -183,8 +184,6 @@ func (c *Clearingway) MenuStaticRespond(s *discordgo.Session, i *discordgo.Inter
 func (m *Menu) MenuEncounterInit(es *Encounters, roleTypes []RoleType) {
 	additionalData := m.AdditionalData
 	additionalData.Roles = make(map[string]*MenuRoleHelper)
-	minValues := 0
-	maxValues := 1
 	dropdownSlice := []discordgo.SelectMenuOption{}
 
 	// generate options based on encounters
@@ -232,51 +231,7 @@ func (m *Menu) MenuEncounterInit(es *Encounters, roleTypes []RoleType) {
 		additionalData.Roles[role.DiscordRole.ID] = menuRoleHelper
 	}
 
-	// generate role list
-	descriptionRoleList := "\n### Available roles"
-	for _, role := range dropdownSlice {
-		descriptionRoleList += fmt.Sprintf("\n- %s", role.Label)
-	}
-
-	if additionalData.MultiSelect {
-		maxValues = len(dropdownSlice)
-	}
-
-	// format response message
-	customID := []string{string(MenuEncounter), string(CommandEncounterProcess), m.Name}
-	dropdownMenu := discordgo.SelectMenu{
-		MenuType:  discordgo.StringSelectMenu,
-		CustomID:  strings.Join(customID, " "),
-		Options:   dropdownSlice,
-		MinValues: &minValues,
-		MaxValues: maxValues,
-	}
-
-	additionalData.MessageEphemeral = &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Flags: discordgo.MessageFlagsEphemeral,
-			Embeds: []*discordgo.MessageEmbed{
-				{
-					Title:       m.Title,
-					Description: m.Description + descriptionRoleList,
-				},
-			},
-			Components: []discordgo.MessageComponent{
-				discordgo.ActionsRow{
-					Components: []discordgo.MessageComponent{
-						dropdownMenu,
-					},
-				},
-			},
-		},
-	}
-
-	if len(m.ImageURL) != 0 {
-		additionalData.MessageEphemeral.Data.Embeds[0].Image = &discordgo.MessageEmbedImage{
-			URL: m.ImageURL,
-		}
-	}
+	additionalData.EncounterDropdown = dropdownSlice
 }
 
 func (c *Clearingway) MenuEncounterSend(s *discordgo.Session, i *discordgo.InteractionCreate, menuName string) {
@@ -295,19 +250,67 @@ func (c *Clearingway) MenuEncounterSend(s *discordgo.Session, i *discordgo.Inter
 	menu := g.Menus.Menus[menuName]
 	additionalData := menu.AdditionalData
 
-	// create a copy of the message
-	message := *additionalData.MessageEphemeral
-	dropdownOpts := message.Data.Components[0].(discordgo.ActionsRow).Components[0].(discordgo.SelectMenu).Options
+	dropdownSlice := make([]discordgo.SelectMenuOption, len(additionalData.EncounterDropdown))
+	copy(dropdownSlice, additionalData.EncounterDropdown)
 
 	// set default selections based on roles present
-	for i, _ := range dropdownOpts {
-		option := &dropdownOpts[i]
+	for i, _ := range dropdownSlice {
+		option := &dropdownSlice[i]
 		if _, ok := userRoleMap[option.Value]; ok {
 			option.Default = true
 		}
 	}
-	err := s.InteractionRespond(i.Interaction, additionalData.MessageEphemeral)
 
+	// generate role list description
+	descriptionRoleList := "\n### Available roles"
+	for _, role := range dropdownSlice {
+		descriptionRoleList += fmt.Sprintf("\n- %s", role.Label)
+	}
+
+	minValues := 0
+	maxValues := 1
+
+	if additionalData.MultiSelect {
+		maxValues = len(dropdownSlice)
+	}
+
+	// format response message
+	customID := []string{string(MenuEncounter), string(CommandEncounterProcess), menuName}
+	dropdownMenu := discordgo.SelectMenu{
+		MenuType:  discordgo.StringSelectMenu,
+		CustomID:  strings.Join(customID, " "),
+		Options:   dropdownSlice,
+		MinValues: &minValues,
+		MaxValues: maxValues,
+	}
+
+	message := &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Flags: discordgo.MessageFlagsEphemeral,
+			Embeds: []*discordgo.MessageEmbed{
+				{
+					Title:       g.Menus.Menus[menuName].Title,
+					Description: g.Menus.Menus[menuName].Description + descriptionRoleList,
+				},
+			},
+			Components: []discordgo.MessageComponent{
+				discordgo.ActionsRow{
+					Components: []discordgo.MessageComponent{
+						dropdownMenu,
+					},
+				},
+			},
+		},
+	}
+
+	if len(g.Menus.Menus[menuName].ImageURL) != 0 {
+		message.Data.Embeds[0].Image = &discordgo.MessageEmbedImage{
+			URL: g.Menus.Menus[menuName].ImageURL,
+		}
+	}
+
+	err := s.InteractionRespond(i.Interaction, message)
 	if err != nil {
 		fmt.Printf("Unable to respond with menu: %v", err)
 		return

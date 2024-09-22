@@ -45,7 +45,7 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 
 		for _, menu := range guild.Menus.Menus {
 			if menu.Type == MenuEncounter {
-				additionalData := menu.AdditionalData.(*MenuEncounterData)
+				additionalData := menu.AdditionalData
 				menu.MenuEncounterInit(guild.Encounters, additionalData.RoleType)
 			}
 		}
@@ -330,9 +330,9 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			}
 			switch CommandType(command[1]) {
 			case CommandMenu:
-				// send_encounter_menu(command[2])
+				c.MenuEncounterSend(s, i, command[2])
 			case CommandEncounterProcess:
-				// process_roles(command[2])
+				c.MenuEncounterProcess(s, i, command[2])
 			}
 		}
 	}

@@ -191,6 +191,7 @@ func (m *Menu) MenuEncounterInit(es *Encounters, roleTypes []RoleType) {
 		for _, encounter := range es.Encounters {
 			role, ok := encounter.Roles[roleType]
 			if !ok {
+				fmt.Printf("Menu %v: role type %v for encounter %v not found. Skipping...\n", m.Name, string(roleType), encounter.Name)
 				continue
 			}
 
@@ -412,7 +413,7 @@ func (c *Clearingway) MenuEncounterProcess(s *discordgo.Session, i *discordgo.In
 		length := len(roles)
 		if length == 1 {
 			responseMsg += fmt.Sprintf("Successfully %v role: <@&%v>\n", verb, roles[0])
-		} else if length > 1 {
+		} else {
 			responseMsg += fmt.Sprintf("Successfully %v roles: ", verb)
 			for _, role := range roles {
 				responseMsg += fmt.Sprintf("<@&%v> ", role)

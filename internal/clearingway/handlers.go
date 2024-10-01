@@ -300,9 +300,7 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		case MenuVerify:
 			switch CommandType(command[1]) {
 			case CommandMenu:
-				// send_modal()
-			case CommandClearsModal:
-				// Clears()
+				MenuVerifySendModal(s, i)
 			}
 		case MenuRemove:
 			switch CommandType(command[1]) {
@@ -328,7 +326,23 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 				// process_roles(command[2])
 			}
 		}
+	case discordgo.InteractionModalSubmit:
+		customID := i.ModalSubmitData().CustomID
+		command := strings.Split(customID, " ")
+		if ok := len(command) > 1; !ok {
+			fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
+			return
+		}
+
+		switch MenuType(command[0]) {
+		case MenuVerify:
+			switch CommandType(command[1]) {
+			case CommandClearsModal:
+				c.MenuVerifyProcess(s, i)
+			}
+		}
 	}
+
 }
 
 func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCreate) {

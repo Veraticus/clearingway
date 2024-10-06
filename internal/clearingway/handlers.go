@@ -298,6 +298,11 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		c.Autocomplete(s, i)
 	case discordgo.InteractionMessageComponent:
 		customID := i.MessageComponentData().CustomID
+
+		// commands are differentiated by the customID with the format
+		// [menu type] [command type] [menu name]
+		// e.g "MenuEncounter encounterProcess menuProg"
+		// menu name is optional and only applies to encounter based menus for now
 		command := strings.Split(customID, " ")
 		if ok := len(command) > 1; !ok {
 			fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)

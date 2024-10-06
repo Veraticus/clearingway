@@ -429,12 +429,12 @@ func (c *Clearingway) MenuEncounterProcess(s *discordgo.Session, i *discordgo.In
 	if len(errorRoles) != 0 {
 		responseMsg += "An error has occurred. Please contact an admin with this message.\nRole actions that failed: "
 		for _, role := range errorRoles {
-			responseMsg += fmt.Sprintf("<@&%v> ", role)
+			responseMsg += fmt.Sprintf("<@&%v>\n", role)
 		}
 	}
 
 	if len(responseMsg) == 0 {
-		responseMsg = "Nothing has been done!"
+		responseMsg = "Nothing has been done!\n"
 	}
 	_, err = s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{
 		Content: &responseMsg,

@@ -29,6 +29,7 @@ var (
 	LimboRole    RoleType = "Limbo"
 	CompleteRole RoleType = "Complete"
 	ColorRole    RoleType = "Name Color"
+	C4XRole      RoleType = "C4X"
 )
 
 type Roles struct {

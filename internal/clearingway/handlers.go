@@ -42,6 +42,14 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 				fmt.Printf("Error ensuring role %+v: %+v\n", r, err)
 			}
 		}
+
+		for _, menu := range guild.Menus.Menus {
+			if menu.Type == MenuEncounter {
+				additionalData := menu.AdditionalData
+				menu.MenuEncounterInit(guild.Encounters, additionalData.RoleType)
+			}
+		}
+
 		time.Sleep(1 * time.Second)
 
 		fmt.Printf("Adding commands...")
@@ -290,6 +298,11 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		c.Autocomplete(s, i)
 	case discordgo.InteractionMessageComponent:
 		customID := i.MessageComponentData().CustomID
+
+		// commands are differentiated by the customID with the format
+		// [menu type] [command type] [menu name]
+		// e.g "MenuEncounter encounterProcess menuProg"
+		// menu name is optional and only applies to encounter based menus for now
 		command := strings.Split(customID, " ")
 		if ok := len(command) > 1; !ok {
 			fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
@@ -318,12 +331,11 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 				fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
 				return
 			}
-
 			switch CommandType(command[1]) {
 			case CommandMenu:
-				// send_encounter_menu(command[2])
+				c.MenuEncounterSend(s, i, command[2])
 			case CommandEncounterProcess:
-				// process_roles(command[2])
+				c.MenuEncounterProcess(s, i, command[2])
 			}
 		}
 	case discordgo.InteractionModalSubmit:

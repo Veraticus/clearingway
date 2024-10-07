@@ -302,6 +302,7 @@ func (g *Guild) InitDiscordMenu() {
 
 	// Remove Roles
 	dataMenuRemove := g.Menus.Menus[string(MenuRemove)]
+	dataMenuRemove.MenuRemoveInit()
 	customIDslice = []string{string(MenuRemove), string(CommandMenu)}
 	menuButtons = append(menuButtons, &discordgo.Button{
 		Label:    dataMenuRemove.Title,

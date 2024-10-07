@@ -318,13 +318,13 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		case MenuRemove:
 			switch CommandType(command[1]) {
 			case CommandMenu:
-				// send_menu()
+				c.MenuStaticRespond(s, i, command[0])
 			case CommandRemoveComfy:
-				// Uncomfy()
+				c.Uncomfy(s, i)
 			case CommandRemoveColor:
-				// Uncolor()
+				c.Uncolor(s, i)
 			case CommandRemoveAll:
-				// RemoveAll()
+				c.RemoveAll(s, i)
 			}
 		case MenuEncounter:
 			if ok := len(command) > 2; !ok {

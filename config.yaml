@@ -779,7 +779,7 @@ guilds:
       multiSelect: true
       roles:
         - name: "BiS Farm"
-        - name: "Ulti Unlock"
+        - name: "Ultimate Unlock"
     - name: "menuColor"
       type: "menuEncounter"
       title: "Change Name Color"

@@ -465,7 +465,7 @@ func (c *Clearingway) MenuEncounterProcess(s *discordgo.Session, i *discordgo.In
 		length := len(roles)
 		if length == 1 {
 			responseMsg += fmt.Sprintf("Successfully %v role: <@&%v>\n", verb, roles[0])
-		} else {
+		} else if length > 1 { // exclude case where no roles were added/removed
 			responseMsg += fmt.Sprintf("Successfully %v roles: ", verb)
 			for _, role := range roles {
 				responseMsg += fmt.Sprintf("<@&%v> ", role)

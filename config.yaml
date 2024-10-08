@@ -574,6 +574,7 @@ guilds:
     nameColor: true
   guildId: 1172230157776466050
   channelId: 1172348608671133760
+    menu: true
   encounters:
   - ids: [1060, 1047, 1039, 1073]
     name: "The Unending Coil of Bahamut (Ultimate)"
@@ -590,6 +591,10 @@ guilds:
       - name: "The Legend's Color"
         type: "Name Color"
         color: 0xfdfd96
+      - name: "UCoB C4X"
+        type: "C4X"
+      - name: "UCoB Prog"
+        type: "Prog"
   - ids: [1061, 1048, 1042, 1074]
     name: "The Weapon's Refrain (Ultimate)"
     defaultRoles: false
@@ -605,6 +610,10 @@ guilds:
       - name: "The Ultimate Color"
         type: "Name Color"
         color: 0x97cae3
+      - name: "UWU C4X"
+        type: "C4X"
+      - name: "UWU Prog"
+        type: "Prog"
   - ids: [1062, 1050, 1075]
     name: "The Epic of Alexander (Ultimate)"
     defaultRoles: false
@@ -620,6 +629,10 @@ guilds:
       - name: "The Perfect Color"
         type: "Name Color"
         color: 0xfae9c2
+      - name: "TEA C4X"
+        type: "C4X"
+      - name: "TEA Prog"
+        type: "Prog"
   - ids: [1065, 1076]
     name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
@@ -635,6 +648,10 @@ guilds:
       - name: "The Heavens' Color"
         type: "Name Color"
         color: 0xc9843f
+      - name: "DSR C4X"
+        type: "C4X"
+      - name: "DSR Prog"
+        type: "Prog"
   - ids: [1068, 1077]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
@@ -650,6 +667,10 @@ guilds:
       - name: "The Alpha Color"
         type: "Name Color"
         color: 0x6534c6
+      - name: "TOP C4X"
+        type: "C4X"
+      - name: "TOP Prog"
+        type: "Prog"
   # TODO: implement when FRU goes live
   # - ids: []
   #   name: "Futures Rewritten (Ultimate)"
@@ -666,6 +687,10 @@ guilds:
   #     - name: "The Lesbians' Color"
   #       type: "Name Color"
   #       color: 0xD52D00
+  #     - name: "FRU C4X"
+  #       type: "C4X"
+  #     - name: "FRU Prog"
+  #       type: "Prog"
   reconfigureRoles:
   - from: "Please Do Other Content"
     hoist: true
@@ -711,6 +736,59 @@ guilds:
     type: "Complete"
     encounterName: "The Omega Protocol (Ultimate)"
     to: "Alpha"
+  menu:
+    - name: "menuMain"
+      type: "menuMain"
+      title: "NAUR Role Assignment"
+      description: |-
+        Welcome to the Role Assignment channel. 
+
+        To start, verify your character using the `Verify Character` button. After Clearingway has verified ownership of your character, you will receive roles based on certain criteria from your FFLogs. 
+
+        Additional roles are also obtainable after verifying your character by using the other buttons. Descriptions for each button are provided below. You can also view every Clearingway related role by typing `/roles`.
+
+        **Verify Character**: Have Clearingway verify ownership and analyze all ultimate clears of your character.
+        **Reclear & C4X Roles**: Obtain mentionable Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
+        **Legacy Content Roles**:  Obtain mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
+        **Change Name Color**: Obtain a role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
+        **Remove Roles**: Remove all or certain types of Clearingway related roles from yourself.
+
+        If you need any help or run into issues, please open a support ticket here: <#1240061557350731856>
+    - name: "menuRemove"
+      type: "menuRemove"
+      title: "Remove Roles"
+      description: >
+        Remove all or certain types of Clearingway related roles from yourself.
+    - name: "menuReclear"
+      type: "menuEncounter"
+      title: "Reclear & C4X Roles"
+      description: > 
+        Obtain mentionable Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
+      roleType:
+        - "Reclear"
+        - "C4X"
+      multiSelect: true
+      requireClear: true
+    - name: "menuProg"
+      type: "menuEncounter"
+      title: "Legacy Content Roles"
+      description: >
+        Obtain mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
+      roleType:
+        - "Prog"
+      multiSelect: true
+      roles:
+        - name: "BiS Farm"
+        - name: "Ulti Unlock"
+    - name: "menuColor"
+      type: "menuEncounter"
+      title: "Change Name Color"
+      description: >
+        Obtain a role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
+      roleType:
+        - "Name Color"
+      requireClear: true
+      imageUrl: https://raw.githubusercontent.com/naurffxiv/assets/main/Discord%20Markdown%20Files/Thumbnails/image.png
 - name: Deep Dungeon
   roles:
     relevantParsing: false

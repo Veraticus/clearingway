@@ -572,9 +572,9 @@ guilds:
     datacenter: true
     reclear: true
     nameColor: true
+    menu: true
   guildId: 1172230157776466050
   channelId: 1172348608671133760
-    menu: true
   encounters:
   - ids: [1060, 1047, 1039, 1073]
     name: "The Unending Coil of Bahamut (Ultimate)"

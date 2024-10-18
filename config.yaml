@@ -688,27 +688,31 @@ guilds:
   reconfigureRoles:
   - from: "Please Do Other Content"
     hoist: true
-  # Rename ultimate Limbo roles so they are more accurate
+  # Skip these roles
   - from: "Limbo"
     type: "Limbo"
     encounterName: "The Unending Coil of Bahamut (Ultimate)"
-    to: "Legendary Limbo"
+    skip: true
   - from: "Limbo"
     type: "Limbo"
     encounterName: "The Weapon's Refrain (Ultimate)"
-    to: "Ultimate Limbo"
+    skip: true
   - from: "Limbo"
     type: "Limbo"
     encounterName: "The Epic of Alexander (Ultimate)"
-    to: "Perfect Limbo"
+    skip: true
   - from: "Limbo"
     type: "Limbo"
     encounterName: "Dragonsong's Reprise (Ultimate)"
-    to: "Heavenly Limbo"
+    skip: true
   - from: "Limbo"
     type: "Limbo"
     encounterName: "The Omega Protocol (Ultimate)"
-    to: "Alpha Limbo"
+    skip: true
+  - from: "Gray"
+    skip: true
+  - from: "NA's Comfiest"
+    skip: true
   # Rename ultimate Complete roles so they are more accurate
   - from: "Complete"
     type: "Complete"

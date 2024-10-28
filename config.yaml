@@ -739,9 +739,8 @@ guilds:
       type: "menuMain"
       title: "NAUR Role Assignment"
       description: |-
-        NAUR Role Assignment
-
-        Welcome to the Role Assignment channel. Using the buttons below will give or remove certain roles in this server. Some roles are tied to ultimate clears. Make sure to verify your clears for those roles. If you need any help or run into issues, please open a support ticket here: ⁠https://discord.com/channels/1172230157776466050/1241821383307038781
+        Welcome to the Role Assignment channel.
+        Using the buttons below will give or remove certain roles in this server. Some roles are tied to ultimate clears. Make sure to verify your clears for those roles. If you need any help or run into issues, please open a support ticket here: ⁠https://discord.com/channels/1172230157776466050/1241821383307038781
 
         **Verify Character**: Use this button to verify ownership and analyze all ultimate clears of your character.
 
@@ -761,7 +760,7 @@ guilds:
       type: "menuEncounter"
       title: "Reclear & C4X Roles"
       description: > 
-        Obtain mentionable Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
+        Toggle mentionable Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
       roleType:
         - "Reclear"
         - "C4X"
@@ -771,7 +770,7 @@ guilds:
       type: "menuEncounter"
       title: "Legacy Content Roles"
       description: >
-        Obtain mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
+        Toggle mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
       roleType:
         - "Prog"
       multiSelect: true
@@ -780,9 +779,9 @@ guilds:
         - name: "Ultimate Unlock"
     - name: "menuColor"
       type: "menuEncounter"
-      title: "Change Name Color"
+      title: "Name Color Roles"
       description: >
-        Obtain a role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
+        Toggle a role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
       roleType:
         - "Name Color"
       requireClear: true

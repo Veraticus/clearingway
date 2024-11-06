@@ -331,7 +331,7 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 					fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
 					return
 				}
-				// can reuse this function since button interactions have no selections
+				// NB: can reuse this function since button interactions have no selections
 				c.MenuEncounterProcess(s, i, command[2])
 			}
 		case MenuEncounter:

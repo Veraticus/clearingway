@@ -739,19 +739,19 @@ guilds:
       type: "menuMain"
       title: "NAUR Role Assignment"
       description: |-
-        Welcome to the Role Assignment channel. 
+        Welcome to the Role Assignment channel.
+        
+        Using the buttons below will give or remove certain roles in this server. Some roles are tied to ultimate clears. Make sure to verify your clears for those roles. If you need any help or run into issues, please open a support ticket here: ⁠https://discord.com/channels/1172230157776466050/1241821383307038781
 
-        To start, verify your character using the `Verify Character` button. After Clearingway has verified ownership of your character, you will receive roles based on certain criteria from your FFLogs. 
+        **Verify Character**: Use this button to verify ownership and analyze all ultimate clears of your character.
 
-        Additional roles are also obtainable after verifying your character by using the other buttons. Descriptions for each button are provided below. You can also view every Clearingway related role by typing `/roles`.
+        **Reclear & C4X Roles**: Use this button to add or remove specific Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
 
-        **Verify Character**: Have Clearingway verify ownership and analyze all ultimate clears of your character.
-        **Reclear & C4X Roles**: Obtain mentionable Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
-        **Legacy Content Roles**:  Obtain mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
-        **Change Name Color**: Obtain a role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
-        **Remove Roles**: Remove all or certain types of Clearingway related roles from yourself.
+        **Legacy Content Roles**: Use this button to add or remove specific mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
 
-        If you need any help or run into issues, please open a support ticket here: <#1240061557350731856>
+        **Change Name Color**: Use this button to add or remove a specific role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
+
+        **Remove Roles**: Use this button to remove all or certain categories of roles from your profile.
     - name: "menuRemove"
       type: "menuRemove"
       title: "Remove Roles"
@@ -761,7 +761,7 @@ guilds:
       type: "menuEncounter"
       title: "Reclear & C4X Roles"
       description: > 
-        Obtain mentionable Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
+        Toggle mentionable Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
       roleType:
         - "Reclear"
         - "C4X"
@@ -771,7 +771,7 @@ guilds:
       type: "menuEncounter"
       title: "Legacy Content Roles"
       description: >
-        Obtain mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
+        Toggle mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
       roleType:
         - "Prog"
       multiSelect: true
@@ -780,9 +780,9 @@ guilds:
         - name: "Ultimate Unlock"
     - name: "menuColor"
       type: "menuEncounter"
-      title: "Change Name Color"
+      title: "Name Color Roles"
       description: >
-        Obtain a role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
+        Toggle a role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
       roleType:
         - "Name Color"
       requireClear: true

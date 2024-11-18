@@ -656,12 +656,12 @@ guilds:
     roles:
       - name: "TOP Cleared"
         type: "Cleared"
-        color: 0x6534c6
+        color: 0x8d5af3
       - name: "TOP Reclear"
         type: "Reclear"
       - name: "The Alpha Color"
         type: "Name Color"
-        color: 0x6534c6
+        color: 0x8d5af3
       - name: "TOP C4X"
         type: "C4X"
       - name: "TOP Prog"

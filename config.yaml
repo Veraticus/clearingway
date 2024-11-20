@@ -683,8 +683,8 @@ guilds:
         color: 0xD52D00
       - name: "FRU C4X"
         type: "C4X"
-      - name: "FRU Prog"
-        type: "Prog"
+      #- name: "FRU Prog"
+      #  type: "Prog"
   reconfigureRoles:
   - from: "Please Do Other Content"
     hoist: true

@@ -124,7 +124,21 @@ func LegendRoles() *Roles {
 					return true, output
 				}
 
-				return false, "Did not clear all five ultimates."
+				return false, "Did not clear only five ultimates."
+			},
+		},
+		// TODO: change role name to what atmus wants
+		{
+			Name: "The Hexa Legend", Color: 0x3498db,
+			Description: "Cleared exactly six ultimates.",
+			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
+				clearedEncounters := opts.Encounters.Clears(opts.Rankings)
+				if len(clearedEncounters.Encounters) == 6 {
+					output := legendRoleString(clearedEncounters, opts.Rankings)
+					return true, output
+				}
+
+				return false, "Did not clear all six ultimates."
 			},
 		},
 		{

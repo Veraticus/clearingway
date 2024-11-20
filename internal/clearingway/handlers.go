@@ -218,13 +218,10 @@ var ReclearCommand = &discordgo.ApplicationCommand{
 					Name:  "TOP",
 					Value: "The Omega Protocol (Ultimate)",
 				},
-				// TODO: implement when FRU goes live
-				/*
 				{
-					Name: "FRU",
+					Name:  "FRU",
 					Value: "Futures Rewritten (Ultimate)",
 				},
-				*/
 			},
 		},
 	},
@@ -260,13 +257,10 @@ var NameColorCommand = &discordgo.ApplicationCommand{
 					Name:  "TOP",
 					Value: "The Omega Protocol (Ultimate)",
 				},
-				// TODO: implement when FRU goes live
-				/*
 				{
-					Name: "FRU",
+					Name:  "FRU",
 					Value: "Futures Rewritten (Ultimate)",
 				},
-				*/
 			},
 		},
 	},

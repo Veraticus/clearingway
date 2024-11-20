@@ -129,7 +129,7 @@ func LegendRoles() *Roles {
 		},
 		// TODO: change role name to what atmus wants
 		{
-			Name: "The Hexa Legend", Color: 0x3498db,
+			Name: "The Sexa Legend", Color: 0x3498db,
 			Description: "Cleared exactly six ultimates.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				clearedEncounters := opts.Encounters.Clears(opts.Rankings)

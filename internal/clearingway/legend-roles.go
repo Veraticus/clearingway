@@ -127,7 +127,6 @@ func LegendRoles() *Roles {
 				return false, "Did not clear only five ultimates."
 			},
 		},
-		// TODO: change role name to what atmus wants
 		{
 			Name: "The Sexa Legend", Color: 0x3498db,
 			Description: "Cleared exactly six ultimates.",

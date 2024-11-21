@@ -141,7 +141,7 @@ func (c *Clearingway) ClearsHelper(s *discordgo.Session, i *discordgo.Interactio
 	if !isOwner {
 		err = discord.ContinueInteraction(s, i.Interaction,
 			fmt.Sprintf(
-				"I could not verify your ownership of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile and then run `/clears` again:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
+				"I could not verify your ownership of `%s (%s)`!\nIf this is your character, add the following code to your Lodestone profile and try again:\n\n**%s**\n\nYou can edit your Lodestone profile at https://na.finalfantasyxiv.com/lodestone/my/setting/profile/",
 				char.Name(),
 				char.World,
 				char.LodestoneSlug(discordId),

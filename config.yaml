@@ -666,25 +666,25 @@ guilds:
         type: "C4X"
       - name: "TOP Prog"
         type: "Prog"
-  # TODO: implement when FRU goes live
-  # - ids: []
-  #   name: "Futures Rewritten (Ultimate)"
-  #   defaultRoles: false
-  #   totalWeaponsAvailable: 21
-  #   the: "Roommate"
-  #   roles:
-  #     - name: "FRU Cleared"
-  #       type: "Cleared"
-  #       color: 0xc9843f
-  #     - name: "Reclear FRU"
-  #       type: "Reclear"
-  #     - name: "The Lesbians' Color"
-  #       type: "Name Color"
-  #       color: 0xD52D00
-  #     - name: "FRU C4X"
-  #       type: "C4X"
-  #     - name: "FRU Prog"
-  #       type: "Prog"
+# TODO: add fight ids when fight is live on FFLogs
+  - ids: []
+    name: "Futures Rewritten (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 21
+    the: "Roommate"
+    roles:
+      - name: "FRU Cleared"
+        type: "Cleared"
+        color: 0xc9843f
+      - name: "Reclear FRU"
+        type: "Reclear"
+      - name: "The Lesbians' Color"
+        type: "Name Color"
+        color: 0xD52D00
+      - name: "FRU C4X"
+        type: "C4X"
+      #- name: "FRU Prog"
+      #  type: "Prog"
   reconfigureRoles:
   - from: "Please Do Other Content"
     hoist: true
@@ -708,6 +708,10 @@ guilds:
   - from: "Limbo"
     type: "Limbo"
     encounterName: "The Omega Protocol (Ultimate)"
+    skip: true
+  - from: "Limbo"
+    type: "Limbo"
+    encounterName: "Futures Rewritten (Ultimate)"
     skip: true
   - from: "Gray"
     skip: true
@@ -734,6 +738,10 @@ guilds:
     type: "Complete"
     encounterName: "The Omega Protocol (Ultimate)"
     to: "Alpha"
+  - from: "Complete"
+    type: "Complete"
+    encounterName: "Futures Rewritten (Ultimate)"
+    to: "Roommate"
   menu:
     - name: "menuMain"
       type: "menuMain"

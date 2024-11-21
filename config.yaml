@@ -675,12 +675,12 @@ guilds:
     roles:
       - name: "FRU Cleared"
         type: "Cleared"
-        color: 0xc9843f
+        color: 0xa3f8e7
       - name: "Reclear FRU"
         type: "Reclear"
       - name: "The Lesbians' Color"
         type: "Name Color"
-        color: 0xD52D00
+        color: 0xa3f8e7
       - name: "FRU C4X"
         type: "C4X"
       #- name: "FRU Prog"

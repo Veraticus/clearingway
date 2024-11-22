@@ -40,6 +40,7 @@ type Menu struct {
 	Description    string              // optional description to show in embed
 	ImageURL       string              // optional image URL
 	AdditionalData *MenuAdditionalData // additional data depending on MenuType
+	Buttons        []discordgo.Button
 }
 
 type MenuRoleHelper struct {
@@ -62,6 +63,7 @@ func (m *Menu) Init(c *ConfigMenu) {
 	m.Name = c.Name
 	m.Type = MenuType(c.Type)
 	m.Title = c.Title
+	m.Buttons = []discordgo.Button{}
 
 	if len(c.Description) != 0 {
 		m.Description = c.Description
@@ -150,6 +152,37 @@ func (ms *Menus) Roles() *Roles {
 	}
 
 	return roles
+}
+
+func PopulateButtons(buttonsList []discordgo.Button) []discordgo.MessageComponent {
+	// count how many buttons to ensure menu doesn't exceed limit of 25 buttons
+	ctr := 0
+	ret := []discordgo.MessageComponent{}
+	for _, button := range buttonsList {
+		if ctr >= 25 {
+			fmt.Printf("Exceeded button limit, skipping any additional buttons...")
+			break
+		}
+		if ctr%5 == 0 {
+			ret = append(ret, discordgo.ActionsRow{Components: []discordgo.MessageComponent{button}})
+		} else {
+			actionsRow := ret[ctr/5].(discordgo.ActionsRow)
+			actionsRow.Components = append(actionsRow.Components, button)
+			ret[ctr/5] = actionsRow
+		}
+		ctr++
+	}
+	return ret
+}
+
+func (m *Menu) FinalizeButtons() {
+	components := PopulateButtons(m.Buttons)
+
+	if m.Type == MenuMain {
+		m.AdditionalData.MessageMainMenu.Components = components
+	} else {
+		m.AdditionalData.MessageEphemeral.Data.Components = components
+	}
 }
 
 // Creates an response to an interaction with a static menu

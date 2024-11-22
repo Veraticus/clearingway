@@ -275,12 +275,12 @@ func (g *Guild) IsProgEnabled() bool {
 }
 
 func (g *Guild) InitDiscordMenu() {
-	menuButtons := []discordgo.MessageComponent{}
+	dataMenuMain := g.Menus.Menus[string(MenuMain)]
 
 	// Verify Clears
 	dataMenuVerify := g.Menus.Menus[string(MenuVerify)]
 	customIDslice := []string{string(MenuVerify), string(CommandMenu)}
-	menuButtons = append(menuButtons, &discordgo.Button{
+	dataMenuMain.Buttons = append(dataMenuMain.Buttons, discordgo.Button{
 		Label:    dataMenuVerify.Title,
 		Style:    discordgo.SuccessButton,
 		Disabled: false,
@@ -291,9 +291,9 @@ func (g *Guild) InitDiscordMenu() {
 	for _, menu := range g.Menus.Menus {
 		if menu.Type == MenuEncounter {
 			customIDslice = []string{string(MenuEncounter), string(CommandMenu), menu.Name}
-			menuButtons = append(menuButtons, &discordgo.Button{
-				Label: menu.Title,
-				Style: discordgo.PrimaryButton,
+			dataMenuMain.Buttons = append(dataMenuMain.Buttons, discordgo.Button{
+				Label:    menu.Title,
+				Style:    discordgo.PrimaryButton,
 				Disabled: false,
 				CustomID: strings.Join(customIDslice, " "),
 			})
@@ -304,24 +304,18 @@ func (g *Guild) InitDiscordMenu() {
 	dataMenuRemove := g.Menus.Menus[string(MenuRemove)]
 	dataMenuRemove.MenuRemoveInit()
 	customIDslice = []string{string(MenuRemove), string(CommandMenu)}
-	menuButtons = append(menuButtons, &discordgo.Button{
+	dataMenuMain.Buttons = append(dataMenuMain.Buttons, discordgo.Button{
 		Label:    dataMenuRemove.Title,
 		Style:    discordgo.DangerButton,
 		Disabled: false,
 		CustomID: strings.Join(customIDslice, " "),
 	})
 
-	dataMenuMain := g.Menus.Menus[string(MenuMain)]
 	menuMessage := &discordgo.MessageSend{
 		Embeds: []*discordgo.MessageEmbed{
 			{
 				Title:       dataMenuMain.Title,
 				Description: dataMenuMain.Description,
-			},
-		},
-		Components: []discordgo.MessageComponent{
-			discordgo.ActionsRow{
-				Components: menuButtons,
 			},
 		},
 	}
@@ -331,4 +325,5 @@ func (g *Guild) InitDiscordMenu() {
 	}
 
 	dataMenuMain.AdditionalData = &MenuAdditionalData{MessageMainMenu: menuMessage}
+	dataMenuMain.FinalizeButtons()
 }

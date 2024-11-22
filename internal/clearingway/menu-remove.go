@@ -42,9 +42,7 @@ func (m *Menu) MenuRemoveInit() {
 		},
 	}
 
-	if len(m.ImageURL) > 0 {
-		message.Embeds[0].Image = &discordgo.MessageEmbedImage{URL: m.ImageURL}
-	}
+	m.MenuStyle(message.Embeds)
 
 	m.AdditionalData = &MenuAdditionalData{
 		MessageEphemeral: &discordgo.InteractionResponse{

@@ -112,14 +112,16 @@ func (c *Clearingway) MenuEncounterSend(s *discordgo.Session, i *discordgo.Inter
 		MaxValues: maxValues,
 	}
 
+	menu = g.Menus.Menus[menuName]
+
 	message := &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Flags: discordgo.MessageFlagsEphemeral,
 			Embeds: []*discordgo.MessageEmbed{
 				{
-					Title:       g.Menus.Menus[menuName].Title,
-					Description: g.Menus.Menus[menuName].Description + descriptionRoleList,
+					Title:       menu.Title,
+					Description: menu.Description + descriptionRoleList,
 				},
 			},
 			Components: []discordgo.MessageComponent{
@@ -132,11 +134,7 @@ func (c *Clearingway) MenuEncounterSend(s *discordgo.Session, i *discordgo.Inter
 		},
 	}
 
-	if len(g.Menus.Menus[menuName].ImageURL) != 0 {
-		message.Data.Embeds[0].Image = &discordgo.MessageEmbedImage{
-			URL: g.Menus.Menus[menuName].ImageURL,
-		}
-	}
+	menu.MenuStyle(message.Data.Embeds)
 
 	err := s.InteractionRespond(i.Interaction, message)
 	if err != nil {

@@ -303,3 +303,17 @@ func (c *Clearingway) MenuAutocomplete(s *discordgo.Session, i *discordgo.Intera
 		fmt.Printf("Could not send Discord autocompletions: %+v\n", err)
 	}
 }
+
+func (m *Menu) MenuStyle(Embeds []*discordgo.MessageEmbed) {
+	if len(m.ImageURL) > 0 {
+		Embeds[0].Image = &discordgo.MessageEmbedImage{URL: m.ImageURL}
+	}
+
+	if len(m.ThumbnailURL) > 0 {
+		Embeds[0].Thumbnail = &discordgo.MessageEmbedThumbnail{URL: m.ThumbnailURL}
+	}
+
+	if len(m.Fields) > 0 {
+		Embeds[0].Fields = m.Fields
+	}
+}

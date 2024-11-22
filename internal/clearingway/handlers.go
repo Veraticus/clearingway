@@ -118,10 +118,11 @@ var MenuCommand = &discordgo.ApplicationCommand{
 	DefaultMemberPermissions: &adminPermission,
 	Options: []*discordgo.ApplicationCommandOption{
 		{
-			Type:        discordgo.ApplicationCommandOptionString,
-			Name:        "menu",
-			Description: "Menu to send",
-			Required:    true,
+			Type:         discordgo.ApplicationCommandOptionString,
+			Name:         "menu",
+			Description:  "Menu to send",
+			Required:     true,
+			Autocomplete: true,
 		},
 	},
 }

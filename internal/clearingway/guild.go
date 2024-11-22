@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Veraticus/clearingway/internal/ffxiv"
+	trie "github.com/Vivino/go-autocomplete-trie"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -274,6 +275,8 @@ func (g *Guild) IsProgEnabled() bool {
 }
 
 func (g *Guild) InitDiscordMenu() {
+	// init menu autocomplete
+	g.Menus.AutoCompleteTrie = trie.New()
 	// format the message object for main menus
 	for _, menu := range g.Menus.Menus {
 		if menu.Type != MenuMain {
@@ -293,6 +296,13 @@ func (g *Guild) InitDiscordMenu() {
 		}
 		menu.AdditionalData = &MenuAdditionalData{MessageMainMenu: menuMessage}
 		menu.FinalizeButtons()
+
+		// set up autocomplete
+		g.Menus.Autocomplete = append(g.Menus.Autocomplete, &discordgo.ApplicationCommandOptionChoice{
+			Name:  menu.Name,
+			Value: menu.Name,
+		})
+		g.Menus.AutoCompleteTrie.Insert(menu.Name)
 	}
 
 	// initialize all buttons for remove roles

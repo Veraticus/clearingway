@@ -85,6 +85,7 @@ type ConfigMenu struct {
 	Title         string          `yaml:"title"`
 	Description   string          `yaml:"description"`
 	ImageUrl      string          `yaml:"imageUrl"`
+	ThumbnailUrl  string          `yaml:"thumbnailUrl"`
 	ConfigButtons []*ConfigButton `yaml:"buttons"`
 	ConfigRoles   []*ConfigRole   `yaml:"roles"`
 	RoleType      []string        `yaml:"roleType"`

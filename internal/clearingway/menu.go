@@ -43,6 +43,7 @@ type Menu struct {
 	Title          string              // title to show in embed
 	Description    string              // optional description to show in embed
 	ImageURL       string              // optional image URL
+	ThumbnailURL   string              // optional thumbnail URL
 	AdditionalData *MenuAdditionalData // additional data depending on MenuType
 	Buttons        []discordgo.Button
 }
@@ -75,6 +76,10 @@ func (m *Menu) Init(c *ConfigMenu) {
 
 	if len(c.ImageUrl) != 0 {
 		m.ImageURL = c.ImageUrl
+	}
+
+	if len(c.ThumbnailUrl) != 0 {
+		m.ThumbnailURL = c.ThumbnailUrl
 	}
 
 	switch m.Type {

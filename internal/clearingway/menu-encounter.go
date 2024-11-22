@@ -92,7 +92,7 @@ func (c *Clearingway) MenuEncounterSend(s *discordgo.Session, i *discordgo.Inter
 	// generate role list description
 	descriptionRoleList := "\n### Available roles"
 	for _, role := range dropdownSlice {
-		descriptionRoleList += fmt.Sprintf("\n- %s", role.Label)
+		descriptionRoleList += fmt.Sprintf("\n- <@&%s>", role.Value)
 	}
 
 	minValues := 0

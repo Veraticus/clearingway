@@ -86,6 +86,7 @@ type ConfigMenu struct {
 	Description   string          `yaml:"description"`
 	ImageUrl      string          `yaml:"imageUrl"`
 	ThumbnailUrl  string          `yaml:"thumbnailUrl"`
+	ConfigFields  []*ConfigField  `yaml:"fields"`
 	ConfigButtons []*ConfigButton `yaml:"buttons"`
 	ConfigRoles   []*ConfigRole   `yaml:"roles"`
 	RoleType      []string        `yaml:"roleType"`
@@ -98,4 +99,10 @@ type ConfigButton struct {
 	Style    int    `yaml:"style"`
 	MenuName string `yaml:"menuName"`
 	MenuType string `yaml:"menuType"`
+}
+
+type ConfigField struct {
+	Name   string `yaml:"name"`
+	Value  string `yaml:"value"`
+	Inline bool   `yaml:"inline"`
 }

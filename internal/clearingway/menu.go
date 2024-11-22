@@ -38,13 +38,14 @@ type Menus struct {
 }
 
 type Menu struct {
-	Name           string              // internal name to uniquely identify menus
-	Type           MenuType            // type of menu to differentiate AdditionalData types
-	Title          string              // title to show in embed
-	Description    string              // optional description to show in embed
-	ImageURL       string              // optional image URL
-	ThumbnailURL   string              // optional thumbnail URL
-	AdditionalData *MenuAdditionalData // additional data depending on MenuType
+	Name           string                         // internal name to uniquely identify menus
+	Type           MenuType                       // type of menu to differentiate AdditionalData types
+	Title          string                         // title to show in embed
+	Description    string                         // optional description to show in embed
+	ImageURL       string                         // optional image URL
+	ThumbnailURL   string                         // optional thumbnail URL
+	Fields         []*discordgo.MessageEmbedField // embed fields
+	AdditionalData *MenuAdditionalData            // additional data depending on MenuType
 	Buttons        []discordgo.Button
 }
 
@@ -68,6 +69,7 @@ func (m *Menu) Init(c *ConfigMenu) {
 	m.Name = c.Name
 	m.Type = MenuType(c.Type)
 	m.Title = c.Title
+	m.Fields = []*discordgo.MessageEmbedField{}
 	m.Buttons = []discordgo.Button{}
 
 	if len(c.Description) != 0 {
@@ -80,6 +82,16 @@ func (m *Menu) Init(c *ConfigMenu) {
 
 	if len(c.ThumbnailUrl) != 0 {
 		m.ThumbnailURL = c.ThumbnailUrl
+	}
+
+	if len(c.ConfigFields) != 0 {
+		for _, configField := range c.ConfigFields {
+			m.Fields = append(m.Fields, &discordgo.MessageEmbedField{
+				Name:   configField.Name,
+				Value:  configField.Value,
+				Inline: configField.Inline,
+			})
+		}
 	}
 
 	switch m.Type {

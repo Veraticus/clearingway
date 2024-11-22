@@ -27,6 +27,14 @@ func (c *Clearingway) MenuMainSend(s *discordgo.Session, i *discordgo.Interactio
 	}
 	additionalData := menu.AdditionalData
 
+	if menu.Type != MenuMain {
+		err := discord.StartInteraction(s, i.Interaction, "Menu is not of type menuMain.")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
 	_, err := s.ChannelMessageSendComplex(i.ChannelID, additionalData.MessageMainMenu)
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)

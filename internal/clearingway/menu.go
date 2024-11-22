@@ -2,6 +2,7 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -74,6 +75,44 @@ func (m *Menu) Init(c *ConfigMenu) {
 	}
 
 	switch m.Type {
+	case MenuMain:
+		for _, configButton := range c.ConfigButtons {
+			button := discordgo.Button{}
+
+			if len(configButton.Label) != 0 {
+				button.Label = configButton.Label
+			} else {
+				continue
+			}
+
+			if configButton.Style != 0 {
+				button.Style = discordgo.ButtonStyle(configButton.Style)
+			} else {
+				button.Style = discordgo.ButtonStyle(1)
+			}
+
+			customIDslice := []string{}
+			if len(configButton.MenuName) != 0 && len(configButton.MenuType) != 0 {
+				menuType := MenuType(configButton.MenuType)
+				switch menuType {
+				case MenuVerify:
+					fallthrough
+				case MenuRemove:
+					customIDslice = []string{configButton.MenuType, string(CommandMenu)}
+				case MenuEncounter:
+					customIDslice = []string{string(MenuEncounter), string(CommandMenu), configButton.MenuName}
+
+				default:
+					continue
+				}
+			} else {
+				continue
+			}
+			button.Disabled = false
+			button.CustomID = strings.Join(customIDslice, " ")
+
+			m.Buttons = append(m.Buttons, button)
+		}
 	case MenuEncounter:
 		m.AdditionalData = &MenuAdditionalData{}
 		data := m.AdditionalData

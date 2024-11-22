@@ -116,6 +116,14 @@ var MenuCommand = &discordgo.ApplicationCommand{
 	Name:                     "menu",
 	Description:              "Send the roles menu to the current channel.",
 	DefaultMemberPermissions: &adminPermission,
+	Options: []*discordgo.ApplicationCommandOption{
+		{
+			Type:        discordgo.ApplicationCommandOptionString,
+			Name:        "menu",
+			Description: "Menu to send",
+			Required:    true,
+		},
+	},
 }
 
 var ClearCommand = &discordgo.ApplicationCommand{

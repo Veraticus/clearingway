@@ -118,10 +118,11 @@ var MenuCommand = &discordgo.ApplicationCommand{
 	DefaultMemberPermissions: &adminPermission,
 	Options: []*discordgo.ApplicationCommandOption{
 		{
-			Type:        discordgo.ApplicationCommandOptionString,
-			Name:        "menu",
-			Description: "Menu to send",
-			Required:    true,
+			Type:         discordgo.ApplicationCommandOptionString,
+			Name:         "menu",
+			Description:  "Menu to send",
+			Required:     true,
+			Autocomplete: true,
 		},
 	},
 }
@@ -306,7 +307,12 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.MenuMainSend(s, i)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
-		c.Autocomplete(s, i)
+		switch i.ApplicationCommandData().Name {
+		case "clears":
+			c.Autocomplete(s, i)
+		case "menu":
+			c.MenuAutocomplete(s, i)
+		}
 	case discordgo.InteractionMessageComponent:
 		customID := i.MessageComponentData().CustomID
 

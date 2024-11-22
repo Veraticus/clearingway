@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	trie "github.com/Vivino/go-autocomplete-trie"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -31,7 +32,9 @@ const (
 
 // struct to hold data for all different menu components
 type Menus struct {
-	Menus map[string]*Menu
+	Menus            map[string]*Menu
+	Autocomplete     []*discordgo.ApplicationCommandOptionChoice
+	AutoCompleteTrie *trie.Trie
 }
 
 type Menu struct {
@@ -239,5 +242,47 @@ func (c *Clearingway) MenuStaticRespond(s *discordgo.Session, i *discordgo.Inter
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 		return
+	}
+}
+
+func (c *Clearingway) MenuAutocomplete(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	options := i.ApplicationCommandData().Options
+	optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
+	for _, opt := range options {
+		optionMap[opt.Name] = opt
+	}
+
+	var menu string
+	if option, ok := optionMap["menu"]; ok {
+		menu = option.StringValue()
+	}
+
+	choices := []*discordgo.ApplicationCommandOptionChoice{}
+
+	if len(menu) == 0 {
+		choices = g.Menus.Autocomplete
+	} else {
+		for _, menuCompletion := range g.Menus.AutoCompleteTrie.SearchAll(menu) {
+			choices = append(choices, &discordgo.ApplicationCommandOptionChoice{
+				Name:  menuCompletion,
+				Value: menuCompletion,
+			})
+		}
+	}
+
+	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionApplicationCommandAutocompleteResult,
+		Data: &discordgo.InteractionResponseData{
+			Choices: choices,
+		},
+	})
+	if err != nil {
+		fmt.Printf("Could not send Discord autocompletions: %+v\n", err)
 	}
 }

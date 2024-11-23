@@ -26,7 +26,10 @@ For creating new menus, the only types to be concerned with are `menuMain` and `
 - `description` (string) - The description of the embed
 - `imageUrl` (string) - A full-size image to be displayed at the bottom of the embed
 - `thumbnailUrl` (string) - A thumbnail embed to be displayed at the top-right of the embed
-
+- `fields` (array of object) - Fields to be displayed within an embed  
+  - `name` (string) - Title of field
+  - `value` (string) - Description of field
+  - `inline` (bool) - Whether field is inline or not
 
 ## MenuMain
 Menus that are sendable to the channel which are viewable by every user
@@ -90,70 +93,74 @@ guilds:
       multiline
       description
 ```
-For basic styling, we can add a thumbnail and image to the embed
+For basic styling, we can add a thumbnail, image, and fields to the embed
 ```yaml
 # ...
   menu:
-  - name: "menuMain"
-    type: "menuMain"
-    title: "Example"
-    description: "Example"
-    imageUrl: https://raw.githubusercontent.com/naurffxiv/assets/refs/heads/main/Discord%20Files/Misc%20Images/ultimates%20colour%20server%20header.png
-    thumbnailUrl: https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
+    - name: "menuMain"
+      type: "menuMain"
+      title: "Example"
+      description: "Example"
+      imageUrl: https://raw.githubusercontent.com/naurffxiv/assets/refs/heads/main/Discord%20Files/Misc%20Images/  ultimates%20colour%20server%20header.png
+      thumbnailUrl: https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?  raw=true
+      fields:
+        - name: "field title"
+          value: "field description"
+          # inline can be omitted since the default is false which is probably what you want
 ```
 ## Adding buttons to `menuMain`
 This example adds a verify character button, a remove roles button, and a basic `menuEncounter` menu called `example` along with its respective button. The `example` menu will contain a dropdown for a single role that is not tied to any encounters.
 ```yaml
 # ...
   menu:
-  - name: "menuMain"
-    type: "menuMain"
-    title: "Example"
-    description: "This is a single line description"
-    buttons:
-    # verify character button
-    - label: "Verify Character"
-      style: 3  # green button
-      menuName: "menuVerify"
-      menuType: "menuVerify"
-    # remove roles button
-    - label: "Remove Roles"
-      style: 4 # red button
-      menuName: "menuRemove"
-      menuType: "menuRemove"
-    # example menu button
-    - label: "menuEncounter Button"
-      style: 1  # blurple button
-      menuName: "example"
-      menuType: "menuEncounter"
-    # example menu
-  - name: "example"
-    type: "menuEncounter"
-    title: "Example submenu"
-    description: "Example description"
-    roles:
-    - name: "Example Role"
+    - name: "menuMain"
+      type: "menuMain"
+      title: "Example"
+      description: "This is a single line description"
+      buttons:
+      # verify character button
+      - label: "Verify Character"
+        style: 3  # green button
+        menuName: "menuVerify"
+        menuType: "menuVerify"
+      # remove roles button
+      - label: "Remove Roles"
+        style: 4 # red button
+        menuName: "menuRemove"
+        menuType: "menuRemove"
+      # example menu button
+      - label: "menuEncounter Button"
+        style: 1  # blurple button
+        menuName: "example"
+        menuType: "menuEncounter"
+      # example menu
+    - name: "example"
+      type: "menuEncounter"
+      title: "Example submenu"
+      description: "Example description"
+      roles:
+        - name: "Example Role"
 ```
 
 And if you want to add multiple roles that are not tied to any encounters
 ```yaml
     # ...
     roles:
-    - name: "Example Role 1"
-+    - name: "Example Role 2"
-+    - name: "Example Role 3"
+      - name: "Example Role 1"
+      - name: "Example Role 2"
+      - name: "Example Role 3"
     # As many roles as you want
 ```
 If you want to let the user select multiple of these roles on top of that
 ```yaml
     # ...
-  - name: "example"
-    type: "menuEncounter"
-    title: "Example submenu"
-    description: "Example description"
-+    multiSelect: true
-    roles:
-    - name: "Example Role 1"
+    - name: "example"
+      type: "menuEncounter"
+      title: "Example submenu"
+      description: "Example description"
+      multiSelect: true
+      roles:
+        - name: "Example Role 1"
     # And so forth
 ```
 ## Creating encounter tied roles
@@ -164,27 +171,27 @@ Roles here need to be set up in the encounters section instead of within the men
 Below is an example of a reclear submenu with 1 encounter, only allowing for 1 option to be selected at a time
 ```yaml
 guilds:
-- name: guild name
-  # ...
-  encounters:
-  # test encounter 1
-  - ids: [1234]
-    name: "Test encounter 1"
-    roles:
-    - name: "Test encounter 1 cleared"
-      type: "Cleared"
-    - name: "Test encounter 1 reclears"
-      type: "Reclear"
-  menu:
-    # ... menuMain with the respective button ...
-    # reclear submenu
-  - name: "reclear"
-    type: "menuEncounter"
-    title: "Reclear Roles"
-    description: "Reclear roles"
-    roleType:
-    - "Reclear"
-    requireClear: true
+  - name: guild name
+    # ...
+    encounters:
+      # test encounter 1
+      - ids: [1234]
+        name: "Test encounter 1"
+        roles:
+        - name: "Test encounter 1 cleared"
+          type: "Cleared"
+        - name: "Test encounter 1 reclears"
+          type: "Reclear"
+    menu:
+      # ... menuMain with the respective button ...
+      # reclear submenu
+      - name: "reclear"
+        type: "menuEncounter"
+        title: "Reclear Roles"
+        description: "Reclear roles"
+        roleType:
+        - "Reclear"
+        requireClear: true
 ```
 Here I add 1 more encounter and another role type, now I have 2 different selectable role types in the submenu. With the addition of `multiSelect`, the user is able to pick any combination of these 4 selectable roles (Reclear/C4X roles for the 2 test encounters)
 ```yaml
@@ -192,25 +199,25 @@ Here I add 1 more encounter and another role type, now I have 2 different select
   encounters:
   # ... test encounter 1 ...
   # test encounter 2
-  - ids: [2345]
-    name: "Test encounter 2"
-    roles:
-    - name: "Test encounter 2 cleared"
-      type: "Cleared"
-    - name: "Test encounter 2 reclears"
-      type: "Reclear"
-    - name: "Test encounter 2 C4X"
-      type: "C4X"
+    - ids: [2345]
+      name: "Test encounter 2"
+      roles:
+      - name: "Test encounter 2 cleared"
+        type: "Cleared"
+      - name: "Test encounter 2 reclears"
+        type: "Reclear"
+      - name: "Test encounter 2 C4X"
+        type: "C4X"
   menu:
     # ... menuMain with the respective button ...
     # reclear/c4x submenu
-  - name: "cleared"
-    type: "menuEncounter"
-    title: "Reclear/C4X Roles"
-    description: "Reclear/C4X roles"
-    roleType:
-    - "Reclear"
-+    - "C4X"
-    requireClear: true
-+    multiSelect: true
+    - name: "cleared"
+      type: "menuEncounter"
+      title: "Reclear/C4X Roles"
+      description: "Reclear/C4X roles"
+      roleType:
+        - "Reclear"
+        - "C4X"
+      requireClear: true
+      multiSelect: true
 ```

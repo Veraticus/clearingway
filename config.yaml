@@ -898,9 +898,14 @@ guilds:
       description: Toggle several server related roles.
       multiSelect: true
       roles:
-        - name: Server Updates
+        - name: Server Ping
+          color: 0xf1c40f
         - name: Vote Ping
-        - name: Event Announcement
+          color: 0xf1c40f
+        - name: Event Ping
+          color: 0xf1c40f
+        - name: Movie Ping
+          color: 0xf1c40f
     - name: menuRemove
       type: menuRemove
       title: Remove Roles

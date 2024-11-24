@@ -291,9 +291,9 @@ func (g *Guild) InitDiscordMenu() {
 				},
 			},
 		}
-		if len(menu.ImageURL) > 0 {
-			menuMessage.Embeds[0].Image = &discordgo.MessageEmbedImage{URL: menu.ImageURL}
-		}
+
+		menu.MenuStyle(menuMessage.Embeds)
+
 		menu.AdditionalData = &MenuAdditionalData{MessageMainMenu: menuMessage}
 		menu.FinalizeButtons()
 

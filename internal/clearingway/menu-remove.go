@@ -13,7 +13,7 @@ func (m *Menu) MenuRemoveInit() {
 		commandType CommandType
 	}
 
-	removeButtons := []discordgo.MessageComponent{}
+	removeButtons := []discordgo.Button{}
 	removeButtonsList := []removeButton{
 		{name: "Uncomfy", commandType: CommandRemoveComfy},
 		{name: "Uncolor", commandType: CommandRemoveColor},
@@ -30,17 +30,14 @@ func (m *Menu) MenuRemoveInit() {
 		})
 	}
 
+	m.Buttons = append(m.Buttons, removeButtons...)
+
 	message := &discordgo.InteractionResponseData{
 		Flags: discordgo.MessageFlagsEphemeral,
 		Embeds: []*discordgo.MessageEmbed{
 			{
 				Title:       m.Title,
 				Description: m.Description,
-			},
-		},
-		Components: []discordgo.MessageComponent{
-			discordgo.ActionsRow{
-				Components: removeButtons,
 			},
 		},
 	}
@@ -68,14 +65,5 @@ func (m *Menu) MenuRemoveAddButton(menuEncounterToAdd *Menu) {
 		CustomID: strings.Join(customIDslice, " "),
 	}
 
-	// create new ActionsRow component if already made, append to it
-	buttonRows := &m.AdditionalData.MessageEphemeral.Data.Components
-	if len(*buttonRows) < 2 {
-		*buttonRows = append(*buttonRows, discordgo.ActionsRow{Components: []discordgo.MessageComponent{button}})
-	} else {
-		// creates a copy of ActionsRow, appends the button, then sets the element to the appended copy
-		addButtonRow := (*buttonRows)[1].(discordgo.ActionsRow)
-		addButtonRow.Components = append(addButtonRow.Components, button)
-		(*buttonRows)[1] = addButtonRow
-	}
+	m.Buttons = append(m.Buttons, button)
 }

@@ -2,7 +2,9 @@ package clearingway
 
 import (
 	"fmt"
+	"strings"
 
+	trie "github.com/Vivino/go-autocomplete-trie"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -30,7 +32,9 @@ const (
 
 // struct to hold data for all different menu components
 type Menus struct {
-	Menus map[string]*Menu
+	Menus            map[string]*Menu
+	Autocomplete     []*discordgo.ApplicationCommandOptionChoice
+	AutoCompleteTrie *trie.Trie
 }
 
 type Menu struct {
@@ -40,6 +44,7 @@ type Menu struct {
 	Description    string              // optional description to show in embed
 	ImageURL       string              // optional image URL
 	AdditionalData *MenuAdditionalData // additional data depending on MenuType
+	Buttons        []discordgo.Button
 }
 
 type MenuRoleHelper struct {
@@ -62,6 +67,7 @@ func (m *Menu) Init(c *ConfigMenu) {
 	m.Name = c.Name
 	m.Type = MenuType(c.Type)
 	m.Title = c.Title
+	m.Buttons = []discordgo.Button{}
 
 	if len(c.Description) != 0 {
 		m.Description = c.Description
@@ -72,6 +78,44 @@ func (m *Menu) Init(c *ConfigMenu) {
 	}
 
 	switch m.Type {
+	case MenuMain:
+		for _, configButton := range c.ConfigButtons {
+			button := discordgo.Button{}
+
+			if len(configButton.Label) != 0 {
+				button.Label = configButton.Label
+			} else {
+				continue
+			}
+
+			if configButton.Style != 0 {
+				button.Style = discordgo.ButtonStyle(configButton.Style)
+			} else {
+				button.Style = discordgo.ButtonStyle(1)
+			}
+
+			customIDslice := []string{}
+			if len(configButton.MenuName) != 0 && len(configButton.MenuType) != 0 {
+				menuType := MenuType(configButton.MenuType)
+				switch menuType {
+				case MenuVerify:
+					fallthrough
+				case MenuRemove:
+					customIDslice = []string{configButton.MenuType, string(CommandMenu)}
+				case MenuEncounter:
+					customIDslice = []string{string(MenuEncounter), string(CommandMenu), configButton.MenuName}
+
+				default:
+					continue
+				}
+			} else {
+				continue
+			}
+			button.Disabled = false
+			button.CustomID = strings.Join(customIDslice, " ")
+
+			m.Buttons = append(m.Buttons, button)
+		}
 	case MenuEncounter:
 		m.AdditionalData = &MenuAdditionalData{}
 		data := m.AdditionalData
@@ -152,6 +196,37 @@ func (ms *Menus) Roles() *Roles {
 	return roles
 }
 
+func PopulateButtons(buttonsList []discordgo.Button) []discordgo.MessageComponent {
+	// count how many buttons to ensure menu doesn't exceed limit of 25 buttons
+	ctr := 0
+	ret := []discordgo.MessageComponent{}
+	for _, button := range buttonsList {
+		if ctr >= 25 {
+			fmt.Printf("Exceeded button limit, skipping any additional buttons...")
+			break
+		}
+		if ctr%5 == 0 {
+			ret = append(ret, discordgo.ActionsRow{Components: []discordgo.MessageComponent{button}})
+		} else {
+			actionsRow := ret[ctr/5].(discordgo.ActionsRow)
+			actionsRow.Components = append(actionsRow.Components, button)
+			ret[ctr/5] = actionsRow
+		}
+		ctr++
+	}
+	return ret
+}
+
+func (m *Menu) FinalizeButtons() {
+	components := PopulateButtons(m.Buttons)
+
+	if m.Type == MenuMain {
+		m.AdditionalData.MessageMainMenu.Components = components
+	} else {
+		m.AdditionalData.MessageEphemeral.Data.Components = components
+	}
+}
+
 // Creates an response to an interaction with a static menu
 func (c *Clearingway) MenuStaticRespond(s *discordgo.Session, i *discordgo.InteractionCreate, menuName string) {
 	g, ok := c.Guilds.Guilds[i.GuildID]
@@ -167,5 +242,47 @@ func (c *Clearingway) MenuStaticRespond(s *discordgo.Session, i *discordgo.Inter
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 		return
+	}
+}
+
+func (c *Clearingway) MenuAutocomplete(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	options := i.ApplicationCommandData().Options
+	optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
+	for _, opt := range options {
+		optionMap[opt.Name] = opt
+	}
+
+	var menu string
+	if option, ok := optionMap["menu"]; ok {
+		menu = option.StringValue()
+	}
+
+	choices := []*discordgo.ApplicationCommandOptionChoice{}
+
+	if len(menu) == 0 {
+		choices = g.Menus.Autocomplete
+	} else {
+		for _, menuCompletion := range g.Menus.AutoCompleteTrie.SearchAll(menu) {
+			choices = append(choices, &discordgo.ApplicationCommandOptionChoice{
+				Name:  menuCompletion,
+				Value: menuCompletion,
+			})
+		}
+	}
+
+	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionApplicationCommandAutocompleteResult,
+		Data: &discordgo.InteractionResponseData{
+			Choices: choices,
+		},
+	})
+	if err != nil {
+		fmt.Printf("Could not send Discord autocompletions: %+v\n", err)
 	}
 }

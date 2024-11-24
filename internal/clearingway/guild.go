@@ -2,9 +2,9 @@ package clearingway
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/Veraticus/clearingway/internal/ffxiv"
+	trie "github.com/Vivino/go-autocomplete-trie"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -275,60 +275,37 @@ func (g *Guild) IsProgEnabled() bool {
 }
 
 func (g *Guild) InitDiscordMenu() {
-	menuButtons := []discordgo.MessageComponent{}
-
-	// Verify Clears
-	dataMenuVerify := g.Menus.Menus[string(MenuVerify)]
-	customIDslice := []string{string(MenuVerify), string(CommandMenu)}
-	menuButtons = append(menuButtons, &discordgo.Button{
-		Label:    dataMenuVerify.Title,
-		Style:    discordgo.SuccessButton,
-		Disabled: false,
-		CustomID: strings.Join(customIDslice, " "),
-	})
-
-	// Add yaml configured menus
+	// init menu autocomplete
+	g.Menus.AutoCompleteTrie = trie.New()
+	// format the message object for main menus
 	for _, menu := range g.Menus.Menus {
-		if menu.Type == MenuEncounter {
-			customIDslice = []string{string(MenuEncounter), string(CommandMenu), menu.Name}
-			menuButtons = append(menuButtons, &discordgo.Button{
-				Label: menu.Title,
-				Style: discordgo.PrimaryButton,
-				Disabled: false,
-				CustomID: strings.Join(customIDslice, " "),
-			})
+		if menu.Type != MenuMain {
+			continue
 		}
+
+		menuMessage := &discordgo.MessageSend{
+			Embeds: []*discordgo.MessageEmbed{
+				{
+					Title:       menu.Title,
+					Description: menu.Description,
+				},
+			},
+		}
+		if len(menu.ImageURL) > 0 {
+			menuMessage.Embeds[0].Image = &discordgo.MessageEmbedImage{URL: menu.ImageURL}
+		}
+		menu.AdditionalData = &MenuAdditionalData{MessageMainMenu: menuMessage}
+		menu.FinalizeButtons()
+
+		// set up autocomplete
+		g.Menus.Autocomplete = append(g.Menus.Autocomplete, &discordgo.ApplicationCommandOptionChoice{
+			Name:  menu.Name,
+			Value: menu.Name,
+		})
+		g.Menus.AutoCompleteTrie.Insert(menu.Name)
 	}
 
-	// Remove Roles
+	// initialize all buttons for remove roles
 	dataMenuRemove := g.Menus.Menus[string(MenuRemove)]
 	dataMenuRemove.MenuRemoveInit()
-	customIDslice = []string{string(MenuRemove), string(CommandMenu)}
-	menuButtons = append(menuButtons, &discordgo.Button{
-		Label:    dataMenuRemove.Title,
-		Style:    discordgo.DangerButton,
-		Disabled: false,
-		CustomID: strings.Join(customIDslice, " "),
-	})
-
-	dataMenuMain := g.Menus.Menus[string(MenuMain)]
-	menuMessage := &discordgo.MessageSend{
-		Embeds: []*discordgo.MessageEmbed{
-			{
-				Title:       dataMenuMain.Title,
-				Description: dataMenuMain.Description,
-			},
-		},
-		Components: []discordgo.MessageComponent{
-			discordgo.ActionsRow{
-				Components: menuButtons,
-			},
-		},
-	}
-
-	if len(dataMenuMain.ImageURL) > 0 {
-		menuMessage.Embeds[0].Image = &discordgo.MessageEmbedImage{URL: dataMenuMain.ImageURL}
-	}
-
-	dataMenuMain.AdditionalData = &MenuAdditionalData{MessageMainMenu: menuMessage}
 }

@@ -80,13 +80,21 @@ type ConfigReconfigureRoles struct {
 }
 
 type ConfigMenu struct {
-	Name         string        `yaml:"name"`
-	Type         string        `yaml:"type"`
-	Title        string        `yaml:"title"`
-	Description  string        `yaml:"description"`
-	ImageUrl     string        `yaml:"imageUrl"`
-	ConfigRoles  []*ConfigRole `yaml:"roles"`
-	RoleType     []string      `yaml:"roleType"`
-	MultiSelect  bool          `yaml:"multiSelect"`
-	RequireClear bool          `yaml:"requireClear"`
+	Name          string          `yaml:"name"`
+	Type          string          `yaml:"type"`
+	Title         string          `yaml:"title"`
+	Description   string          `yaml:"description"`
+	ImageUrl      string          `yaml:"imageUrl"`
+	ConfigButtons []*ConfigButton `yaml:"buttons"`
+	ConfigRoles   []*ConfigRole   `yaml:"roles"`
+	RoleType      []string        `yaml:"roleType"`
+	MultiSelect   bool            `yaml:"multiSelect"`
+	RequireClear  bool            `yaml:"requireClear"`
+}
+
+type ConfigButton struct {
+	Label    string `yaml:"label"`
+	Style    int    `yaml:"style"`
+	MenuName string `yaml:"menuName"`
+	MenuType string `yaml:"menuType"`
 }

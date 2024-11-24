@@ -15,8 +15,25 @@ func (c *Clearingway) MenuMainSend(s *discordgo.Session, i *discordgo.Interactio
 		return
 	}
 
-	menu := g.Menus.Menus[string(MenuMain)]
+	menuOpt := i.ApplicationCommandData().Options[0].StringValue()
+
+	menu, ok := g.Menus.Menus[menuOpt]
+	if !ok {
+		err := discord.StartInteraction(s, i.Interaction, "Unable to find menu.")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
 	additionalData := menu.AdditionalData
+
+	if menu.Type != MenuMain {
+		err := discord.StartInteraction(s, i.Interaction, "Menu is not of type menuMain.")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
 
 	_, err := s.ChannelMessageSendComplex(i.ChannelID, additionalData.MessageMainMenu)
 	if err != nil {

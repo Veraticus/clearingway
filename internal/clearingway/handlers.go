@@ -51,6 +51,14 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			}
 		}
 
+		for _, menu := range guild.Menus.Menus {
+			if menu.Type == MenuMain || menu.Type == MenuRemove {
+				if len(menu.Buttons) != 0 {
+					menu.FinalizeButtons()
+				}
+			}
+		}
+
 		time.Sleep(1 * time.Second)
 
 		fmt.Printf("Adding commands...")
@@ -108,6 +116,15 @@ var MenuCommand = &discordgo.ApplicationCommand{
 	Name:                     "menu",
 	Description:              "Send the roles menu to the current channel.",
 	DefaultMemberPermissions: &adminPermission,
+	Options: []*discordgo.ApplicationCommandOption{
+		{
+			Type:         discordgo.ApplicationCommandOptionString,
+			Name:         "menu",
+			Description:  "Menu to send",
+			Required:     true,
+			Autocomplete: true,
+		},
+	},
 }
 
 var ClearCommand = &discordgo.ApplicationCommand{
@@ -290,7 +307,12 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			c.MenuMainSend(s, i)
 		}
 	case discordgo.InteractionApplicationCommandAutocomplete:
-		c.Autocomplete(s, i)
+		switch i.ApplicationCommandData().Name {
+		case "clears":
+			c.Autocomplete(s, i)
+		case "menu":
+			c.MenuAutocomplete(s, i)
+		}
 	case discordgo.InteractionMessageComponent:
 		customID := i.MessageComponentData().CustomID
 

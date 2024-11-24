@@ -42,7 +42,6 @@ A list of buttons to be displayed under the embed. Each button object has the fo
   - `2` = Secondary (Grey)
   - `3` = Success (Green)
   - `4` = Danger (Red)
-  - `5` = URL (Grey), prob shouldn't be used?
 - `menuName` (string) - Name of menu button leads to
 - `menuType` (string) - Type of menu referred to by `menuName`
 

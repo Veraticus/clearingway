@@ -75,7 +75,11 @@ func (c *Clearingway) MenuEncounterSend(s *discordgo.Session, i *discordgo.Inter
 		userRoleMap[role] = struct{}{}
 	}
 
-	menu := g.Menus.Menus[menuName]
+	menu, ok := g.Menus.Menus[menuName]
+	if !ok {
+		discord.StartInteraction(s, i.Interaction, "Error: Menu not found.")
+		return
+	}
 	additionalData := menu.AdditionalData
 
 	dropdownSlice := make([]discordgo.SelectMenuOption, len(additionalData.EncounterDropdown))
@@ -157,7 +161,11 @@ func (c *Clearingway) MenuEncounterProcess(s *discordgo.Session, i *discordgo.In
 		return
 	}
 
-	menu := g.Menus.Menus[menuName]
+	menu, ok := g.Menus.Menus[menuName]
+	if !ok {
+		discord.StartInteraction(s, i.Interaction, "Error: Menu not found.")
+		return
+	}
 	additionalData := menu.AdditionalData
 
 	userOptions := i.MessageComponentData().Values

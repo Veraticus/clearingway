@@ -743,58 +743,173 @@ guilds:
     encounterName: "Futures Rewritten (Ultimate)"
     to: "Roommate"
   menu:
-    - name: "menuMain"
-      type: "menuMain"
-      title: "NAUR Role Assignment"
-      description: |-
-        Welcome to the Role Assignment channel.
-        
-        Using the buttons below will give or remove certain roles in this server. Some roles are tied to ultimate clears. Make sure to verify your clears for those roles. If you need any help or run into issues, please open a support ticket here: https://discord.com/channels/1172230157776466050/1240061557350731856
-
-        **Verify Character**: Use this button to verify ownership and analyze all ultimate clears of your character.
-
-        **Reclear & C4X Roles**: Use this button to add or remove specific Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
-
-        **Legacy Content Roles**: Use this button to add or remove specific mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
-
-        **Change Name Color**: Use this button to add or remove a specific role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
-
-        **Remove Roles**: Use this button to remove all or certain categories of roles from your profile.
-    - name: "menuRemove"
-      type: "menuRemove"
-      title: "Remove Roles"
+    - name: menuMain
+      type: menuMain
+      title: __Character Verifcation Menu__
+      description: Use the  button to begin the verification process of your character.
+      thumbnailUrl: >-
+        https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
+      fields:
+        - name: Verify Character Button
+          value: >
+            Verifying your character will confirm ownership of your FFXIV character and analyze the FFLogs attached to it.
+            Once verified, roles will then be assigned to you based on your confirmed clears and other criteria in your logs.
+      buttons:
+        - label: Verify Character
+          style: 3
+          menuName: menuVerify
+          menuType: menuVerify
+    - name: cleared
+      type: menuMain
+      title: __Cleared Roles Menu__
+      description: Use the buttons below to obtain roles that required a specific `Cleared Role`. 
+      thumbnailUrl: >-
+        https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
+      fields:
+        - name: Name Color Button
+          value: >
+            Use this button to add or remove a specific role that changes your name color in NAUR
+            to one that matches the theme of a specific ultimate
+        - name: Reclear Roles Button
+          value: >
+            Use this button to add or remove specific mentionable Reclear Roles for a specific
+            ultimate. These roles are used to ping people for Reclear parties.
+        - name: C4X Roles Button
+          value: >
+            Use this button to add or remove specific mentionable C4X Roles for a specific
+            ultimate. These roles are used to ping people for clear parties.
+      buttons:
+        - label: Name Colors
+          style: 1
+          menuName: menuColor
+          menuType: menuEncounter
+        - label: Reclear Roles
+          style: 1
+          menuName: menuReclear
+          menuType: menuEncounter
+        - label: C4X Roles
+          style: 1
+          menuName: menuHelper
+          menuType: menuEncounter
+    - name: menuColor
+      type: menuEncounter
+      title: Name Color Roles
       description: >
-        Remove all or certain types of Clearingway related roles from yourself.
-    - name: "menuReclear"
-      type: "menuEncounter"
-      title: "Reclear & C4X Roles"
-      description: > 
-        Toggle mentionable Reclear or C4X Roles for a specific ultimate. You must have the corresponding Cleared Role.
+        Toggle a role that changes your name color to one that matches the
+        theme of a specific ultimate. You must have the corresponding Cleared
+        Role.
       roleType:
-        - "Reclear"
-        - "C4X"
+        - Name Color
+      requireClear: true
+    - name: menuReclear
+      type: menuEncounter
+      title: Reclear Roles
+      description: >
+        Toggle mentionable reclear roles for a specific ultimate. You must have
+        the corresponding Cleared Role.
+      roleType:
+        - Reclear
       multiSelect: true
       requireClear: true
-    - name: "menuProg"
-      type: "menuEncounter"
-      title: "Legacy Content Roles"
+    - name: menuHelper
+      type: menuEncounter
+      title: C4X Roles
       description: >
-        Toggle mentionable roles for legacy ultimate prog, ultimate unlocks, and or BiS farm parties.
+        Toggle mentionable C4X Roles for a specific ultimate. You must have the
+        corresponding Cleared Role.
       roleType:
-        - "Prog"
+        - C4X
+    - name: prog
+      type: menuMain
+      title: __Prog Role Menu__
+      description: >
+        Prog Roles are obtainable by anyone and are used to ping people for certain prog parties.
+        *Note: Current Ultimates will have roles by prog point while Legacy UItimates will have only one role per duty.*
+      thumbnailUrl: >-
+        https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
+      fields:
+        - name: FRU Prog Button
+          value: >
+            Use this button to add or remove a role to be pinged for parties regarding a certain prog point in FRU.
+        - name: Legacy Ultimate Prog Button
+          value: >
+            Use this button to add or remove a role to be pinged for prog parties in a specific Legacy Ultimate.
+        - name: BiS Farm / Ultimate Unlock Button
+          value: >
+            Use this button to add or remove a role to be pinged for BiS Farms and or Ultimate Unlocks.
+      buttons:
+        - label: FRU Prog Roles
+          style: 1
+          menuName: menuFRU
+          menuType: menuEncounter
+        - label: Legacy Content Roles
+          style: 1
+          menuName: menuLegacy
+          menuType: menuEncounter
+        - label: BiS Farm/Ultimate Unlock
+          style: 1
+          menuName: menuProgOthers
+          menuType: menuEncounter
+    - name: menuFRU
+      type: menuEncounter
+      title: FRU Prog Roles
+      description: Toggle mentionable prog roles for FRU.
       multiSelect: true
       roles:
-        - name: "BiS Farm"
-        - name: "Ultimate Unlock"
-    - name: "menuColor"
-      type: "menuEncounter"
-      title: "Name Color Roles"
-      description: >
-        Toggle a role that changes your name color in NAUR to one that matches the theme of a specific ultimate. You must have the corresponding Cleared Role.
+        - name: Thancred
+    - name: menuLegacy
+      type: menuEncounter
+      title: Legacy Content Roles
+      description: Toggle mentionable roles for legacy ultimate prog.
       roleType:
-        - "Name Color"
-      requireClear: true
-      imageUrl: https://raw.githubusercontent.com/naurffxiv/assets/main/Discord%20Markdown%20Files/Thumbnails/image.png
+        - Prog
+      multiSelect: true
+    - name: menuProgOthers
+      type: menuEncounter
+      title: BiS Farm/Ultimate Unlock Roles
+      description: Toggle mentionable roles for ultimate unlocks and BiS farm parties.
+      multiSelect: true
+      roles:
+        - name: BiS Farm
+        - name: Ultimate Unlock
+    - name: misc
+      type: menuMain
+      title: __Miscellaneous Menu__
+      description: This menu is used to obtain server-related roles or to remove certain types of roles from yourself.
+      thumbnailUrl: >-
+        https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
+      fields:
+        - name: Server Related Roles Button
+          value: Use this button to add or remove a role to be pinged for certain server notifcations.
+        - name: Remove Roles Button
+          value: Use this button to remove certain types of roles in bulk.
+      buttons:
+        - label: Server Related Roles
+          style: 3
+          menuName: menuServer
+          menuType: menuEncounter
+        - label: Remove Roles
+          style: 4
+          menuName: menuRemove
+          menuType: menuRemove
+    - name: menuServer
+      type: menuEncounter
+      title: Server Related Roles
+      description: Toggle several server related roles.
+      multiSelect: true
+      roles:
+        - name: Server Ping
+          color: 0xf1c40f
+        - name: Vote Ping
+          color: 0xf1c40f
+        - name: Event Ping
+          color: 0xf1c40f
+        - name: Movie Ping
+          color: 0xf1c40f
+    - name: menuRemove
+      type: menuRemove
+      title: Remove Roles
+      description: Remove all or certain types of Clearingway related roles from yourself.
 - name: Deep Dungeon
   roles:
     relevantParsing: false

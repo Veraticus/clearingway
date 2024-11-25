@@ -675,7 +675,7 @@ guilds:
     roles:
       - name: "FRU Cleared"
         type: "Cleared"
-        color: 0xc9843f
+        color: 0xa3f8e7
       - name: "FRU Reclear"
         type: "Reclear"
       - name: "The Lesbians' Color"

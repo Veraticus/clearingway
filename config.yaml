@@ -819,6 +819,8 @@ guilds:
         corresponding Cleared Role.
       roleType:
         - C4X
+      multiSelect: true
+      requireClear: true
     - name: prog
       type: menuMain
       title: __Prog Role Menu__

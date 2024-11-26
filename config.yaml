@@ -858,7 +858,10 @@ guilds:
       description: Toggle mentionable prog roles for FRU.
       multiSelect: true
       roles:
-        - name: Thancred
+        - name: Fatebreaker
+        - name: Shiva
+        - name: Adds
+        - name: Gaia
     - name: menuLegacy
       type: menuEncounter
       title: Legacy Content Roles

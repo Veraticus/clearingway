@@ -860,6 +860,7 @@ guilds:
       roles:
         - name: Fatebreaker
         - name: Shiva
+        - name: Adds
         - name: Gaia
     - name: menuLegacy
       type: menuEncounter

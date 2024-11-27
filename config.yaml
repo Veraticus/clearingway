@@ -856,12 +856,15 @@ guilds:
       type: menuEncounter
       title: FRU Prog Roles
       description: Toggle mentionable prog roles for FRU.
-      multiSelect: true
       roles:
-        - name: Fatebreaker
-        - name: Shiva
-        - name: Adds
-        - name: Gaia
+        - name: Cyclonic Break	
+        - name: Utopian Sky	
+        - name: Fall of Faith
+        - name: Diamond Dust
+        - name: Light Rampant
+        - name: Intermission
+        - name: Ultimate Relativity
+        - name: Apocalypse
     - name: menuLegacy
       type: menuEncounter
       title: Legacy Content Roles

@@ -666,7 +666,6 @@ guilds:
         type: "C4X"
       - name: "TOP Prog"
         type: "Prog"
-# TODO: add fight ids when fight is live on FFLogs
   - ids: [1079]
     name: "Futures Rewritten (Ultimate)"
     defaultRoles: false

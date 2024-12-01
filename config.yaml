@@ -651,7 +651,7 @@ guilds:
   - ids: [1068, 1077]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
-    totalWeaponsAvailable: 19
+    totalWeaponsAvailable: 21
     the: "Alpha"
     roles:
       - name: "TOP Cleared"
@@ -666,8 +666,7 @@ guilds:
         type: "C4X"
       - name: "TOP Prog"
         type: "Prog"
-# TODO: add fight ids when fight is live on FFLogs
-  - ids: []
+  - ids: [1079]
     name: "Futures Rewritten (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 21

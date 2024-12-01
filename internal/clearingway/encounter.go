@@ -50,10 +50,9 @@ var UltimateEncounters = &Encounters{
 			TotalWeaponsAvailable: 19,
 			The:                   "Alpha",
 		},
-		// TODO: add fight ids when fight is live on FFLogs
 		{
 			Name:                  "Futures Rewritten (Ultimate)",
-			Ids:                   []int{},
+			Ids:                   []int{1079},
 			Difficulty:            "Ultimate",
 			DefaultRoles:          false,
 			TotalWeaponsAvailable: 21,

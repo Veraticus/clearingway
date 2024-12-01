@@ -556,7 +556,7 @@ guilds:
     totalWeaponsAvailable: 19
     the: "Roommate"
     roles:
-      - name: Genesis of Sheep"
+      - name: "Genesis of Sheep"
         type: "Cleared"
         color: 0xaaf8f7
         hoist: true        

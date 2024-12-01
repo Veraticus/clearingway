@@ -558,7 +558,7 @@ guilds:
     roles:
       - name: Genesis of Sheep"
         type: "Cleared"
-        color: 0xd1e5f4
+        color: 0xaaf8f7
         hoist: true        
   reconfigureRoles:
   - from: "The Legend"
@@ -570,6 +570,8 @@ guilds:
   - from: "The Quad Legend"
     color: 0x0ec0a5
   - from: "The Penta Legend"
+    color: 0x0ec0a5
+  - from: "The Sexa Legend"
     color: 0x0ec0a5
 - name: NAUR
   roles:

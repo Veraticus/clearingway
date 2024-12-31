@@ -3,7 +3,7 @@
 test:
 	go test ./... -race -covermode=atomic -coverprofile=coverage.out
 
-build:
+clearingway:
 	go build -o clearingway
 
 postgres:

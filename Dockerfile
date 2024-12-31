@@ -1,10 +1,13 @@
-FROM golang:1.22.1 AS builder
+FROM golang:1.23.1 AS builder
 WORKDIR /src
+COPY go.mod go.sum /src/
+RUN go mod download
 COPY . /src
-RUN make build
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 make clearingway
 
-FROM alpine:3.19.1
+FROM gcr.io/distroless/static-debian12
 WORKDIR /clearingway
 COPY --from=builder /src/clearingway .
 COPY --from=builder /src/config.yaml .
-ENTRYPOINT /clearingway/clearingway
+USER nonroot:nonroot
+ENTRYPOINT ["/clearingway/clearingway"]

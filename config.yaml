@@ -559,7 +559,7 @@ guilds:
       - name: "Genesis of Sheep"
         type: "Cleared"
         color: 0xaaf8f7
-        hoist: true        
+        hoist: true
   reconfigureRoles:
   - from: "The Legend"
     color: 0x0ec0a5
@@ -773,7 +773,7 @@ guilds:
     - name: cleared
       type: menuMain
       title: __Cleared Roles Menu__
-      description: Use the buttons below to obtain roles that required a specific `Cleared Role`. 
+      description: Use the buttons below to obtain roles that required a specific `Cleared Role`.
       thumbnailUrl: >-
         https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
       fields:
@@ -868,8 +868,8 @@ guilds:
       title: FRU Prog Roles
       description: Toggle mentionable prog roles for FRU.
       roles:
-        - name: Cyclonic Break	
-        - name: Utopian Sky	
+        - name: Cyclonic Break
+        - name: Utopian Sky
         - name: Fall of Faith
         - name: Diamond Dust
         - name: Light Rampant
@@ -980,3 +980,40 @@ guilds:
           description: "Once and Future King / Queen"
           type: "Cleared"
           color: 0x739BD0
+- name: "Really Actually Difficult Alliance Raids"
+  roles:
+    relevantParsing: false
+    relevantFlexing: false
+    relevantRepetition: false
+    legend: false
+    ultimateFlexing: false
+    ultimateRepetition: false
+    datacenter: false
+    menu: true
+  guildId: 1278813368932630568
+  channelId: 1323700342906556437
+  physicalDatacenters:
+  - name: "NA"
+  encounters:
+  - ids: [2061]
+    name: "Cloud of Darkness (Chaotic)"
+    defaultRoles: false
+    roles:
+      - name: "cod cleared"
+        type: "Cleared"
+        color: 0xffffff
+  menu:
+    - name: menuMain
+      type: menuMain
+      title: __Verify Clears__
+      description: Use the button below to verify clears for your character.
+      fields:
+        - name: Verify Clears
+          value: >
+            Verifying your character will confirm ownership of your FFXIV character and analyze the FFLogs attached to it.
+            Once verified, roles will then be assigned to you based on your confirmed clears and other criteria in your logs.
+      buttons:
+        - label: Verify Clears
+          style: 3
+          menuName: menuVerify
+          menuType: menuVerify

@@ -1011,7 +1011,7 @@ guilds:
         - name: Verify Clears
           value: >
             Verifying your character will confirm ownership of your FFXIV character and analyze the FFLogs attached to it.
-            Once verified, roles will then be assigned to you based on your confirmed clears and other criteria in your logs.
+            Once verified, roles will then be assigned to you based on your confirmed clears.
       buttons:
         - label: Verify Clears
           style: 3

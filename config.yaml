@@ -1,274 +1,4 @@
 guilds:
-- name: NAPS
-  roles:
-    relevantParsing: true
-    relevantFlexing: true
-    relevantRepetition: true
-    legend: true
-    ultimateFlexing: true
-    ultimateRepetition: true
-    datacenter: true
-  guildId: 1008845758805594173
-  channelId: 1008850017185955850
-  physicalDatacenters:
-  - name: "NA"
-  encounters:
-  - ids: [91]
-    name: "P12S"
-    difficulty: "Savage"
-    defaultRoles: true
-    roles:
-      - name: "P12S-Cleared"
-        type: "Cleared"
-        color: 0xef8633
-  - ids: [90]
-    name: "P11S"
-    difficulty: "Savage"
-    defaultRoles: true
-    roles:
-      - name: "P11S-Cleared"
-        type: "Cleared"
-        color: 0x9644e5
-  - ids: [89]
-    name: "P10S"
-    difficulty: "Savage"
-    defaultRoles: true
-    roles:
-      - name: "P10S-Cleared"
-        type: "Cleared"
-        color: 0x2a72f6
-  - ids: [88]
-    name: "P9S"
-    difficulty: "Savage"
-    defaultRoles: true
-    roles:
-      - name: "P9S-Cleared"
-        type: "Cleared"
-        color: 0x78fa4c
-    clearedColor: 0x78fa4c
-- name: APD
-  roles:
-    relevantParsing: true
-    relevantFlexing: true
-    relevantRepetition: true
-    legend: true
-    ultimateFlexing: true
-    ultimateRepetition: true
-    datacenter: true
-  guildId: 968960259081252884
-  channelId: 972868045552877589
-  physicalDatacenters:
-  - name: "NA"
-  encounters:
-  - ids: [1065, 1076]
-    name: "Dragonsong's Reprise (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 19
-    roles:
-      - name: "Cleared"
-        type: "Cleared"
-        color: 0xf58cba
-    prog:
-    - name: Vault Knights
-      color: 0x9C491B
-      hoist: false
-    - name: Thordan
-      color: 0x693986
-      hoist: false
-      mention: false
-    - name: Nidstinien
-      color: 0x356590
-      hoist: false
-      mention: false
-    - name: The Eyes
-      color: 0x596D79
-      hoist: false
-      mention: false
-    - name: Thordan Reprise
-      color: 0x925CB1
-      hoist: false
-      mention: false
-    - name: Double Dragon
-      color: 0x5195D3
-      hoist: false
-      mention: false
-    - name: Dragon-king Thordan
-      color: 0xE8C444
-      hoist: false
-      mention: false
-  reconfigureRoles:
-  - from: "Heavenly"
-    skip: true
-  - from: "Heavenly Limbo"
-    skip: true
-- name: UAR
-  roles:
-    relevantParsing: true
-    relevantFlexing: false
-    relevantRepetition: false
-    legend: true
-    ultimateFlexing: true
-    ultimateRepetition: true
-    datacenter: true
-  guildId: 973884326515191838
-  channelId: 1028344695597838356
-  physicalDatacenters:
-  - name: "NA"
-  encounters:
-  - ids: [1060, 1047, 1039, 1073]
-    name: "The Unending Coil of Bahamut (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 15
-    the: "Legendary"
-    roles:
-      - name: "UCoB Cleared"
-        type: "Cleared"
-        color: 0xFFFD7F
-  - ids: [1061, 1048, 1042, 1074]
-    name: "The Weapon's Refrain (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 15
-    the: "Ultimate"
-    roles:
-      - name: "UWU Cleared"
-        type: "Cleared"
-        color: 0x9CBDD8
-  - ids: [1062, 1050, 1075]
-    name: "The Epic of Alexander (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 17
-    the: "Perfect"
-    roles:
-      - name: "TEA Cleared"
-        type: "Cleared"
-        color: 0xFAE9C2
-  - ids: [1065, 1076]
-    name: "Dragonsong's Reprise (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 19
-    the: "Heavenly"
-    roles:
-      - name: "DSR Cleared"
-        type: "Cleared"
-        color: 0xCF8035
-  - ids: [1068, 1077]
-    name: "The Omega Protocol (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 19
-    the: "Alpha"
-    roles:
-      - name: "TOP Cleared"
-        type: "Cleared"
-        color: 0xd1e5f4
-- name: UDR
-  roles:
-    relevantParsing: true
-    relevantFlexing: false
-    relevantRepetition: false
-    legend: true
-    ultimateFlexing: true
-    ultimateRepetition: false
-    datacenter: true
-  guildId: 1021602454716022845
-  channelId: 1037083485543866479
-  physicalDatacenters:
-  - name: "NA"
-  encounters:
-  - ids: [1060, 1047, 1039, 1073]
-    name: "The Unending Coil of Bahamut (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 15
-    the: "Legendary"
-    roles:
-      - name: "i killed ucob"
-        type: "Cleared"
-        color: 0xb89c00
-  - ids: [1061, 1048, 1042, 1074]
-    name: "The Weapon's Refrain (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 15
-    the: "Ultimate"
-    roles:
-      - name: "i killed uwu"
-        type: "Cleared"
-        color: 0x23f3f7
-  - ids: [1062, 1050, 1075]
-    name: "The Epic of Alexander (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 17
-    the: "Perfect"
-    roles:
-      - name: "i killed tea"
-        type: "Cleared"
-        color: 0xf5cbff
-  - ids: [1065, 1076]
-    name: "Dragonsong's Reprise (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 19
-    the: "Heavenly"
-    roles:
-      - name: "i killed dsr"
-        type: "Cleared"
-        color: 0xD8833B
-  reconfigureRoles:
-  - from: "The Quad Legend"
-    to: "dodge on sight"
-    color: 0xff0003
-- name: UPR
-  roles:
-    relevantParsing: false
-    relevantFlexing: false
-    relevantRepetition: false
-    legend: false
-    ultimateFlexing: false
-    ultimateRepetition: false
-    datacenter: true
-  guildId: 404710160540368917
-  channelId: 1028389598755311657
-  physicalDatacenters:
-  - name: "NA"
-    logicalDatacenters:
-      - to: "aether guest"
-        from: "Aether"
-        color: 0x000001
-      - to: "crystal guest"
-        from: "Crystal"
-        color: 0xf9c9a9
-      - to: "primal guest"
-        from: "Primal"
-        color: 0xff0000
-      - to: "dynamis guest"
-        from: "Dynamis"
-        color: 0xEAC645
-  encounters:
-  - ids: [1060, 1047, 1039, 1073]
-    name: "The Unending Coil of Bahamut (Ultimate)"
-    defaultRoles: false
-    roles:
-      - name: "Cleared Ucob"
-        type: "Cleared"
-        color: 0xEAC645
-  - ids: [1061, 1048, 1042, 1074]
-    name: "The Weapon's Refrain (Ultimate)"
-    defaultRoles: false
-    roles:
-      - name: "Cleared UwU"
-        type: "Cleared"
-        color: 0x3bbdf5
-  - ids: [1062, 1050, 1075]
-    name: "The Epic of Alexander (Ultimate)"
-    defaultRoles: false
-    roles:
-      - name: "Cleared TEA"
-        type: "Cleared"
-        color: 0x65C97A
-  - ids: [1065, 1076]
-    name: "Dragonsong's Reprise (Ultimate)"
-    defaultRoles: false
-    roles:
-      - name: "Cleared DSR"
-        type: "Cleared"
-        color: 0xb660ff
 - name: Ultimate Uncoiled
   roles:
     relevantParsing: false
@@ -351,53 +81,6 @@ guilds:
   - from: "The Quad Legend"
     to: "tetrislegendbtw"
     color: 0xffa6c9
-- name: TOP
-  roles:
-    relevantParsing: true
-    relevantFlexing: true
-    relevantRepetition: true
-    legend: true
-    ultimateFlexing: true
-    ultimateRepetition: true
-    datacenter: true
-  guildId: 982459453578285056
-  channelId: 1073363433489170442
-  physicalDatacenters:
-  - name: "NA"
-  encounters:
-  - ids: [1068, 1077]
-    name: "The Omega Protocol (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 19
-    roles:
-      - name: "ALPHA LEGEND"
-        type: "Cleared"
-        color: 0xf58cba
-        hoist: true
-    prog:
-    - name: Omega
-      color: 0x693986
-      hoist: true
-    - name: Omega-M/F
-      color: 0x356590
-      hoist: true
-    - name: Omega Reconfigured
-      color: 0x596D79
-      hoist: true
-    - name: Blue Screen
-      color: 0x925CB1
-      hoist: true
-    - name: "Run: Dynamis"
-      color: 0x6fd9f3
-      hoist: true
-    - name: Alpha Omega
-      color: 0xE8C444
-      hoist: true
-  reconfigureRoles:
-  - from: "Alpha"
-    skip: true
-  - from: "Alpha Limbo"
-    skip: true
 - name: Savage Learning Academy
   roles:
     relevantParsing: false
@@ -1002,6 +685,72 @@ guilds:
       - name: "cod cleared"
         type: "Cleared"
         color: 0xffffff
+  menu:
+    - name: menuMain
+      type: menuMain
+      title: __Verify Clears__
+      description: Use the button below to verify clears for your character.
+      fields:
+        - name: Verify Clears
+          value: >
+            Verifying your character will confirm ownership of your FFXIV character and analyze the FFLogs attached to it.
+            Once verified, roles will then be assigned to you based on your confirmed clears.
+      buttons:
+        - label: Verify Clears
+          style: 3
+          menuName: menuVerify
+          menuType: menuVerify
+- name: "NASE"
+  roles:
+    relevantParsing: false
+    relevantFlexing: false
+    relevantRepetition: false
+    legend: false
+    ultimateFlexing: false
+    ultimateRepetition: false
+    datacenter: false
+    menu: true
+  guildId: 1249838010783240192
+  channelId: 1324415334601723925
+  physicalDatacenters:
+  - name: "NA"
+  encounters:
+  - ids: [1071]
+    name: "Worqor Lar Dor (Extreme)"
+    defaultRoles: false
+    roles:
+      - name: "EX 1 Cleared"
+        type: "Cleared"
+        color: 0x99aab5
+  - ids: [1072]
+    name: "Everkeep (Extreme)"
+    defaultRoles: false
+    roles:
+      - name: "EX 2 Cleared"
+        type: "Cleared"
+        color: 0x1abc9c
+  - ids: [1078]
+    name: "The Minstrel's Ballad: Sphene's Burden"
+    defaultRoles: false
+    roles:
+      - name: "EX 3 Cleared"
+        type: "Cleared"
+        color: 0x9b59b6
+  - ids: [96]
+    name: "AAC Light Heavyweight M4 (Savage)"
+    defaultRoles: false
+    difficulty: "Savage"
+    roles:
+      - name: "AAC LH Cleared"
+        type: "Cleared"
+        color: 0x3498db
+  - ids: [2061]
+    name: "Cloud of Darkness (Chaotic)"
+    defaultRoles: false
+    roles:
+      - name: "CAR CoD Farm"
+        type: "Cleared"
+        color: 0x99aab5
   menu:
     - name: menuMain
       type: menuMain

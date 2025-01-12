@@ -530,9 +530,6 @@ guilds:
         - name: Legacy Ultimate Prog Button
           value: >
             Use this button to add or remove a role to be pinged for prog parties in a specific Legacy Ultimate.
-        - name: BiS Farm / Ultimate Unlock Button
-          value: >
-            Use this button to add or remove a role to be pinged for BiS Farms and or Ultimate Unlocks.
       buttons:
         - label: FRU Prog Roles
           style: 1
@@ -541,10 +538,6 @@ guilds:
         - label: Legacy Content Roles
           style: 1
           menuName: menuLegacy
-          menuType: menuEncounter
-        - label: BiS Farm/Ultimate Unlock
-          style: 1
-          menuName: menuProgOthers
           menuType: menuEncounter
     - name: menuFRU
       type: menuEncounter
@@ -569,18 +562,10 @@ guilds:
       roleType:
         - Prog
       multiSelect: true
-    - name: menuProgOthers
-      type: menuEncounter
-      title: BiS Farm/Ultimate Unlock Roles
-      description: Toggle mentionable roles for ultimate unlocks and BiS farm parties.
-      multiSelect: true
-      roles:
-        - name: BiS Farm
-        - name: Ultimate Unlock
     - name: misc
       type: menuMain
       title: __Miscellaneous Menu__
-      description: This menu is used to obtain server-related roles or to remove certain types of roles from yourself.
+      description: This menu is used to obtain other miscellaneous roles or to remove certain types of roles from yourself.
       thumbnailUrl: >-
         https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
       fields:
@@ -588,7 +573,14 @@ guilds:
           value: Use this button to add or remove a role to be pinged for certain server notifcations.
         - name: Remove Roles Button
           value: Use this button to remove certain types of roles in bulk.
+        - name: Non-Specific Ultimate Roles Button
+          value: >
+            Use this button to add or remove non-specific ultimate roles.
       buttons:
+        - label: Non-Specific Ultimate Roles
+          style: 1
+          menuName: menuGenUlti
+          menuType: menuEncounter
         - label: Server Related Roles
           style: 3
           menuName: menuServer
@@ -597,6 +589,15 @@ guilds:
           style: 4
           menuName: menuRemove
           menuType: menuRemove
+    - name: menuGenUlti
+      type: menuEncounter
+      title: Non-Specific Ultimate Roles
+      description: Toggle mentionable non-specific ultimate roles.
+      multiSelect: true
+      roles:
+        - name: BiS Farm
+        - name: Ultimate Unlock
+        - name: Mercenary
     - name: menuServer
       type: menuEncounter
       title: Server Related Roles

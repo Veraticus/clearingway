@@ -683,7 +683,7 @@ guilds:
     name: "Cloud of Darkness (Chaotic)"
     defaultRoles: false
     roles:
-      - name: "cod cleared"
+      - name: "Verified Clear-CoD"
         type: "Cleared"
         color: 0xffffff
   menu:

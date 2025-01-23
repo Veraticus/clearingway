@@ -217,11 +217,21 @@ func PopulateButtons(buttonsList []discordgo.Button) []discordgo.MessageComponen
 	// count how many buttons to ensure menu doesn't exceed limit of 25 buttons
 	ctr := 0
 	ret := []discordgo.MessageComponent{}
+	buttonsMap := make(map[string]struct{})
 	for _, button := range buttonsList {
 		if ctr >= 25 {
 			fmt.Printf("Exceeded button limit, skipping any additional buttons...")
 			break
 		}
+
+		// ensure no duplicate buttons are populated
+		if _, ok := buttonsMap[button.CustomID]; !ok {
+			buttonsMap[button.CustomID] = struct{}{}
+		} else {
+			fmt.Printf("Duplicate button customID found, skipping duplicate:\n\tCustomID: %s\n\tLabel: %s", button.CustomID, button.Label)
+			continue
+		}
+
 		if ctr%5 == 0 {
 			ret = append(ret, discordgo.ActionsRow{Components: []discordgo.MessageComponent{button}})
 		} else {

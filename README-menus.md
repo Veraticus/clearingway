@@ -49,7 +49,7 @@ A list of buttons to be displayed under the embed. Each button object has the fo
 ## MenuEncounter
 Ephemeral response menus that allow the user to pick role(s) through a dropdown selection. Dropdown can be single option or multi option. 
 
-Roles in this menu can be set up 2 ways, for all ultimate encounters or a per-role basis. The former allows for requiring a cleared role for the respective ultimate. The latter allows to add miscellaneous roles that are connected to Clearingway's internal encounters.
+Roles in this menu can be set up 2 ways, for all encounters of a particular difficulty or a per-role basis. The former allows for requiring a cleared role for the respective ultimate. The latter allows to add miscellaneous roles that are connected to Clearingway's internal encounters.
 
 ### Common
 #### Optional properties
@@ -60,6 +60,7 @@ Roles must still be set up separately and connected the respective encounter in 
 #### Required properties
 - `roleType` (array of string) - Category of role (string enum), defined in `role.go`
 #### Optional properties
+- `difficulties` (array of string) - Encounter difficulties you want to include in this menu.
 - `requireClear` (bool) - Whether the configured roles require their respective encounter's clear role.
 
 ### Per-role basis
@@ -220,3 +221,63 @@ Here I add 1 more encounter and another role type, now I have 2 different select
       requireClear: true
       multiSelect: true
 ```
+## Role menu for only one dificulty type
+Use this when you want to filter out encounters of certain difficulties. 
+```yaml
+# ...
+  encounters:
+    # test encounter 1
+    - ids: [1234]
+      name: "Test encounter 1"
+      difficulty: "Ultimate"
+      roles:
+        # ...
+    - ids: [2345]
+      name: "Test encounter 2"
+      difficulty: "Savage"
+      roles:
+        # ...
+  menu:
+    # ... menuMain with the respective button ...
+    # reclear/c4x submenu
+    - name: "namecolors"
+      type: "menuEncounter"
+      title: "Name Color Roles"
+      description: "Name Color Roles"
+      roleType:
+        - Name Color
+      requireClear: true
+      difficulties:
+        - Ultimate
+```
+The menu now only contains the relevant role of test encounter 1, test encounter 2 is filtered out.
+## Role menu with multiple difficulty types but split in the same menu
+```yaml
+# ...
+  encounters:
+    # test encounter 1
+    - ids: [1234]
+      name: "Test encounter 1"
+      difficulty: "Ultimate"
+      roles:
+        # ...
+    - ids: [2345]
+      name: "Test encounter 2"
+      difficulty: "Savage"
+      roles:
+        # ...
+  menu:
+    # ... menuMain with the respective button ...
+    # reclear/c4x submenu
+    - name: "namecolors"
+      type: "menuEncounter"
+      title: "Name Color Roles"
+      description: "Name Color Roles"
+      roleType:
+        - Name Color
+      requireClear: true
+      difficulties:
+        - Ultimate
+        - Savage
+```
+The menu now contains the relevant roles for both encounters, but they are split for better categorization.

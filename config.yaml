@@ -271,83 +271,31 @@ guilds:
   guildId: 1172230157776466050
   channelId: 1172348608671133760
   encounters:
-  - ids: [1060, 1047, 1039, 1073]
-    name: "The Unending Coil of Bahamut (Ultimate)"
+  - ids: [1079]
+    name: "Futures Rewritten (Ultimate)"
     defaultRoles: false
-    totalWeaponsAvailable: 15
-    the: "Legendary"
+    totalWeaponsAvailable: 21
+    the: "Roommate"
+    difficulty: "Ultimate"
     roles:
-      - name: "UCoB Cleared"
+      - name: "FRU Cleared"
         type: "Cleared"
-        color: 0xfdfd96
-      - name: "UCoB Reclear"
+        color: 0xa3f8e7
+      - name: "FRU Reclear"
         type: "Reclear"
-      - name: "The Legend's Color"
+      - name: "The Lesbians' Color"
         type: "Name Color"
-        color: 0xfdfd96
-      - name: "UCoB C4X"
+        color: 0xa3f8e7
+      - name: "FRU C4X"
         type: "C4X"
-      - name: "UCoB Prog"
-        type: "Prog"
-  - ids: [1061, 1048, 1042, 1074]
-    name: "The Weapon's Refrain (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 15
-    the: "Ultimate"
-    roles:
-      - name: "UWU Cleared"
-        type: "Cleared"
-        color: 0x97cae3
-      - name: "UWU Reclear"
-        type: "Reclear"
-      - name: "The Ultimate Color"
-        type: "Name Color"
-        color: 0x97cae3
-      - name: "UWU C4X"
-        type: "C4X"
-      - name: "UWU Prog"
-        type: "Prog"
-  - ids: [1062, 1050, 1075]
-    name: "The Epic of Alexander (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 17
-    the: "Perfect"
-    roles:
-      - name: "TEA Cleared"
-        type: "Cleared"
-        color: 0xfae9c2
-      - name: "TEA Reclear"
-        type: "Reclear"
-      - name: "The Perfect Color"
-        type: "Name Color"
-        color: 0xfae9c2
-      - name: "TEA C4X"
-        type: "C4X"
-      - name: "TEA Prog"
-        type: "Prog"
-  - ids: [1065, 1076]
-    name: "Dragonsong's Reprise (Ultimate)"
-    defaultRoles: false
-    totalWeaponsAvailable: 19
-    the: "Heavenly"
-    roles:
-      - name: "DSR Cleared"
-        type: "Cleared"
-        color: 0xc9843f
-      - name: "DSR Reclear"
-        type: "Reclear"
-      - name: "The Heavens' Color"
-        type: "Name Color"
-        color: 0xc9843f
-      - name: "DSR C4X"
-        type: "C4X"
-      - name: "DSR Prog"
+      - name: "FRU Prog"
         type: "Prog"
   - ids: [1068, 1077]
     name: "The Omega Protocol (Ultimate)"
     defaultRoles: false
     totalWeaponsAvailable: 21
     the: "Alpha"
+    difficulty: "Ultimate"
     roles:
       - name: "TOP Cleared"
         type: "Cleared"
@@ -361,24 +309,134 @@ guilds:
         type: "C4X"
       - name: "TOP Prog"
         type: "Prog"
-  - ids: [1079]
-    name: "Futures Rewritten (Ultimate)"
+  - ids: [1065, 1076]
+    name: "Dragonsong's Reprise (Ultimate)"
     defaultRoles: false
-    totalWeaponsAvailable: 21
-    the: "Roommate"
+    totalWeaponsAvailable: 19
+    the: "Heavenly"
+    difficulty: "Ultimate"
     roles:
-      - name: "FRU Cleared"
+      - name: "DSR Cleared"
         type: "Cleared"
-        color: 0xa3f8e7
-      - name: "FRU Reclear"
+        color: 0xc9843f
+      - name: "DSR Reclear"
         type: "Reclear"
-      - name: "The Lesbians' Color"
+      - name: "The Heavens' Color"
         type: "Name Color"
-        color: 0xa3f8e7
-      - name: "FRU C4X"
+        color: 0xc9843f
+      - name: "DSR C4X"
         type: "C4X"
-      #- name: "FRU Prog"
-      #  type: "Prog"
+      - name: "DSR Prog"
+        type: "Prog"
+  - ids: [1062, 1050, 1075]
+    name: "The Epic of Alexander (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 17
+    the: "Perfect"
+    difficulty: "Ultimate"
+    roles:
+      - name: "TEA Cleared"
+        type: "Cleared"
+        color: 0xfae9c2
+      - name: "TEA Reclear"
+        type: "Reclear"
+      - name: "The Perfect Color"
+        type: "Name Color"
+        color: 0xfae9c2
+      - name: "TEA C4X"
+        type: "C4X"
+      - name: "TEA Prog"
+        type: "Prog"
+  - ids: [1061, 1048, 1042, 1074]
+    name: "The Weapon's Refrain (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Ultimate"
+    difficulty: "Ultimate"
+    roles:
+      - name: "UWU Cleared"
+        type: "Cleared"
+        color: 0x97cae3
+      - name: "UWU Reclear"
+        type: "Reclear"
+      - name: "The Ultimate Color"
+        type: "Name Color"
+        color: 0x97cae3
+      - name: "UWU C4X"
+        type: "C4X"
+      - name: "UWU Prog"
+        type: "Prog"
+  - ids: [1060, 1047, 1039, 1073]
+    name: "The Unending Coil of Bahamut (Ultimate)"
+    defaultRoles: false
+    totalWeaponsAvailable: 15
+    the: "Legendary"
+    difficulty: "Ultimate"
+    roles:
+      - name: "UCoB Cleared"
+        type: "Cleared"
+        color: 0xfdfd96
+      - name: "UCoB Reclear"
+        type: "Reclear"
+      - name: "The Legend's Color"
+        type: "Name Color"
+        color: 0xfdfd96
+      - name: "UCoB C4X"
+        type: "C4X"
+      - name: "UCoB Prog"
+        type: "Prog"
+  - ids: 
+    name: "M8S"
+    defaultRoles: false
+    difficulty: "Savage"
+    roles:
+      - name: "M8S Cleared"
+        type: "Cleared"
+      - name: "M8S Reclear"
+        type: "Reclear"
+      - name: "M8S Prog"
+        type: "Prog"
+      - name: "M8S C4X"
+        type: "C4X"
+  - ids: 
+    name: "M7S"
+    defaultRoles: false
+    difficulty: "Savage"
+    roles:
+      - name: "M7S Cleared"
+        type: "Cleared"
+      - name: "M7S Reclear"
+        type: "Reclear"
+      - name: "M7S Prog"
+        type: "Prog"
+      - name: "M7S C4X"
+        type: "C4X"
+  - ids: 
+    name: "M6S"
+    defaultRoles: false
+    difficulty: "Savage"
+    roles:
+      - name: "M6S Cleared"
+        type: "Cleared"
+      - name: "M6S Reclear"
+        type: "Reclear"
+      - name: "M6S Prog"
+        type: "Prog"
+      - name: "M6S C4X"
+        type: "C4X"
+  - ids: 
+    name: "M5S"
+    defaultRoles: false
+    difficulty: "Savage"
+    roles:
+      - name: "M5S Cleared"
+        type: "Cleared"
+      - name: "M5S Reclear"
+        type: "Reclear"
+      - name: "M5S Prog"
+        type: "Prog"
+      - name: "M5S C4X"
+        type: "C4X"
   reconfigureRoles:
   - from: "Please Do Other Content"
     hoist: true
@@ -466,12 +524,12 @@ guilds:
             to one that matches the theme of a specific ultimate
         - name: Reclear Roles Button
           value: >
-            Use this button to add or remove specific mentionable Reclear Roles for a specific
-            ultimate. These roles are used to ping people for Reclear parties.
+            Use this button to add or remove specific mentionable Reclear Roles for a specific duty.
+            These roles are used to ping people for Reclear parties.
         - name: C4X Roles Button
           value: >
-            Use this button to add or remove specific mentionable C4X Roles for a specific
-            ultimate. These roles are used to ping people for clear parties.
+            Use this button to add or remove specific mentionable C4X Roles for a specific duty.
+            These roles are used to ping people for clear parties.
       buttons:
         - label: Name Colors
           style: 1
@@ -495,6 +553,8 @@ guilds:
       roleType:
         - Name Color
       requireClear: true
+      difficulties:
+        - Ultimate
     - name: menuReclear
       type: menuEncounter
       title: Reclear Roles
@@ -505,6 +565,9 @@ guilds:
         - Reclear
       multiSelect: true
       requireClear: true
+      difficulties:
+        - Ultimate
+        - Savage
     - name: menuHelper
       type: menuEncounter
       title: C4X Roles
@@ -515,81 +578,58 @@ guilds:
         - C4X
       multiSelect: true
       requireClear: true
+      difficulties:
+        - Ultimate
+        - Savage
     - name: prog
       type: menuMain
-      title: __Prog Role Menu__
+      title: __Non-Cleared Roles Menu__
       description: >
         Prog Roles are obtainable by anyone and are used to ping people for certain prog parties.
-        *Note: Current Ultimates will have roles by prog point while Legacy UItimates will have only one role per duty.*
       thumbnailUrl: >-
         https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
       fields:
-        - name: FRU Prog Button
+        - name: Ultimate Prog Button
           value: >
-            Use this button to add or remove a role to be pinged for parties regarding a certain prog point in FRU.
-        - name: Legacy Ultimate Prog Button
+            Use this button to add or remove a role to be pinged for certain Ultimate parties.
+        - name: Savage Prog Button
           value: >
-            Use this button to add or remove a role to be pinged for prog parties in a specific Legacy Ultimate.
+            Use this button to add or remove a role to be pinged for certain Savage parties.
+        - name: Other Roles Button
+          value: >
+            Includes a global BiS Farm, Ultimate Unlock, and Mercenary roles.
       buttons:
-        - label: FRU Prog Roles
+        - label: Ultimate Prog
           style: 1
-          menuName: menuFRU
+          menuName: ultimateProg
           menuType: menuEncounter
-        - label: Legacy Content Roles
+        - label: Savage Prog
           style: 1
-          menuName: menuLegacy
+          menuName: savageProg
           menuType: menuEncounter
-    - name: menuFRU
+        - label: Other Roles
+          style: 1
+          menuName: othersProg
+          menuType: menuEncounter
+    - name: ultimateProg
       type: menuEncounter
-      title: FRU Prog Roles
-      description: Toggle mentionable prog roles for FRU.
-      roles:
-        - name: Cyclonic Break
-        - name: Utopian Sky
-        - name: Fall of Faith
-        - name: Diamond Dust
-        - name: Light Rampant
-        - name: Intermission
-        - name: Ultimate Relativity
-        - name: Apocalypse
-        - name: Darklit Dragonsong
-        - name: Crystalize Time
-        - name: Pandora
-    - name: menuLegacy
-      type: menuEncounter
-      title: Legacy Content Roles
-      description: Toggle mentionable roles for legacy ultimate prog.
+      title: Ultimate Prog Roles
+      description: Toggle mentionable roles for ultimate prog.
       roleType:
         - Prog
       multiSelect: true
-    - name: misc
-      type: menuMain
-      title: __Miscellaneous Menu__
-      description: This menu is used to obtain other miscellaneous roles or to remove certain types of roles from yourself.
-      thumbnailUrl: >-
-        https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
-      fields:
-        - name: Server Related Roles Button
-          value: Use this button to add or remove a role to be pinged for certain server notifcations.
-        - name: Remove Roles Button
-          value: Use this button to remove certain types of roles in bulk.
-        - name: Non-Specific Ultimate Roles Button
-          value: >
-            Use this button to add or remove non-specific ultimate roles.
-      buttons:
-        - label: Non-Specific Ultimate Roles
-          style: 1
-          menuName: menuGenUlti
-          menuType: menuEncounter
-        - label: Server Related Roles
-          style: 3
-          menuName: menuServer
-          menuType: menuEncounter
-        - label: Remove Roles
-          style: 4
-          menuName: menuRemove
-          menuType: menuRemove
-    - name: menuGenUlti
+      difficulties:
+        - Ultimate
+    - name: savageProg
+      type: menuEncounter
+      title: Savage Prog Roles
+      description: Toggle mentionable roles for savage prog.
+      roleType:
+        - Prog
+      multiSelect: true
+      difficulties:
+        - Savage
+    - name: othersProg
       type: menuEncounter
       title: Non-Specific Ultimate Roles
       description: Toggle mentionable non-specific ultimate roles.
@@ -598,6 +638,26 @@ guilds:
         - name: BiS Farm
         - name: Ultimate Unlock
         - name: Mercenary
+    - name: misc
+      type: menuMain
+      title: __Server Roles and Role Removal Menu__
+      description: This menu is used to obtain other miscellaneous roles or to remove certain types of roles from yourself.
+      thumbnailUrl: >-
+        https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
+      fields:
+        - name: Server Related Roles Button
+          value: Use this button to add or remove a role to be pinged for certain server notifcations.
+        - name: Remove Roles Button
+          value: Use this button to remove certain types of roles in bulk.
+      buttons:
+        - label: Server Related Roles
+          style: 3
+          menuName: menuServer
+          menuType: menuEncounter
+        - label: Remove Roles
+          style: 4
+          menuName: menuRemove
+          menuType: menuRemove
     - name: menuServer
       type: menuEncounter
       title: Server Related Roles
@@ -674,8 +734,8 @@ guilds:
     ultimateRepetition: false
     datacenter: false
     menu: true
-  guildId: 1278813368932630568
-  channelId: 1323700342906556437
+  guildId: 352655835387658251
+  channelId: 1267144864684834939
   physicalDatacenters:
   - name: "NA"
   encounters:

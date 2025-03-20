@@ -50,19 +50,26 @@ type Menu struct {
 }
 
 type MenuRoleHelper struct {
-	Role         *Role
-	Prerequisite *Role
+	Role            *Role
+	Prerequisite    *Role
+	DifficultyIndex int
+}
+
+type DropdownHelper struct {
+	DropdownTitle     string
+	SelectMenuOptions []discordgo.SelectMenuOption
 }
 
 type MenuAdditionalData struct {
 	MessageMainMenu   *discordgo.MessageSend
 	MessageEphemeral  *discordgo.InteractionResponse
-	EncounterDropdown []discordgo.SelectMenuOption
+	EncounterDropdown []DropdownHelper
 	Roles             map[string]*MenuRoleHelper
 	ExtraRoles        []*Role
 	RoleType          []RoleType
 	MultiSelect       bool
 	RequireClear      bool
+	Difficulties      []string
 }
 
 func (m *Menu) Init(c *ConfigMenu) {
@@ -153,6 +160,10 @@ func (m *Menu) Init(c *ConfigMenu) {
 			data.RequireClear = true
 		} else {
 			data.RequireClear = false
+		}
+
+		if len(c.Difficulties) != 0 {
+			data.Difficulties = c.Difficulties
 		}
 
 		for _, configRole := range c.ConfigRoles {

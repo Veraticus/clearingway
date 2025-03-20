@@ -348,7 +348,7 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 					return
 				}
 				// NB: can reuse this function since button interactions have no selections
-				c.MenuEncounterProcess(s, i, command[2])
+				c.MenuEncounterProcess(s, i, command[2], "-1")
 			}
 		case MenuEncounter:
 			if ok := len(command) > 2; !ok {
@@ -359,7 +359,7 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			case CommandMenu:
 				c.MenuEncounterSend(s, i, command[2])
 			case CommandEncounterProcess:
-				c.MenuEncounterProcess(s, i, command[2])
+				c.MenuEncounterProcess(s, i, command[2], command[3])
 			}
 		}
 	case discordgo.InteractionModalSubmit:

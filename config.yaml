@@ -385,7 +385,7 @@ guilds:
         type: "C4X"
       - name: "UCoB Prog"
         type: "Prog"
-  - ids: 
+  - ids: [100]  # should be 101 if there's a doorboss
     name: "M8S"
     defaultRoles: false
     difficulty: "Savage"
@@ -398,7 +398,7 @@ guilds:
         type: "Prog"
       - name: "M8S C4X"
         type: "C4X"
-  - ids: 
+  - ids: [99]
     name: "M7S"
     defaultRoles: false
     difficulty: "Savage"
@@ -411,7 +411,7 @@ guilds:
         type: "Prog"
       - name: "M7S C4X"
         type: "C4X"
-  - ids: 
+  - ids: [98]
     name: "M6S"
     defaultRoles: false
     difficulty: "Savage"
@@ -424,7 +424,7 @@ guilds:
         type: "Prog"
       - name: "M6S C4X"
         type: "C4X"
-  - ids: 
+  - ids: [97]
     name: "M5S"
     defaultRoles: false
     difficulty: "Savage"

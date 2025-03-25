@@ -92,6 +92,7 @@ type ConfigMenu struct {
 	RoleType      []string        `yaml:"roleType"`
 	MultiSelect   bool            `yaml:"multiSelect"`
 	RequireClear  bool            `yaml:"requireClear"`
+	Difficulties  []string        `yaml:"difficulties"`
 }
 
 type ConfigButton struct {

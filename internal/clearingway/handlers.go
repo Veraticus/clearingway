@@ -317,9 +317,9 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 		customID := i.MessageComponentData().CustomID
 
 		// commands are differentiated by the customID with the format
-		// [menu type] [command type] [menu name]
-		// e.g "MenuEncounter encounterProcess menuProg"
-		// menu name is optional and only applies to encounter based menus for now
+		// [menu type] [command type] [menu name] [dropdownId]
+		// e.g "MenuEncounter encounterProcess menuProg 0"
+		// menu name and dropdownId are optional and only applies to encounter based menus for now
 		command := strings.Split(customID, " ")
 		if ok := len(command) > 1; !ok {
 			fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
@@ -348,7 +348,7 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 					return
 				}
 				// NB: can reuse this function since button interactions have no selections
-				c.MenuEncounterProcess(s, i, command[2])
+				c.MenuEncounterProcess(s, i, command[2], "-1")
 			}
 		case MenuEncounter:
 			if ok := len(command) > 2; !ok {
@@ -359,7 +359,7 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 			case CommandMenu:
 				c.MenuEncounterSend(s, i, command[2])
 			case CommandEncounterProcess:
-				c.MenuEncounterProcess(s, i, command[2])
+				c.MenuEncounterProcess(s, i, command[2], command[3])
 			}
 		}
 	case discordgo.InteractionModalSubmit:

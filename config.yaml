@@ -749,8 +749,8 @@ guilds:
     ultimateRepetition: false
     datacenter: false
     menu: true
-  guildId: 352655835387658251
-  channelId: 1267144864684834939
+  guildId: 1278813368932630568
+  channelId: 1323700342906556437
   physicalDatacenters:
   - name: "NA"
   encounters:

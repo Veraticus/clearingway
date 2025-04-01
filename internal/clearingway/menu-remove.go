@@ -15,8 +15,9 @@ func (m *Menu) MenuRemoveInit() {
 
 	removeButtons := []discordgo.Button{}
 	removeButtonsList := []removeButton{
+		// TODO: implement manual disabling of these buttons through the config
 		{name: "Uncomfy", commandType: CommandRemoveComfy},
-		{name: "Uncolor", commandType: CommandRemoveColor},
+		//{name: "Uncolor", commandType: CommandRemoveColor},
 		{name: "Remove All", commandType: CommandRemoveAll},
 	}
 

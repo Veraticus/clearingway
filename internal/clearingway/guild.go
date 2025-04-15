@@ -53,7 +53,7 @@ func (g *Guild) Init(c *ConfigGuild) {
 	g.Encounters = &Encounters{Encounters: []*Encounter{}}
 	g.Achievements = &Achievements{Achievements: []*Achievement{}}
 	g.Characters = &ffxiv.Characters{Characters: map[string]*ffxiv.Character{}}
-	g.Menus = &Menus{Menus: map[string]*Menu{}}
+	g.Menus = &Menus{Menus: map[string]*Menu{}, MenuGroups: map[string][]string{}}
 	g.DefaultMenus()
 
 	g.PhysicalDatacenters = &PhysicalDatacenters{PhysicalDatacenters: map[string]*PhysicalDatacenter{}}
@@ -178,6 +178,12 @@ func (g *Guild) Init(c *ConfigGuild) {
 	}
 
 	if g.MenuEnabled {
+		if (c.ConfigMenuOrder != nil) {
+			for _, menuOrder := range c.ConfigMenuOrder {
+				g.Menus.MenuGroups[menuOrder.Name] = menuOrder.Menus
+			}
+		}
+		
 		g.InitDiscordMenu()
 		g.MenuRoles = g.Menus.Roles()
 	}
@@ -303,6 +309,15 @@ func (g *Guild) InitDiscordMenu() {
 			Value: menu.Name,
 		})
 		g.Menus.AutoCompleteTrie.Insert(menu.Name)
+	}
+
+	for group, _ := range g.Menus.MenuGroups {
+		menuGroupName := "group " + group
+		g.Menus.Autocomplete = append(g.Menus.Autocomplete, &discordgo.ApplicationCommandOptionChoice{
+			Name: menuGroupName,
+			Value: menuGroupName,
+		})
+		g.Menus.AutoCompleteTrie.Insert(menuGroupName)
 	}
 
 	// initialize all buttons for remove roles

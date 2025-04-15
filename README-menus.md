@@ -281,3 +281,25 @@ The menu now only contains the relevant role of test encounter 1, test encounter
         - Savage
 ```
 The menu now contains the relevant roles for both encounters, but they are split for better categorization.
+
+# Menu groups
+You can send multiple menus with one /menu command by setting up a menu group.  
+The following creates a single menu group called "roleAssignment" and sends
+the menuMains corresponding to the 3 items in order. The group will show up
+as an autocomplete option in /menu as "group roleAssignment"
+```yaml
+guilds:
+- name: guild name
+  roles:
+    menu: true
+  guildId: 1234567891234567891
+  channelId: 1234567891234567891
+  menuOrder:
+    - name: "roleAssignment"
+      menus:
+        - menuMain
+        - cleared
+        - prog
+  menu:
+    # ...
+```

@@ -14,6 +14,7 @@ type ConfigGuild struct {
 	ConfigRoles               *ConfigRoles                `yaml:"roles"`
 	ConfigReconfigureRoles    []*ConfigReconfigureRoles   `yaml:"reconfigureRoles"`
 	ConfigMenus               []*ConfigMenu               `yaml:"menu"`
+	ConfigMenuOrder           []ConfigMenuOrder           `yaml:"menuOrder"`
 }
 
 type ConfigRoles struct {
@@ -106,4 +107,9 @@ type ConfigField struct {
 	Name   string `yaml:"name"`
 	Value  string `yaml:"value"`
 	Inline bool   `yaml:"inline"`
+}
+
+type ConfigMenuOrder struct {
+	Name  string   `yaml:"name"`
+	Menus []string `yaml:"menus"`
 }

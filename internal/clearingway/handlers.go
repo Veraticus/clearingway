@@ -47,7 +47,6 @@ func (c *Clearingway) DiscordReady(s *discordgo.Session, event *discordgo.Ready)
 			if menu.Type == MenuEncounter {
 				additionalData := menu.AdditionalData
 				menu.MenuEncounterInit(guild.Encounters, additionalData.RoleType)
-				guild.Menus.Menus[string(MenuRemove)].MenuRemoveAddButton(menu)
 			}
 		}
 
@@ -342,13 +341,6 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 				c.Uncolor(s, i)
 			case CommandRemoveAll:
 				c.RemoveAll(s, i)
-			case CommandRemoveEncounter:
-				if ok := len(command) > 2; !ok {
-					fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
-					return
-				}
-				// NB: can reuse this function since button interactions have no selections
-				c.MenuEncounterProcess(s, i, command[2], "-1")
 			}
 		case MenuEncounter:
 			if ok := len(command) > 2; !ok {

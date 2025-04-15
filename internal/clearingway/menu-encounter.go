@@ -129,8 +129,17 @@ func (c *Clearingway) MenuEncounterSend(s *discordgo.Session, i *discordgo.Inter
 	}
 	additionalData := menu.AdditionalData
 
+	// make deep copy of DropdownHelper slice
 	dropdowns := make([]DropdownHelper, len(additionalData.EncounterDropdown))
-	copy(dropdowns, additionalData.EncounterDropdown)
+	for i, dropdown := range additionalData.EncounterDropdown {
+		selectMenuOptCopy := make([]discordgo.SelectMenuOption, len(dropdown.SelectMenuOptions))
+		copy(selectMenuOptCopy, dropdown.SelectMenuOptions)
+
+		dropdowns[i] = DropdownHelper{
+			DropdownTitle:     dropdown.DropdownTitle,
+			SelectMenuOptions: selectMenuOptCopy,
+		}
+	}
 
 	// set default selections based on roles present
 	for index, dropdown := range dropdowns {

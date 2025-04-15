@@ -506,23 +506,56 @@ guilds:
     type: "Complete"
     encounterName: "Futures Rewritten (Ultimate)"
     to: "Roommate"
+  menuOrder:
+    - name: "roleAssignment"
+      menus:
+        - menuMain
+        - cleared
+        - prog
   menu:
     - name: menuMain
       type: menuMain
-      title: __Character Verifcation Menu__
-      description: Use the  button to begin the verification process of your character.
+      title: __Main Menu__
+      description: |
+        Use the buttons below to verify your character, obtain server related roles, or remove roles.
       thumbnailUrl: >-
         https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
       fields:
-        - name: Verify Character Button
+        - name: Verify Button
           value: >
             Verifying your character will confirm ownership of your FFXIV character and analyze the FFLogs attached to it.
             Once verified, roles will then be assigned to you based on your confirmed clears and other criteria in your logs.
+        - name: Server Roles Button
+          value: Use this button to add or remove a role to be pinged for certain server notifcations.
+        - name: Remove Roles Button
+          value: Use this button to remove certain types of roles in bulk.
       buttons:
-        - label: Verify Character
+        - label: Verify
           style: 3
           menuName: menuVerify
           menuType: menuVerify
+        - label: Server Roles
+          style: 1
+          menuName: menuServer
+          menuType: menuEncounter
+        - label: Remove Roles
+          style: 4
+          menuName: menuRemove
+          menuType: menuRemove
+    - name: menuServer
+      type: menuEncounter
+      title: Server Related Roles
+      description: Toggle several server related roles.
+      multiSelect: true
+      roles:
+        - name: Server Ping
+          color: 0xf1c40f
+        - name: Vote Ping
+          color: 0xf1c40f
+        - name: Event Ping
+          color: 0xf1c40f
+        - name: Movie Ping
+          color: 0xf1c40f
     - name: cleared
       type: menuMain
       title: __Cleared Roles Menu__
@@ -597,7 +630,7 @@ guilds:
         - Extreme
     - name: prog
       type: menuMain
-      title: __Non-Cleared Roles Menu__
+      title: __Prog Roles Menu__
       description: >
         Prog Roles are obtainable by anyone and are used to ping people for certain prog parties.
       thumbnailUrl: >-
@@ -613,15 +646,15 @@ guilds:
           value: >
             Includes a global BiS Farm, Ultimate Unlock, and Mercenary roles.
       buttons:
-        - label: Ultimate Prog
+        - label: Ultimate
           style: 1
           menuName: ultimateProg
           menuType: menuEncounter
-        - label: Savage/Extreme Prog
+        - label: Savage/Extreme
           style: 1
           menuName: savageExtremeProg
           menuType: menuEncounter
-        - label: Other Prog-related Roles
+        - label: Other Roles
           style: 1
           menuName: othersProg
           menuType: menuEncounter
@@ -653,44 +686,6 @@ guilds:
         - name: BiS Farm
         - name: Ultimate Unlock
         - name: Mercenary
-    - name: misc
-      type: menuMain
-      title: __Server Roles and Role Removal Menu__
-      description: This menu is used to obtain other miscellaneous roles or to remove certain types of roles from yourself.
-      thumbnailUrl: >-
-        https://github.com/naurffxiv/assets/blob/main/Discord%20Files/Misc%20Images/naur_icon_optimized2.gif?raw=true
-      fields:
-        - name: Server Related Roles Button
-          value: Use this button to add or remove a role to be pinged for certain server notifcations.
-        - name: Remove Roles Button
-          value: Use this button to remove certain types of roles in bulk.
-      buttons:
-        - label: Server Related Roles
-          style: 3
-          menuName: menuServer
-          menuType: menuEncounter
-        - label: Remove Roles
-          style: 4
-          menuName: menuRemove
-          menuType: menuRemove
-    - name: menuServer
-      type: menuEncounter
-      title: Server Related Roles
-      description: Toggle several server related roles.
-      multiSelect: true
-      roles:
-        - name: Server Ping
-          color: 0xf1c40f
-        - name: Vote Ping
-          color: 0xf1c40f
-        - name: Event Ping
-          color: 0xf1c40f
-        - name: Movie Ping
-          color: 0xf1c40f
-    - name: menuRemove
-      type: menuRemove
-      title: Remove Roles
-      description: Remove all or certain types of Clearingway related roles from yourself.
 - name: Deep Dungeon
   roles:
     relevantParsing: false

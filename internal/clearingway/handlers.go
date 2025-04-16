@@ -352,7 +352,11 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 				c.MenuEncounterSend(s, i, command[2])
 			case CommandEncounterProcess:
 				c.MenuEncounterProcess(s, i, command[2], command[3])
-			}
+			default:
+				fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
+			}	
+		default:
+			fmt.Printf("Invalid custom ID received: \"%v\"\n", customID)
 		}
 	case discordgo.InteractionModalSubmit:
 		customID := i.ModalSubmitData().CustomID

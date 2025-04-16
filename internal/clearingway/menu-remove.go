@@ -8,27 +8,14 @@ import (
 
 // Creates the menu component of MenuRemove
 func (m *Menu) MenuRemoveInit() {
-	type removeButton struct {
-		name        string
-		commandType CommandType
-	}
-
-	removeButtons := []discordgo.Button{}
-	removeButtonsList := []removeButton{
-		// TODO: implement manual disabling of these buttons through the config
-		{name: "Uncomfy", commandType: CommandRemoveComfy},
-		//{name: "Uncolor", commandType: CommandRemoveColor},
-		{name: "Remove All", commandType: CommandRemoveAll},
-	}
-
-	for _, button := range removeButtonsList {
-		customIDslice := []string{string(MenuRemove), string(button.commandType)}
-		removeButtons = append(removeButtons, discordgo.Button{
-			Label:    button.name,
-			Style:    discordgo.DangerButton,
+	removeAllCustomID := []string{string(MenuRemove), string(CommandRemoveAll)}
+	removeButtons := []discordgo.Button{
+		{
+			Label:   "Yes, remove all roles",
+			Style: discordgo.DangerButton,
 			Disabled: false,
-			CustomID: strings.Join(customIDslice, " "),
-		})
+			CustomID: strings.Join(removeAllCustomID, " "),
+		},
 	}
 
 	m.Buttons = append(m.Buttons, removeButtons...)
@@ -51,18 +38,4 @@ func (m *Menu) MenuRemoveInit() {
 			Data: message,
 		},
 	}
-
-}
-
-func (m *Menu) MenuRemoveAddButton(menuEncounterToAdd *Menu) {
-	// create button
-	customIDslice := []string{string(MenuRemove), string(CommandRemoveEncounter), string(menuEncounterToAdd.Name)}
-	button := discordgo.Button{
-		Label:    "Remove " + menuEncounterToAdd.Title,
-		Style:    discordgo.DangerButton,
-		Disabled: false,
-		CustomID: strings.Join(customIDslice, " "),
-	}
-
-	m.Buttons = append(m.Buttons, button)
 }

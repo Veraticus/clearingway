@@ -36,6 +36,7 @@ type Menus struct {
 	Menus            map[string]*Menu
 	Autocomplete     []*discordgo.ApplicationCommandOptionChoice
 	AutoCompleteTrie *trie.Trie
+	MenuGroups        map[string][]string
 }
 
 type Menu struct {

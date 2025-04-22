@@ -26,7 +26,7 @@ const (
 	CommandRemoveComfy      CommandType = "removeComfy"
 	CommandRemoveColor      CommandType = "removeColor"
 	CommandRemoveAll        CommandType = "removeAll"
-	CommandRemoveCancel     CommandType = "removeCancel"
+	CommandRemoveFlex       CommandType = "removeFlex"
 	CommandRemoveEncounter  CommandType = "removeEncounter"
 	CommandEncounterProcess CommandType = "encounterProcess"
 )
@@ -207,8 +207,8 @@ func (g *Guild) DefaultMenus() {
 	g.Menus.Menus[string(MenuRemove)] = &Menu{
 		Name:        string(MenuRemove),
 		Type:        MenuRemove,
-		Title:       "Remove All Roles",
-		Description: "Are you sure you want to remove all Clearingway related roles? Ignore or dismiss this message to cancel.",
+		Title:       "Remove roles",
+		Description: "Please select which roles you want to remove. Ignore or dismiss this message to cancel.",
 	}
 }
 

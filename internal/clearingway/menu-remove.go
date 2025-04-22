@@ -9,12 +9,19 @@ import (
 // Creates the menu component of MenuRemove
 func (m *Menu) MenuRemoveInit() {
 	removeAllCustomID := []string{string(MenuRemove), string(CommandRemoveAll)}
+	removeFlexCustomID := []string{string(MenuRemove), string(CommandRemoveFlex)}
 	removeButtons := []discordgo.Button{
 		{
-			Label:   "Yes, remove all roles",
+			Label:   "Remove all roles",
 			Style: discordgo.DangerButton,
 			Disabled: false,
 			CustomID: strings.Join(removeAllCustomID, " "),
+		},
+		{
+			Label: "Remove just flex roles",
+			Style: discordgo.DangerButton,
+			Disabled: false,
+			CustomID: strings.Join(removeFlexCustomID, " "),
 		},
 	}
 

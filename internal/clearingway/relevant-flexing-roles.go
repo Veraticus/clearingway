@@ -9,7 +9,7 @@ import (
 func RelevantFlexingRoles() *Roles {
 	return &Roles{Roles: []*Role{
 		{
-			Name: "NA's Comfiest", Color: 0x636363, Uncomfy: true,
+			Name: "NA's Comfiest", Color: 0x636363, Uncomfy: true, Unflex: true,
 			Description: "DPS parse rounds to zero in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				encounter, rank := opts.Encounters.WorstDPSRank(opts.Rankings)
@@ -32,7 +32,7 @@ func RelevantFlexingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Nice", Color: 0xE48CA3,
+			Name: "Nice", Color: 0xE48CA3, Unflex: true,
 			Description: "DPS parse rounds to 69 (nice) in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
@@ -65,7 +65,7 @@ func RelevantFlexingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Chad", Color: 0x39FF14, Uncomfy: true,
+			Name: "Chad", Color: 0x39FF14, Uncomfy: true, Unflex: true,
 			Description: "HPS parse as a healer rounds to 0 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
@@ -98,7 +98,7 @@ func RelevantFlexingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Bloodbather", Color: 0x8a0303,
+			Name: "Bloodbather", Color: 0x8a0303, Unflex: true,
 			Description: "HPS parse as a non-healer is 100 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
@@ -131,7 +131,7 @@ func RelevantFlexingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Overhealer", Color: 0xFFFFFF,
+			Name: "Overhealer", Color: 0xFFFFFF, Unflex: true,
 			Description: "HPS parse as a healer is 100 in a relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {
@@ -164,7 +164,7 @@ func RelevantFlexingRoles() *Roles {
 			},
 		},
 		{
-			Name: "Rainbow", Color: 0xb6719f,
+			Name: "Rainbow", Color: 0xb6719f, Unflex: true,
 			Description: "At least one DPS parse at every percentile color (except gold) in a single relevant encounter.",
 			ShouldApply: func(opts *ShouldApplyOpts) (bool, string) {
 				for _, encounter := range opts.Encounters.Encounters {

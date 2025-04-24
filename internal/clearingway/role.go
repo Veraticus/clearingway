@@ -46,6 +46,7 @@ type Role struct {
 	Color       int
 	Uncomfy     bool
 	Uncolor     bool
+	Unflex      bool
 	Skip        bool
 	Mention     bool
 	Hoist       bool

@@ -339,6 +339,8 @@ func (c *Clearingway) InteractionCreate(s *discordgo.Session, i *discordgo.Inter
 				c.Uncomfy(s, i)
 			case CommandRemoveColor:
 				c.Uncolor(s, i)
+			case CommandRemoveFlex:
+				c.Unflex(s, i)
 			case CommandRemoveAll:
 				c.RemoveAll(s, i)
 			}
@@ -445,7 +447,7 @@ func (c *Clearingway) Uncomfy(s *discordgo.Session, i *discordgo.InteractionCrea
 		if err != nil {
 			fmt.Printf("Error removing uncomfy role: %+v\n", err)
 		}
-		fmt.Printf("Removing uncomfy role: %+v\n", err)
+		fmt.Printf("Removing uncomfy role: %+v\n", r.Name)
 	}
 
 	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Uncomfy roles:__\n⮕ Removed!\n")
@@ -518,10 +520,83 @@ func (c *Clearingway) Uncolor(s *discordgo.Session, i *discordgo.InteractionCrea
 		if err != nil {
 			fmt.Printf("Error removing parsing role: %+v\n", err)
 		}
-		fmt.Printf("Removing parsing role: %+v\n", err)
+		fmt.Printf("Removing parsing role: %+v\n", r.Name)
 	}
 
 	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Parsing roles:__\n⮕ Removed!\n")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+	}
+}
+
+func (c *Clearingway) Unflex(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	g, ok := c.Guilds.Guilds[i.GuildID]
+	if !ok {
+		fmt.Printf("Interaction received from guild %s with no configuration!\n", i.GuildID)
+		return
+	}
+
+	// Ignore messages not on the correct channel
+	if i.ChannelID != g.ChannelId {
+		fmt.Printf("Ignoring message not in channel %s.\n", g.ChannelId)
+	}
+
+	err := discord.StartInteraction(s, i.Interaction, "Removing miscellaneous parse-related roles from you...")
+	if err != nil {
+		fmt.Printf("Error sending Discord message: %v\n", err)
+		return
+	}
+
+	member, err := c.Discord.Session.GuildMember(g.Id, i.Member.User.ID)
+	if err != nil {
+		err = discord.ContinueInteraction(s, i.Interaction, err.Error())
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	flexRoles := []*Role{}
+	for _, r := range g.AllRoles() {
+		if r.Skip {
+			continue
+		}
+		if r.Unflex {
+			flexRoles = append(flexRoles, r)
+		}
+	}
+
+	if len(flexRoles) == 0 {
+		err = discord.ContinueInteraction(s, i.Interaction, "These roles are not present in this Discord!")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	rolesToRemove := []*Role{}
+	for _, r := range flexRoles {
+		if r.PresentInRoles(member.Roles) {
+			rolesToRemove = append(rolesToRemove, r)
+		}
+	}
+	if len(rolesToRemove) == 0 {
+		err = discord.ContinueInteraction(s, i.Interaction, "You do not have any miscellaneous parsing roles!")
+		if err != nil {
+			fmt.Printf("Error sending Discord message: %v\n", err)
+		}
+		return
+	}
+
+	for _, r := range rolesToRemove {
+		err = r.RemoveFromCharacter(g.Id, i.Member.User.ID, c.Discord.Session)
+		if err != nil {
+			fmt.Printf("Error removing misc. parsing role: %+v\n", err)
+		}
+		fmt.Printf("Removing misc. parsing role: %+v\n", r.Name)
+	}
+
+	err = discord.ContinueInteraction(s, i.Interaction, "_ _\n__Misc. parsing roles:__\n⮕ Removed!\n")
 	if err != nil {
 		fmt.Printf("Error sending Discord message: %v\n", err)
 	}

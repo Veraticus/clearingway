@@ -554,8 +554,6 @@ guilds:
           color: 0xf1c40f
         - name: Event Ping
           color: 0xf1c40f
-        - name: Movie Ping
-          color: 0xf1c40f
     - name: cleared
       type: menuMain
       title: __Cleared Roles Menu__
